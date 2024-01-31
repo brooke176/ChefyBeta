@@ -1,10 +1,3 @@
-//
-//  MessagesViewController.swift
-//  ChefyBeta MessagesExtension
-//
-//  Created by Brooke Skinner on 1/30/24.
-//
-
 import UIKit
 import Messages
 import SwiftUI
