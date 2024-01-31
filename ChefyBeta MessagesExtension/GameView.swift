@@ -1,5 +1,5 @@
 import SwiftUI
-
+//test
 struct GameView: View {
     @State private var seasoningAmount = 0.0
     @State private var cookingProgress = 0.0
