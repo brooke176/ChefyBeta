@@ -11,8 +11,12 @@
 		EEC0C3212B69E7190094E043 /* ChefyBeta MessagesExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = EEC0C3202B69E7190094E043 /* ChefyBeta MessagesExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		EEC0C3262B69E7190094E043 /* Messages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEC0C3252B69E7190094E043 /* Messages.framework */; };
 		EEC0C3292B69E7190094E043 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC0C3282B69E7190094E043 /* MessagesViewController.swift */; };
-		EEC0C32C2B69E71A0094E043 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EEC0C32A2B69E71A0094E043 /* MainInterface.storyboard */; };
 		EEC0C32E2B69E71E0094E043 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EEC0C32D2B69E71E0094E043 /* Assets.xcassets */; };
+		EEC0C33A2B69E82D0094E043 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC0C3392B69E82D0094E043 /* ContentView.swift */; };
+		EEC0C33C2B69E8480094E043 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC0C33B2B69E8480094E043 /* DetailView.swift */; };
+		EEC0C33E2B69E8600094E043 /* ImageItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC0C33D2B69E8600094E043 /* ImageItem.swift */; };
+		EEC0C3402B69E8850094E043 /* ToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC0C33F2B69E8850094E043 /* ToolbarView.swift */; };
+		EEC0C3422B69E8980094E043 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC0C3412B69E8980094E043 /* GameView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,9 +49,13 @@
 		EEC0C3202B69E7190094E043 /* ChefyBeta MessagesExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ChefyBeta MessagesExtension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEC0C3252B69E7190094E043 /* Messages.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Messages.framework; path = System/Library/Frameworks/Messages.framework; sourceTree = SDKROOT; };
 		EEC0C3282B69E7190094E043 /* MessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
-		EEC0C32B2B69E71A0094E043 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		EEC0C32D2B69E71E0094E043 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EEC0C32F2B69E71E0094E043 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EEC0C3392B69E82D0094E043 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		EEC0C33B2B69E8480094E043 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
+		EEC0C33D2B69E8600094E043 /* ImageItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageItem.swift; sourceTree = "<group>"; };
+		EEC0C33F2B69E8850094E043 /* ToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarView.swift; sourceTree = "<group>"; };
+		EEC0C3412B69E8980094E043 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,7 +109,11 @@
 			isa = PBXGroup;
 			children = (
 				EEC0C3282B69E7190094E043 /* MessagesViewController.swift */,
-				EEC0C32A2B69E71A0094E043 /* MainInterface.storyboard */,
+				EEC0C3392B69E82D0094E043 /* ContentView.swift */,
+				EEC0C33B2B69E8480094E043 /* DetailView.swift */,
+				EEC0C33D2B69E8600094E043 /* ImageItem.swift */,
+				EEC0C33F2B69E8850094E043 /* ToolbarView.swift */,
+				EEC0C3412B69E8980094E043 /* GameView.swift */,
 				EEC0C32D2B69E71E0094E043 /* Assets.xcassets */,
 				EEC0C32F2B69E71E0094E043 /* Info.plist */,
 			);
@@ -196,7 +208,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				EEC0C32E2B69E71E0094E043 /* Assets.xcassets in Resources */,
-				EEC0C32C2B69E71A0094E043 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -207,6 +218,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EEC0C33E2B69E8600094E043 /* ImageItem.swift in Sources */,
+				EEC0C3402B69E8850094E043 /* ToolbarView.swift in Sources */,
+				EEC0C33A2B69E82D0094E043 /* ContentView.swift in Sources */,
+				EEC0C33C2B69E8480094E043 /* DetailView.swift in Sources */,
+				EEC0C3422B69E8980094E043 /* GameView.swift in Sources */,
 				EEC0C3292B69E7190094E043 /* MessagesViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -220,17 +236,6 @@
 			targetProxy = EEC0C3222B69E7190094E043 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		EEC0C32A2B69E71A0094E043 /* MainInterface.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				EEC0C32B2B69E71A0094E043 /* Base */,
-			);
-			name = MainInterface.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		EEC0C3302B69E71E0094E043 /* Debug */ = {
