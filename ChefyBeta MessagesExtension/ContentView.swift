@@ -28,11 +28,10 @@ struct ContentView: View {
                             itemContainer(item: item)
                         }
                     }
-                    .padding(.horizontal)
+//                    .padding(.horizontal)
                 }
                 .background(Color(UIColor.systemGroupedBackground))
             }
-            .navigationTitle("Menu")
         }
     }
     
