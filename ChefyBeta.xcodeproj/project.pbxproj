@@ -17,6 +17,7 @@
 		EEC0C33E2B69E8600094E043 /* ImageItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC0C33D2B69E8600094E043 /* ImageItem.swift */; };
 		EEC0C3402B69E8850094E043 /* ToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC0C33F2B69E8850094E043 /* ToolbarView.swift */; };
 		EEC0C3422B69E8980094E043 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC0C3412B69E8980094E043 /* GameView.swift */; };
+		EEF9BB562B6C495D002EA1BD /* MessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF9BB552B6C495D002EA1BD /* MessageHandler.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 		EEC0C33D2B69E8600094E043 /* ImageItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageItem.swift; sourceTree = "<group>"; };
 		EEC0C33F2B69E8850094E043 /* ToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarView.swift; sourceTree = "<group>"; };
 		EEC0C3412B69E8980094E043 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		EEF9BB552B6C495D002EA1BD /* MessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageHandler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +113,7 @@
 				EEC0C3282B69E7190094E043 /* MessagesViewController.swift */,
 				EEC0C3392B69E82D0094E043 /* ContentView.swift */,
 				EEC0C33B2B69E8480094E043 /* DetailView.swift */,
+				EEF9BB552B6C495D002EA1BD /* MessageHandler.swift */,
 				EEC0C33D2B69E8600094E043 /* ImageItem.swift */,
 				EEC0C33F2B69E8850094E043 /* ToolbarView.swift */,
 				EEC0C3412B69E8980094E043 /* GameView.swift */,
@@ -220,6 +223,7 @@
 			files = (
 				EEC0C33E2B69E8600094E043 /* ImageItem.swift in Sources */,
 				EEC0C3402B69E8850094E043 /* ToolbarView.swift in Sources */,
+				EEF9BB562B6C495D002EA1BD /* MessageHandler.swift in Sources */,
 				EEC0C33A2B69E82D0094E043 /* ContentView.swift in Sources */,
 				EEC0C33C2B69E8480094E043 /* DetailView.swift in Sources */,
 				EEC0C3422B69E8980094E043 /* GameView.swift in Sources */,

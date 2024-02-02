@@ -6,6 +6,7 @@ struct DetailView: View {
     var conversation: MSConversation?
     @Environment(\.presentationMode) var presentationMode
     @State private var isMessageReadyToSend = false
+    @State private var showingGameView = false // State to control GameView presentation
 
     var body: some View {
         VStack {
@@ -18,18 +19,35 @@ struct DetailView: View {
             Text(item.label)
                 .font(.caption)
                 .foregroundColor(.black)
-
-            if isMessageReadyToSend {
-                Button("Send \(item.label)") {
-                    sendMessage()
+            
+            if item.label == "Cheeseburger" {
+                Button(action: {
+                    showingGameView = true // Set to true to show GameView
+                }) {
+                    Text("Play \(item.label)")
+                        .fontWeight(.bold)
+                        .font(.title3)
+                        .padding()
+                        .frame(minWidth: 0, maxWidth: .infinity) // Make the button width flexible
+                        .background(LinearGradient(gradient: Gradient(colors: [Color.pink, Color.green]), startPoint: .leading, endPoint: .trailing))
+                        .cornerRadius(15)
+                        .foregroundColor(.white)
+                        .padding(.horizontal)
+                        .shadow(color: .gray, radius: 5, x: 0, y: 5) // Add a shadow for depth
                 }
-                .padding()
-                .background(Color.green)
-                .foregroundColor(.white)
-                .cornerRadius(8)
+                .padding(.bottom, 10) // Add some padding below the button if needed
             } else {
-                Button("Play \(item.label)") {
-                    prepareMessage()
+                Button("Send \(item.label)") {
+                    if let conversation = conversation {
+                        MessageHandler.insertImage(item: item, into: conversation) { error in
+                            if let error = error {
+                                print("Error inserting message: \(error.localizedDescription)")
+                            } else {
+                                // Optionally dismiss the view or provide feedback that the message was sent successfully
+                                presentationMode.wrappedValue.dismiss()
+                            }
+                        }
+                    }
                 }
                 .padding()
                 .background(Color.blue)
@@ -37,60 +55,9 @@ struct DetailView: View {
                 .cornerRadius(8)
             }
         }
-    }
-    
-    private func prepareMessage() {
-        guard let conversation = conversation else {
-            print("Conversation is nil")
-            return
-        }
-        print("conv1", conversation)
-
-        let session = conversation.selectedMessage?.session ?? MSSession()
-        let message = MSMessage(session: session)
-
-        let layout = MSMessageTemplateLayout()
-        layout.image = UIImage(named: item.imageName) // Dynamic game icon based on selected item
-        layout.caption = "Let's play \(item.label)!"
-        message.layout = layout
-
-        // Insert the message into the conversation
-        conversation.insert(message) { error in
-            if let error = error {
-                print("Error inserting message: \(error.localizedDescription)")
-            } else {
-                print("Message prepared successfully")
-                // No need to dismiss the view, as the user needs to send the message manually
-            }
-        }
-        print("conv2", conversation)
-        isMessageReadyToSend = true
-    }
-
-    private func sendMessage() {
-        guard let conversation = conversation else {
-            print("Conversation is nil")
-            return
-        }
-
-        let session = conversation.selectedMessage?.session ?? MSSession()
-        let message = MSMessage(session: session)
-
-        let layout = MSMessageTemplateLayout()
-        layout.image = UIImage(named: item.imageName) // Dynamic game icon based on selected item
-        layout.caption = "Let's play \(item.label)!"
-        message.layout = layout
-
-        // Insert the message into the conversation
-        conversation.insert(message) { error in
-            if let error = error {
-                print("Error inserting message: \(error.localizedDescription)")
-            } else {
-                print("Message sent successfully")
-                DispatchQueue.main.async {
-                    self.presentationMode.wrappedValue.dismiss()
-                }
-            }
+        .sheet(isPresented: $showingGameView) {
+            // Assuming GameView() is correctly defined elsewhere
+            GameView()
         }
     }
 }

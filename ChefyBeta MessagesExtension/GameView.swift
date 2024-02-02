@@ -1,89 +1,108 @@
 import SwiftUI
-//test
+
 struct GameView: View {
     @State private var seasoningAmount = 0.0
     @State private var cookingProgress = 0.0
     @State private var isCooking = false
-    @State private var steakFlipped = false
+    @State private var burgerFlipped = false
     
     let maxSeasoningAmount = 1.0
+    let perfectSeasoningRange = 0.5...0.8
     let maxCookingProgress = 1.0
+    let cookingFlipPoint = 0.5
     
     var body: some View {
         VStack {
-            Text("Season the steak")
+            Text("Season the burger")
                 .padding()
             
-            // Steak image
-            Image("steak") // Add your steak image
+            Image("patty") // Placeholder for your burger image
+                .resizable()
+                .scaledToFit()
+                .shadow(radius: 1)
+                .frame(width: 150, height: 150)
+                .rotationEffect(.degrees(burgerFlipped ? 180 : 0)) // Flip animation
                 .onTapGesture {
-                    self.flipSteak()
+                    if isCooking {
+                        self.flipBurger()
+                    }
                 }
             
-            // Seasoning shaker
-            Image("seasoning") // Add your seasoning shaker image
+            Image("pepper") // Placeholder for your seasoning image
+                .resizable()
+                .scaledToFit()
+                .shadow(radius: 1)
+                .frame(width: 90, height: 90)
                 .onTapGesture {
-                    self.seasonSteak()
+                    if !isCooking {
+                        self.seasonBurger()
+                    }
                 }
             
-            // Cooking progress bar
             ProgressView(value: cookingProgress, total: maxCookingProgress)
                 .padding()
             
-            // Start cooking button
             Button("Start Cooking") {
                 self.startCooking()
             }
-            .disabled(isCooking)
+            .disabled(isCooking || seasoningAmount < perfectSeasoningRange.lowerBound)
         }
-        .alert(isPresented: .constant(seasoningAmount > maxSeasoningAmount || cookingProgress > maxCookingProgress)) {
-            Alert(
-                title: Text("Game Over"),
-                message: Text("You've \(seasoningAmount > maxSeasoningAmount ? "over-seasoned" : "burnt") the steak!"),
-                dismissButton: .default(Text("Try Again"), action: resetGame)
-            )
-        }
-    }
-    
-    func seasonSteak() {
-        if !isCooking {
-            seasoningAmount += 0.1
-            if seasoningAmount > maxSeasoningAmount {
-                // Lose condition for too much seasoning
-                isCooking = false // Stop the game
+        .alert(isPresented: .constant(checkGameOver())) {
+            if cookingProgress >= maxCookingProgress && seasoningAmount >= perfectSeasoningRange.lowerBound && seasoningAmount <= perfectSeasoningRange.upperBound && burgerFlipped {
+                return Alert(
+                    title: Text("Congratulations!"),
+                    message: Text("You've cooked the perfect burger!"),
+                    dismissButton: .default(Text("Play Again"), action: resetGame)
+                )
+            } else {
+                return Alert(
+                    title: Text("Game Over"),
+                    message: Text("Try to season correctly and flip the burger at the right time."),
+                    dismissButton: .default(Text("Try Again"), action: resetGame)
+                )
             }
         }
     }
     
-    func flipSteak() {
-        if isCooking && !steakFlipped {
-            steakFlipped = true
-            cookingProgress = 0 // Reset progress
-        }
+    func seasonBurger() {
+        seasoningAmount += 0.1
+    }
+    
+    func flipBurger() {
+        burgerFlipped = true
     }
     
     func startCooking() {
         isCooking = true
-        steakFlipped = false
-        cookingProgress = 0
-        
-        // Timer to simulate cooking progress
         Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
             self.cookingProgress += 0.1
-            if self.cookingProgress > self.maxCookingProgress {
+            if self.cookingProgress >= self.maxCookingProgress {
                 timer.invalidate()
-                isCooking = false // Stop the game
+                self.isCooking = false
             }
         }
+    }
+    
+    func checkGameOver() -> Bool {
+        if cookingProgress >= maxCookingProgress {
+            if seasoningAmount >= perfectSeasoningRange.lowerBound && seasoningAmount <= perfectSeasoningRange.upperBound && burgerFlipped {
+                // Win condition
+                return true
+            }
+            // Lose condition
+            return true
+        }
+        return false
     }
     
     func resetGame() {
         seasoningAmount = 0
         cookingProgress = 0
         isCooking = false
-        steakFlipped = false
+        burgerFlipped = false
     }
 }
+
 
 struct GameView_Previews: PreviewProvider {
     static var previews: some View {
