@@ -25,8 +25,9 @@ struct GameView: View {
                 .padding()
             Spacer()
             gameViewContent
-            Spacer()
+                .padding(.horizontal) // Adjust padding to ensure content is centered and has space
             actionButtons
+                .padding() // Provide padding to separate from the game view content
             Spacer()
         }
         .sheet(isPresented: $showingCompletedDishView) {
@@ -67,7 +68,7 @@ struct GameView: View {
                     .frame(width: 150, height: 150)
             }
         }
-        .frame(width: 150, height: 150)
+//        .frame(width: 150, height: 150)
         .onTapGesture {
             if isCooking {
                 self.flipSteak()
@@ -76,7 +77,7 @@ struct GameView: View {
     }
 
     private var actionButtons: some View {
-        Group {
+        VStack {
             if !isCooking {
                 Button("Start Cooking") {
                     self.startCooking()
@@ -88,6 +89,7 @@ struct GameView: View {
                 .cornerRadius(8)
             } else {
                 Button("Serve Steak") {
+                    self.calculateScore()
                     self.serveSteak()
                 }
                 .padding()
