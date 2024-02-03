@@ -15,11 +15,11 @@ struct DetailView: View {
                 .scaledToFit()
                 .frame(width: 200, height: 200)
                 .border(Color.black, width: 1)
-            
+
             Text(item.label)
                 .font(.caption)
                 .foregroundColor(.black)
-            
+
             if item.label == "Cheeseburger" {
                 Button(action: {
                     showingGameView = true // Set to true to show GameView

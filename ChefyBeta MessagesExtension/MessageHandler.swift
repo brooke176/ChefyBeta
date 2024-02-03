@@ -12,7 +12,7 @@ class MessageHandler {
 
         let layout = MSMessageTemplateLayout()
         layout.image = image
-        
+
         let message = MSMessage()
         message.layout = layout
 

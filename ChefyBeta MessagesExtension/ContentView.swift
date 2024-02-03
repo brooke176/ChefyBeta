@@ -6,7 +6,7 @@ struct ContentView: View {
     @State private var selectedItem: ImageItem?
     @State private var showGameView = false
     var conversation: MSConversation?
-    
+
     let imageItems: [ImageItem] = [
         ImageItem(id: 1, imageName: "burger", label: "Burger"),
         ImageItem(id: 2, imageName: "carbonara", label: "Carbonara"),
@@ -15,9 +15,9 @@ struct ContentView: View {
         ImageItem(id: 5, imageName: "nachos", label: "Nachos"),
         ImageItem(id: 6, imageName: "potato", label: "Potato"),
         ImageItem(id: 7, imageName: "cake", label: "Cake"),
-        ImageItem(id: 8, imageName: "burrito", label: "Burrito"),
+        ImageItem(id: 8, imageName: "burrito", label: "Burrito")
     ]
-    
+
     var body: some View {
         NavigationView {
             ScrollView {
@@ -28,13 +28,13 @@ struct ContentView: View {
                             itemContainer(item: item)
                         }
                     }
-//                    .padding(.horizontal)
+                    //                    .padding(.horizontal)
                 }
                 .background(Color(UIColor.systemGroupedBackground))
             }
         }
     }
-    
+
     @ViewBuilder
     private func itemContainer(item: ImageItem) -> some View {
         if item.label == "Burger" {
@@ -52,7 +52,7 @@ struct ContentView: View {
             }
         }
     }
-    
+
     private func itemContent(for item: ImageItem) -> some View {
         VStack {
             Image(item.imageName)
@@ -62,7 +62,7 @@ struct ContentView: View {
                 .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.gray, lineWidth: 0.5))
                 .shadow(radius: 1) // Reduce shadow radius for subtlety
                 .frame(width: 60, height: 60) // Adjust image size for compactness
-            
+
             Text(item.label)
                 .font(.system(size: 10, weight: .medium, design: .rounded)) // Slightly reduce font size
                 .foregroundColor(.black)
