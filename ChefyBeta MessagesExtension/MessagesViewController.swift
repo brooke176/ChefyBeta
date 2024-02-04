@@ -3,21 +3,55 @@ import Messages
 import SwiftUI
 
 class MessagesViewController: MSMessagesAppViewController {
-
-    func presentGameView(_ gameView: some View) {
-        let hostingController = UIHostingController(rootView: gameView)
-
-        // Make sure we're presenting on the main thread
-        DispatchQueue.main.async {
-            // Present the hosting controller modally or add it to the view hierarchy
-            // For simplicity, we're presenting it modally here
-            self.present(hostingController, animated: true, completion: nil)
+    
+    func sendGameState(score: Int, session: MSSession? = nil) {
+        guard let conversation = activeConversation else { return }
+        
+        let session = session ?? MSSession()
+        let message = MSMessage(session: session)
+        
+        let layout = MSMessageTemplateLayout()
+        layout.caption = "Steak Cooking Game"
+        layout.subcaption = "Score: \(score)"
+        message.layout = layout
+        
+        // Add URL components for the game state if needed
+        var components = URLComponents()
+        let scoreQueryItem = URLQueryItem(name: "score", value: "\(score)")
+        components.queryItems = [scoreQueryItem]
+        message.url = components.url
+        
+        // Insert the message into the conversation
+        conversation.insert(message) { error in
+            if let error = error {
+                print("Error sending message: \(error.localizedDescription)")
+            }
         }
     }
+    
+    // Parse an incoming message to extract game state
+    func parseMessage(_ message: MSMessage) -> Int? {
+        guard let messageURL = message.url,
+              let urlComponents = URLComponents(url: messageURL, resolvingAgainstBaseURL: false),
+              let queryItems = urlComponents.queryItems else { return nil }
+        
+        for item in queryItems {
+            if item.name == "score", let value = item.value, let score = Int(value) {
+                return score
+            }
+        }
+        
+        return nil
+    }
 
-    // Use this function to present specific content based on message content or user action
-    func presentContentView(_ contentView: some View) {
+    override func didBecomeActive(with conversation: MSConversation) {
+        super.didBecomeActive(with: conversation)
+
+        // Set up and present the ContentView, passing the active conversation.
+        let contentView = ContentView(conversation: conversation)
         let hostingController = UIHostingController(rootView: contentView)
+
+        // Add hostingController to the view hierarchy
         addChild(hostingController)
         view.addSubview(hostingController.view)
         hostingController.didMove(toParent: self)
@@ -32,44 +66,6 @@ class MessagesViewController: MSMessagesAppViewController {
         ])
     }
 
-    //    override func didBecomeActive(with conversation: MSConversation) {
-    //        super.didBecomeActive(with: conversation)
-    //
-    //        // Set up and present the ContentView, passing the active conversation.
-    //        let contentView = ContentView(conversation: conversation)
-    //        let hostingController = UIHostingController(rootView: contentView)
-    //
-    //        // Add hostingController to the view hierarchy
-    //        addChild(hostingController)
-    //        view.addSubview(hostingController.view)
-    //        hostingController.didMove(toParent: self)
-    //
-    //        // Set constraints for hostingController's view
-    //        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
-    //        NSLayoutConstraint.activate([
-    //            hostingController.view.topAnchor.constraint(equalTo: view.topAnchor),
-    //            hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-    //            hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-    //            hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-    //        ])
-    //    }
-
-    override func didBecomeActive(with conversation: MSConversation) {
-        super.didBecomeActive(with: conversation)
-
-        // Check if there's a game invitation or state to load
-        if let messageURL = conversation.selectedMessage?.url {
-            // Parse the URL to decide what game view to show
-            // For demonstration, directly presenting `SteakGameView`
-            let gameView = SteakGameView() // Adapt this to how you initialize your game view
-            presentGameView(gameView)
-        } else {
-            // Present the main conversation view otherwise
-            let contentView = ContentView(conversation: conversation)
-            presentContentView(contentView)
-        }
-    }
-
     //    override func viewDidLoad() {
     //        super.viewDidLoad()
     //        // Do any additional setup after loading the view.
@@ -77,50 +73,49 @@ class MessagesViewController: MSMessagesAppViewController {
 
     // MARK: - Conversation Handling
 
-    //    override func willBecomeActive(with conversation: MSConversation) {
-    //        // Called when the extension is about to move from the inactive to active state.
-    //        // This will happen when the extension is about to present UI.
-    //
-    //        // Use this method to configure the extension and restore previously stored state.
-    //    }
-    //
-    //    override func didResignActive(with conversation: MSConversation) {
-    //        // Called when the extension is about to move from the active to inactive state.
-    //        // This will happen when the user dismisses the extension, changes to a different
-    //        // conversation or quits Messages.
-    //
-    //        // Use this method to release shared resources, save user data, invalidate timers,
-    //        // and store enough state information to restore your extension to its current state
-    //        // in case it is terminated later.
-    //    }
-    //
-    //    override func didReceive(_ message: MSMessage, conversation: MSConversation) {
-    //        // Called when a message arrives that was generated by another instance of this
-    //        // extension on a remote device.
-    //
-    //        // Use this method to trigger UI updates in response to the message.
-    //    }
-    //
-    //    override func didStartSending(_ message: MSMessage, conversation: MSConversation) {
-    //        // Called when the user taps the send button.
-    //    }
-    //
-    //    override func didCancelSending(_ message: MSMessage, conversation: MSConversation) {
-    //        // Called when the user deletes the message without sending it.
-    //
-    //        // Use this to clean up state related to the deleted message.
-    //    }
-    //
-    //    override func willTransition(to presentationStyle: MSMessagesAppPresentationStyle) {
-    //        // Called before the extension transitions to a new presentation style.
-    //
-    //        // Use this method to prepare for the change in presentation style.
-    //    }
-    //
-    //    override func didTransition(to presentationStyle: MSMessagesAppPresentationStyle) {
-    //        // Called after the extension transitions to a new presentation style.
-    //
-    //        // Use this method to finalize any behaviors associated with the change in presentation style.
-    //    }
+    override func willBecomeActive(with conversation: MSConversation) {
+        // Called when the extension is about to move from the inactive to active state.
+        // This will happen when the extension is about to present UI.
 
+        // Use this method to configure the extension and restore previously stored state.
+    }
+
+    override func didResignActive(with conversation: MSConversation) {
+        // Called when the extension is about to move from the active to inactive state.
+        // This will happen when the user dismisses the extension, changes to a different
+        // conversation or quits Messages.
+
+        // Use this method to release shared resources, save user data, invalidate timers,
+        // and store enough state information to restore your extension to its current state
+        // in case it is terminated later.
+    }
+
+    override func didReceive(_ message: MSMessage, conversation: MSConversation) {
+        // Called when a message arrives that was generated by another instance of this
+        // extension on a remote device.
+
+        // Use this method to trigger UI updates in response to the message.
+    }
+
+    override func didStartSending(_ message: MSMessage, conversation: MSConversation) {
+        // Called when the user taps the send button.
+    }
+
+    override func didCancelSending(_ message: MSMessage, conversation: MSConversation) {
+        // Called when the user deletes the message without sending it.
+
+        // Use this to clean up state related to the deleted message.
+    }
+
+    override func willTransition(to presentationStyle: MSMessagesAppPresentationStyle) {
+        // Called before the extension transitions to a new presentation style.
+
+        // Use this method to prepare for the change in presentation style.
+    }
+
+    override func didTransition(to presentationStyle: MSMessagesAppPresentationStyle) {
+        // Called after the extension transitions to a new presentation style.
+
+        // Use this method to finalize any behaviors associated with the change in presentation style.
+    }
 }

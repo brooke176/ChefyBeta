@@ -6,6 +6,7 @@ struct CompletedDishView: View {
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
+        
         VStack {
             HStack {
                 ForEach(1..<4) { index in
@@ -25,6 +26,7 @@ struct CompletedDishView: View {
             Button("Try Again") {
                 presentationMode.wrappedValue.dismiss()
             }
+
             .padding()
             .background(Color.blue)
             .foregroundColor(.white)

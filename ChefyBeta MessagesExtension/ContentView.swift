@@ -64,22 +64,22 @@ struct ContentView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.gray, lineWidth: 0.5))
                 .shadow(radius: 1)
-                .frame(width: 60, height: 60)
+                .frame(width: 70, height: 80)
                 .overlay(
                     item.label != "Steak" ?
                         Text("Coming Soon")
-                        .font(.caption2) // Use a smaller font size
-                        .padding(2) // Reduce padding around the text
-                        .background(Color.black.opacity(0.7)) // Slightly increase opacity for readability
+                        .font(.system(size: 11, weight: .medium, design: .rounded))
+                        .padding(2)
+                        .background(Color.black.opacity(0.7))
                         .foregroundColor(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 10)) // Smaller corner radius for the background
-                        .offset(x: 0, y: 5) // Adjust positioning to be more subtle and less intrusive
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .offset(x: 0, y: 6)
                         : nil,
                     alignment: .bottomTrailing
                 )
-
+            
             Text(item.label)
-                .font(.system(size: 10, weight: .medium, design: .rounded))
+                .font(.system(size: 12, weight: .medium, design: .rounded))
                 .foregroundColor(.black)
                 .lineLimit(2)
                 .truncationMode(.tail)

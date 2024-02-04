@@ -11,6 +11,7 @@
 		EE6E720D2B6CAB210012BF9E /* PepperGraphic.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6E720C2B6CAB210012BF9E /* PepperGraphic.swift */; };
 		EE6E72152B6DEAAC0012BF9E /* CompletedDishView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6E72142B6DEAAC0012BF9E /* CompletedDishView.swift */; };
 		EE6E72192B6DF83E0012BF9E /* NavigationTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6E72182B6DF83E0012BF9E /* NavigationTarget.swift */; };
+		EE6E721D2B6F5CC00012BF9E /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6E721C2B6F5CC00012BF9E /* Conversation.swift */; };
 		EEC0C31B2B69E7180094E043 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EEC0C31A2B69E7180094E043 /* Assets.xcassets */; };
 		EEC0C3212B69E7190094E043 /* ChefyBeta MessagesExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = EEC0C3202B69E7190094E043 /* ChefyBeta MessagesExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		EEC0C3262B69E7190094E043 /* Messages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEC0C3252B69E7190094E043 /* Messages.framework */; };
@@ -53,6 +54,7 @@
 		EE6E720C2B6CAB210012BF9E /* PepperGraphic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PepperGraphic.swift; sourceTree = "<group>"; };
 		EE6E72142B6DEAAC0012BF9E /* CompletedDishView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedDishView.swift; sourceTree = "<group>"; };
 		EE6E72182B6DF83E0012BF9E /* NavigationTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTarget.swift; sourceTree = "<group>"; };
+		EE6E721C2B6F5CC00012BF9E /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		EEC0C3172B69E7120094E043 /* ChefyBeta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChefyBeta.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEC0C31A2B69E7180094E043 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EEC0C3202B69E7190094E043 /* ChefyBeta MessagesExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ChefyBeta MessagesExtension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -80,12 +82,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		EE6E721B2B6F1E100012BF9E /* BeefWell */ = {
+		EE6E721B2B6F1E100012BF9E /* Steak */ = {
 			isa = PBXGroup;
 			children = (
 				EEC0C3412B69E8980094E043 /* SteakGameView.swift */,
 			);
-			path = BeefWell;
+			path = Steak;
 			sourceTree = "<group>";
 		};
 		EEC0C3102B69E7120094E043 = {
@@ -127,13 +129,14 @@
 			isa = PBXGroup;
 			children = (
 				EEC0C3282B69E7190094E043 /* MessagesViewController.swift */,
+				EE6E721C2B6F5CC00012BF9E /* Conversation.swift */,
 				EEC0C3392B69E82D0094E043 /* ContentView.swift */,
 				EEC0C33B2B69E8480094E043 /* DetailView.swift */,
 				EEF9BB552B6C495D002EA1BD /* MessageHandler.swift */,
 				EEC0C33D2B69E8600094E043 /* ImageItem.swift */,
 				EE6E720C2B6CAB210012BF9E /* PepperGraphic.swift */,
 				EEC0C33F2B69E8850094E043 /* ToolbarView.swift */,
-				EE6E721B2B6F1E100012BF9E /* BeefWell */,
+				EE6E721B2B6F1E100012BF9E /* Steak */,
 				EE6E72182B6DF83E0012BF9E /* NavigationTarget.swift */,
 				EE6E72142B6DEAAC0012BF9E /* CompletedDishView.swift */,
 				EE6E720A2B6C9C650012BF9E /* ProgressBar.swift */,
@@ -241,6 +244,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE6E721D2B6F5CC00012BF9E /* Conversation.swift in Sources */,
 				EE6E720D2B6CAB210012BF9E /* PepperGraphic.swift in Sources */,
 				EEC0C33E2B69E8600094E043 /* ImageItem.swift in Sources */,
 				EE6E72192B6DF83E0012BF9E /* NavigationTarget.swift in Sources */,

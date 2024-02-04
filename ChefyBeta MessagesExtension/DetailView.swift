@@ -64,9 +64,9 @@ struct DetailView: View {
                 .cornerRadius(8)
             }
         }
-        .sheet(isPresented: $showingGameView) {
-            SteakGameView()
-        }
+//        .sheet(isPresented: $showingGameView) {
+//            SteakGameView(conversationManager: <#ConversationManager#>)
+//        }
     }
     func sendGameInvitation() {
         guard let conversation = conversation else { return }

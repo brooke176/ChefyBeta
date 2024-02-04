@@ -1,4 +1,5 @@
 import SwiftUI
+import Messages
 
 struct GameButtonStyle: ButtonStyle {
     var backgroundColor: Color
@@ -25,6 +26,8 @@ enum SeasoningType {
 }
 
 struct SteakGameView: View {
+    var conversationManager: ConversationManager
+
     @State private var seasoning = SteakSeasoning()
     @State private var cookingProgress = 0.0
     @State private var isCooking = false
@@ -36,12 +39,16 @@ struct SteakGameView: View {
     @State private var seasoningGraphics: [SeasoningGraphic] = []
     @State private var score = 1
     @State private var showingCompletedDishView = false
-
+    
     private let minSeasoningAmount: Double = 0.6
     private let maxSeasoningAmount = 3.0
     private let perfectSeasoningRange = 0.6...1.5
     private let maxCookingProgress = 1.0
-
+    
+    init(conversationManager: ConversationManager) {
+        self.conversationManager = conversationManager
+    }
+    
     var body: some View {
         ZStack {
             contentStack
@@ -56,7 +63,7 @@ struct SteakGameView: View {
             CompletedDishView(score: score)
         }
     }
-
+    
     private var contentStack: some View {
         VStack {
             Spacer()
@@ -76,7 +83,7 @@ struct SteakGameView: View {
             Spacer()
         }
     }
-
+    
     private var gameViewContent: some View {
         ZStack(alignment: .center) {
             Image("stove2").resizable().scaledToFit().frame(width: 300, height: 317)
@@ -100,7 +107,7 @@ struct SteakGameView: View {
             if isCooking { steakFlipped.toggle() }
         }
     }
-
+    
     private var actionButtons: some View {
         VStack {
             startCookingButton
@@ -109,19 +116,19 @@ struct SteakGameView: View {
             ProgressBar(progress: cookingProgress).frame(height: 20).padding()
         }
     }
-
+    
     private var startCookingButton: some View {
         Button("Start Cooking", action: startCooking)
             .disabled(!canStartCooking)
             .buttonStyle(GameButtonStyle(backgroundColor: .green))
     }
-
+    
     private var serveSteakButton: some View {
         Button("Serve Steak", action: serveSteak)
             .disabled(!isCooking)
             .buttonStyle(GameButtonStyle(backgroundColor: .blue))
     }
-
+    
     private var seasoningButtons: some View {
         HStack(spacing: 10) {
             Image("salt")
@@ -132,7 +139,7 @@ struct SteakGameView: View {
                 .onTapGesture {
                     self.addSeasoningGraphics(type: .salt)
                 }
-
+            
             Image("pepper")
                 .resizable()
                 .scaledToFit()
@@ -143,11 +150,11 @@ struct SteakGameView: View {
                 }
         }
     }
-
+    
     private var canStartCooking: Bool {
         seasoning.frontSalt >= minSeasoningAmount && seasoning.frontPepper >= minSeasoningAmount
     }
-
+    
     private var instructionText: String {
         if gameEnded {
             return gameMessage
@@ -166,10 +173,10 @@ struct SteakGameView: View {
                 return "Keep cooking..."
             } else {
                 return "Serve the steak"
-
+                
             }}
     }
-
+    
     private func addSeasoningGraphics(type: SeasoningType) {
         let addAmount: Double = 0.1 * 3
         let seasoningColor = type == .salt ? Color.white : Color.black
@@ -184,19 +191,19 @@ struct SteakGameView: View {
         case (.pepper, .back):
             seasoning.backPepper = min(seasoning.backPepper + addAmount, maxSeasoningAmount)
         }
-
+        
         if (type == .salt && (seasoning.frontSalt <= maxSeasoningAmount || seasoning.backSalt <= maxSeasoningAmount)) ||
             (type == .pepper && (seasoning.frontPepper <= maxSeasoningAmount || seasoning.backPepper <= maxSeasoningAmount)) {
             for _ in 1...3 {
                 let offsetAmount: CGFloat = 20.0
                 let newPosition = CGPoint(x: CGFloat.random(in: 175...215) - offsetAmount,
                                           y: CGFloat.random(in: 180...195) - offsetAmount)
-
+                
                 seasoningGraphics.append(SeasoningGraphic(position: newPosition, color: seasoningColor, type: type, side: side))
             }
         }
     }
-
+    
     private func startCooking() {
         isCooking = true
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
@@ -211,7 +218,7 @@ struct SteakGameView: View {
             }
         }
     }
-
+    
     private func serveSteak() {
         stopCooking()
         calculateScore()
@@ -219,13 +226,43 @@ struct SteakGameView: View {
         showingCompletedDishView = true
         resetGame()
     }
-
+    
+    func updateGameState() -> MSMessage {
+        let session = MSSession()
+        let message = MSMessage(session: session)
+        let layout = MSMessageTemplateLayout()
+        layout.caption = "Steak Cooking Game!"
+        message.layout = layout
+        
+        // Encode your game state into a URL
+        var components = URLComponents()
+        components.queryItems = [
+            URLQueryItem(name: "frontSalt", value: String(seasoning.frontSalt)),
+            URLQueryItem(name: "backSalt", value: String(seasoning.backSalt)),
+            URLQueryItem(name: "frontPepper", value: String(seasoning.frontPepper)),
+            URLQueryItem(name: "backPepper", value: String(seasoning.backPepper)),
+            URLQueryItem(name: "cookingProgress", value: String(cookingProgress)),
+            URLQueryItem(name: "score", value: String(score))
+        ]
+        
+        message.url = components.url
+        
+        return message
+    }
+    
     private func stopCooking() {
         isCooking = false
         timer?.invalidate()
         timer = nil
-    }
-
+        conversationManager.sendGameState(score: score) { error in
+               if let error = error {
+                   print("Error sending game state: \(error.localizedDescription)")
+               } else {
+                   // Handle successful sending, such as preparing for the next turn or showing a confirmation
+               }
+           }
+       }
+    
     private func resetGame() {
         cookingProgress = 0
         isCooking = false
@@ -234,7 +271,7 @@ struct SteakGameView: View {
         showFireEffect = false
         seasoningGraphics = []
     }
-
+    
     private func checkCookingProgress(_ newValue: Double) {
         if newValue >= maxCookingProgress {
             stopCooking()
@@ -243,7 +280,7 @@ struct SteakGameView: View {
             showingCompletedDishView = true
         }
     }
-
+    
     private func calculateScore() {
         let isFrontSeasoned = seasoning.frontSalt >= minSeasoningAmount && seasoning.frontPepper >= minSeasoningAmount
         let isBackSeasoned = seasoning.backSalt >= minSeasoningAmount && seasoning.backPepper >= minSeasoningAmount
@@ -252,10 +289,39 @@ struct SteakGameView: View {
         let okScore = steakFlipped && (isFrontSeasoned || isBackSeasoned) && cookingCorrectlyDone
         score = perfectScore ? 3 : okScore ? 2 : 1
     }
-}
-
-struct SteakGameView_Previews: PreviewProvider {
-    static var previews: some View {
-        SteakGameView()
+    
+    func sendGameState(conversation: MSConversation) {
+        let message = MSMessage(session: conversation.selectedMessage?.session ?? MSSession())
+        let layout = MSMessageTemplateLayout()
+        layout.caption = "Steak Cooking Challenge!"
+        message.layout = layout
+        
+        var components = URLComponents()
+        components.queryItems = [
+            URLQueryItem(name: "frontSalt", value: "\(seasoning.frontSalt)"),
+            URLQueryItem(name: "backSalt", value: "\(seasoning.backSalt)"),
+            URLQueryItem(name: "frontPepper", value: "\(seasoning.frontPepper)"),
+            URLQueryItem(name: "backPepper", value: "\(seasoning.backPepper)"),
+            URLQueryItem(name: "score", value: "\(score)"),
+            // Add more game state components as needed
+        ]
+        
+        message.url = components.url
+        
+        // Send the message
+        conversation.insert(message) { error in
+            if let error = error {
+                print("Error sending message: \(error.localizedDescription)")
+            }
+        }
     }
 }
+
+//struct SteakGameView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        SteakGameView()
+//    }
+//}
+
+// This extension could be part of your SteakGameView or a separate utility class
+
