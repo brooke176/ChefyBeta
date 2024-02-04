@@ -44,7 +44,7 @@ struct ContentView: View {
                 itemContent(for: item)
             }
             .sheet(isPresented: $showGameView) {
-                GameView()
+                SteakGameView()
             }
         } else {
             NavigationLink(destination: DetailView(item: item, conversation: conversation)) {

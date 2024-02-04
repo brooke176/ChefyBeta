@@ -1,6 +1,14 @@
 import Foundation
+import SwiftUI
 
-struct PepperGraphic: Identifiable {
+struct SeasoningGraphic: Identifiable {
     let id = UUID()
-    var position: CGPoint
+    let position: CGPoint
+    let color: Color
+    let type: SeasoningType
+    let side: SteakSide
+}
+
+enum SteakSide {
+    case front, back
 }

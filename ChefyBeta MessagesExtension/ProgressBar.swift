@@ -1,14 +1,7 @@
-//
-//  ProgressBar.swift
-//  ChefyBeta MessagesExtension
-//
-//  Created by Brooke Skinner on 2/1/24.
-//
-
 import SwiftUI
 
 struct ProgressBar: View {
-    var progress: Double // Range from 0.0 to 1.0
+    var progress: Double
 
     private let yellowZone = 0.0...0.6
     private let greenZone = 0.6...0.8
@@ -19,6 +12,7 @@ struct ProgressBar: View {
             ZStack(alignment: .leading) {
                 Rectangle()
                     .foregroundColor(.gray.opacity(0.3))
+                    .border(Color.gray)
 
                 HStack(spacing: 0) {
                     Rectangle()
