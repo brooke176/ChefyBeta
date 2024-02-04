@@ -36,12 +36,12 @@ struct SteakGameView: View {
     @State private var seasoningGraphics: [SeasoningGraphic] = []
     @State private var score = 1
     @State private var showingCompletedDishView = false
-    
+
     private let minSeasoningAmount: Double = 0.6
     private let maxSeasoningAmount = 3.0
     private let perfectSeasoningRange = 0.6...1.5
     private let maxCookingProgress = 1.0
-    
+
     var body: some View {
         ZStack {
             contentStack
@@ -56,7 +56,7 @@ struct SteakGameView: View {
             CompletedDishView(score: score)
         }
     }
-    
+
     private var contentStack: some View {
         VStack {
             Spacer()
@@ -84,15 +84,15 @@ struct SteakGameView: View {
             Image("steak").resizable().scaledToFit().frame(width: 70, height: 70)
                 .rotation3DEffect(.degrees(steakFlipped ? 180 : 0), axis: (x: 0, y: 1, z: 0))
                 .animation(.easeInOut(duration: 0.5), value: steakFlipped)
-        ForEach(seasoningGraphics.filter {
-            let shouldDisplay = $0.side == (steakFlipped ? .back : .front)
-            return shouldDisplay
-        }) { graphic in
-            Circle()
-                .fill(graphic.color)
-                .frame(width: 4, height: 4)
-                .position(graphic.position)
-        }
+            ForEach(seasoningGraphics.filter {
+                let shouldDisplay = $0.side == (steakFlipped ? .back : .front)
+                return shouldDisplay
+            }) { graphic in
+                Circle()
+                    .fill(graphic.color)
+                    .frame(width: 4, height: 4)
+                    .position(graphic.position)
+            }
             if showFireEffect {
                 Image("fire").resizable().scaledToFit().frame(width: 150, height: 150)
             }
@@ -157,15 +157,17 @@ struct SteakGameView: View {
             } else {
                 return "Start cooking the steak"
             }
-            } else {
-                if seasoning.backSalt < minSeasoningAmount || seasoning.backPepper < minSeasoningAmount {
-                    return "Season the back side of the steak"
-            } else if cookingProgress < 0.6 {
-            return "Keep cooking..."
         } else {
-            return "Serve the steak"
+            if !steakFlipped {
+                return "Flip the steak"
+            } else if steakFlipped && seasoning.backSalt < minSeasoningAmount || seasoning.backPepper < minSeasoningAmount {
+                return "Season the back side of the steak"
+            } else if cookingProgress < 0.6 {
+                return "Keep cooking..."
+            } else {
+                return "Serve the steak"
 
-        }}
+            }}
     }
 
     private func addSeasoningGraphics(type: SeasoningType) {
@@ -184,7 +186,7 @@ struct SteakGameView: View {
         }
 
         if (type == .salt && (seasoning.frontSalt <= maxSeasoningAmount || seasoning.backSalt <= maxSeasoningAmount)) ||
-           (type == .pepper && (seasoning.frontPepper <= maxSeasoningAmount || seasoning.backPepper <= maxSeasoningAmount)) {
+            (type == .pepper && (seasoning.frontPepper <= maxSeasoningAmount || seasoning.backPepper <= maxSeasoningAmount)) {
             for _ in 1...3 {
                 let offsetAmount: CGFloat = 20.0
                 let newPosition = CGPoint(x: CGFloat.random(in: 175...215) - offsetAmount,

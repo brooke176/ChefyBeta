@@ -8,7 +8,7 @@ struct ContentView: View {
     var conversation: MSConversation?
 
     let imageItems: [ImageItem] = [
-        ImageItem(id: 1, imageName: "burger", label: "Burger"),
+        ImageItem(id: 1, imageName: "steak 1", label: "Steak"),
         ImageItem(id: 2, imageName: "carbonara", label: "Carbonara"),
         ImageItem(id: 3, imageName: "beef_wellington", label: "Beef Welly"),
         ImageItem(id: 4, imageName: "california_roll", label: "Sushi"),
@@ -37,14 +37,17 @@ struct ContentView: View {
 
     @ViewBuilder
     private func itemContainer(item: ImageItem) -> some View {
-        if item.label == "Burger" {
-            Button(action: {
-                showGameView = true
-            }) {
+        if item.label == "Steak" {
+            //            Button(action: {
+            //                showGameView = true
+            //            }) {
+            //                itemContent(for: item)
+            //            }
+            //            .sheet(isPresented: $showGameView) {
+            //                SteakGameView()
+            //            }
+            NavigationLink(destination: DetailView(item: item, conversation: conversation)) {
                 itemContent(for: item)
-            }
-            .sheet(isPresented: $showGameView) {
-                SteakGameView()
             }
         } else {
             NavigationLink(destination: DetailView(item: item, conversation: conversation)) {
@@ -60,23 +63,34 @@ struct ContentView: View {
                 .scaledToFit()
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.gray, lineWidth: 0.5))
-                .shadow(radius: 1) // Reduce shadow radius for subtlety
-                .frame(width: 60, height: 60) // Adjust image size for compactness
+                .shadow(radius: 1)
+                .frame(width: 60, height: 60)
+                .overlay(
+                    item.label != "Steak" ?
+                        Text("Coming Soon")
+                        .font(.caption2) // Use a smaller font size
+                        .padding(2) // Reduce padding around the text
+                        .background(Color.black.opacity(0.7)) // Slightly increase opacity for readability
+                        .foregroundColor(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 10)) // Smaller corner radius for the background
+                        .offset(x: 0, y: 5) // Adjust positioning to be more subtle and less intrusive
+                        : nil,
+                    alignment: .bottomTrailing
+                )
 
             Text(item.label)
-                .font(.system(size: 10, weight: .medium, design: .rounded)) // Slightly reduce font size
+                .font(.system(size: 10, weight: .medium, design: .rounded))
                 .foregroundColor(.black)
                 .lineLimit(2)
                 .truncationMode(.tail)
-                .frame(width: 60) // Keep text width aligned with image width
-                .padding(.top, 2) // Minimize padding between image and text
+                .frame(width: 60)
+                .padding(.top, 2)
         }
-        .padding(8) // Minimize overall padding
+        .padding(8)
         .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .shadow(radius: 2)
-        // Adjust overall frame to be more compact
-        .frame(width: 80, height: 120) // Adjust overall size for compactness
+        .frame(width: 80, height: 120)
     }
 }
 

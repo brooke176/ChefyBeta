@@ -6,7 +6,7 @@ struct DetailView: View {
     var conversation: MSConversation?
     @Environment(\.presentationMode) var presentationMode
     @State private var isMessageReadyToSend = false
-    @State private var showingGameView = false // State to control GameView presentation
+    @State private var showingGameView = false
 
     var body: some View {
         VStack {
@@ -20,22 +20,31 @@ struct DetailView: View {
                 .font(.caption)
                 .foregroundColor(.black)
 
-            if item.label == "Cheeseburger" {
-                Button(action: {
-                    showingGameView = true // Set to true to show GameView
-                }) {
-                    Text("Play \(item.label)")
-                        .fontWeight(.bold)
-                        .font(.title3)
-                        .padding()
-                        .frame(minWidth: 0, maxWidth: .infinity) // Make the button width flexible
-                        .background(LinearGradient(gradient: Gradient(colors: [Color.pink, Color.green]), startPoint: .leading, endPoint: .trailing))
-                        .cornerRadius(15)
-                        .foregroundColor(.white)
-                        .padding(.horizontal)
-                        .shadow(color: .gray, radius: 5, x: 0, y: 5) // Add a shadow for depth
+            if item.label == "Steak" {
+                Button("Invite to Play \(item.label)") {
+                    sendGameInvitation()
                 }
-                .padding(.bottom, 10) // Add some padding below the button if needed
+                .padding()
+                .frame(minWidth: 0, maxWidth: .infinity)
+                .background(Color.green)
+                .foregroundColor(.white)
+                .cornerRadius(15)
+                .padding(.horizontal)
+                //                Button(action: {
+                //                    showingGameView = true
+                //                }) {
+                //                    Text("Play \(item.label)")
+                //                        .fontWeight(.bold)
+                //                        .font(.title3)
+                //                        .padding()
+                //                        .frame(minWidth: 0, maxWidth: .infinity) // Make the button width flexible
+                //                        .background(LinearGradient(gradient: Gradient(colors: [Color.pink, Color.green]), startPoint: .leading, endPoint: .trailing))
+                //                        .cornerRadius(15)
+                //                        .foregroundColor(.white)
+                //                        .padding(.horizontal)
+                //                        .shadow(color: .gray, radius: 5, x: 0, y: 5) // Add a shadow for depth
+                //                }
+                //                .padding(.bottom, 10) // Add some padding below the button if needed
             } else {
                 Button("Send \(item.label)") {
                     if let conversation = conversation {
@@ -56,8 +65,34 @@ struct DetailView: View {
             }
         }
         .sheet(isPresented: $showingGameView) {
-            // Assuming GameView() is correctly defined elsewhere
-            GameView()
+            SteakGameView()
+        }
+    }
+    func sendGameInvitation() {
+        guard let conversation = conversation else { return }
+        let session = conversation.selectedMessage?.session ?? MSSession()
+        let message = MSMessage(session: session)
+
+        let layout = MSMessageTemplateLayout()
+        layout.caption = "Let's play Steak Game!"
+        // You might want to include a thumbnail image for the game
+        // layout.image = UIImage(named: "GameThumbnail")
+        layout.subcaption = "Tap to join!"
+
+        message.layout = layout
+
+        // Include URL that encodes an invitation to play the game
+        // For simplicity, using a static URL. You should encode relevant state or identifiers.
+        if let url = URL(string: "https://example.com/game_invitation?game=steak") {
+            message.url = url
+        }
+
+        conversation.insert(message) { error in
+            if let error = error {
+                print("Error sending game invitation: \(error.localizedDescription)")
+            } else {
+                presentationMode.wrappedValue.dismiss()
+            }
         }
     }
 }
