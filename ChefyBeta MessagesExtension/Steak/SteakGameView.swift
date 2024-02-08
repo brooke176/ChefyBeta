@@ -14,6 +14,13 @@ struct GameButtonStyle: ButtonStyle {
     }
 }
 
+struct GameState {
+    var player1Score: Int = 0
+    var player2Score: Int = 0
+    var gameStatus: String = "waitingForPlayer1" // Add "turnTaken" flag
+    var turnTaken: Bool = false
+}
+
 struct SteakSeasoning {
     var frontSalt: Double = 0
     var backSalt: Double = 0
@@ -27,6 +34,7 @@ enum SeasoningType {
 
 struct SteakGameView: View {
     var conversationManager: ConversationManager
+    @State private var gameState: GameState
 
     @State private var seasoning = SteakSeasoning()
     @State private var cookingProgress = 0.0
@@ -39,14 +47,17 @@ struct SteakGameView: View {
     @State private var seasoningGraphics: [SeasoningGraphic] = []
     @State private var score = 1
     @State private var showingCompletedDishView = false
-    
+    @State private var playerScore = 0 // Score of the player
+    @State private var opponentScore: Int? = nil // Score of the opponent, nil if not yet played
+
     private let minSeasoningAmount: Double = 0.6
     private let maxSeasoningAmount = 3.0
     private let perfectSeasoningRange = 0.6...1.5
     private let maxCookingProgress = 1.0
     
-    init(conversationManager: ConversationManager) {
+    init(conversationManager: ConversationManager, gameState: GameState = GameState()) {
         self.conversationManager = conversationManager
+        self._gameState = State(initialValue: gameState)
     }
     
     var body: some View {
@@ -60,7 +71,7 @@ struct SteakGameView: View {
                 )
         }
         .sheet(isPresented: $showingCompletedDishView) {
-            CompletedDishView(score: score)
+            GameResultView(conversationManager: conversationManager, playerScore: playerScore, opponentScore: $opponentScore)
         }
     }
     
@@ -210,58 +221,52 @@ struct SteakGameView: View {
             self.cookingProgress += 0.1
             if self.cookingProgress >= self.maxCookingProgress {
                 self.showFireEffect = true
-                self.timer?.invalidate()
-                self.gameEnded = true
-                self.calculateScore()
-                self.showingCompletedDishView = true
-                resetGame()
+                self.endTurn()
             }
         }
     }
     
-    private func serveSteak() {
-        stopCooking()
+    private func endTurn() {
+        isCooking = false
+        timer?.invalidate()
+        timer = nil
         calculateScore()
-        gameEnded = true
-        showingCompletedDishView = true
+        gameEnded = true // Assuming this indicates the player has finished their turn
         resetGame()
+        showingCompletedDishView = true
+        gameState.turnTaken = true
     }
     
-    func updateGameState() -> MSMessage {
-        let session = MSSession()
+    private func serveSteak() {
+        endTurn()
+    }
+    
+    func updateGameState(player1Score: Int, player2Score: Int, gameStatus: String) {
+        guard let conversation = conversationManager.activeConversation else { return }
+        
+        let session = conversation.selectedMessage?.session ?? MSSession()
         let message = MSMessage(session: session)
         let layout = MSMessageTemplateLayout()
-        layout.caption = "Steak Cooking Game!"
+        layout.caption = "Steak Cooking Challenge!"
         message.layout = layout
         
-        // Encode your game state into a URL
+        // Encode the game state into the message URL
         var components = URLComponents()
         components.queryItems = [
-            URLQueryItem(name: "frontSalt", value: String(seasoning.frontSalt)),
-            URLQueryItem(name: "backSalt", value: String(seasoning.backSalt)),
-            URLQueryItem(name: "frontPepper", value: String(seasoning.frontPepper)),
-            URLQueryItem(name: "backPepper", value: String(seasoning.backPepper)),
-            URLQueryItem(name: "cookingProgress", value: String(cookingProgress)),
-            URLQueryItem(name: "score", value: String(score))
+            URLQueryItem(name: "player1Score", value: String(player1Score)),
+            URLQueryItem(name: "player2Score", value: String(player2Score)),
+            URLQueryItem(name: "gameStatus", value: gameStatus)
         ]
         
         message.url = components.url
         
-        return message
+        // Send the message using the conversationManager
+        conversation.insert(message) { error in
+            if let error = error {
+                print("Error sending message: \(error.localizedDescription)")
+            }
+        }
     }
-    
-    private func stopCooking() {
-        isCooking = false
-        timer?.invalidate()
-        timer = nil
-        conversationManager.sendGameState(score: score) { error in
-               if let error = error {
-                   print("Error sending game state: \(error.localizedDescription)")
-               } else {
-                   // Handle successful sending, such as preparing for the next turn or showing a confirmation
-               }
-           }
-       }
     
     private func resetGame() {
         cookingProgress = 0
@@ -274,10 +279,7 @@ struct SteakGameView: View {
     
     private func checkCookingProgress(_ newValue: Double) {
         if newValue >= maxCookingProgress {
-            stopCooking()
-            gameEnded = true
-            calculateScore()
-            showingCompletedDishView = true
+            endTurn()
         }
     }
     
@@ -287,41 +289,7 @@ struct SteakGameView: View {
         let cookingCorrectlyDone = cookingProgress >= 0.6 && cookingProgress <= 0.8
         let perfectScore = isFrontSeasoned && isBackSeasoned && cookingCorrectlyDone
         let okScore = steakFlipped && (isFrontSeasoned || isBackSeasoned) && cookingCorrectlyDone
-        score = perfectScore ? 3 : okScore ? 2 : 1
+        playerScore = perfectScore ? 3 : okScore ? 2 : 1
     }
     
-    func sendGameState(conversation: MSConversation) {
-        let message = MSMessage(session: conversation.selectedMessage?.session ?? MSSession())
-        let layout = MSMessageTemplateLayout()
-        layout.caption = "Steak Cooking Challenge!"
-        message.layout = layout
-        
-        var components = URLComponents()
-        components.queryItems = [
-            URLQueryItem(name: "frontSalt", value: "\(seasoning.frontSalt)"),
-            URLQueryItem(name: "backSalt", value: "\(seasoning.backSalt)"),
-            URLQueryItem(name: "frontPepper", value: "\(seasoning.frontPepper)"),
-            URLQueryItem(name: "backPepper", value: "\(seasoning.backPepper)"),
-            URLQueryItem(name: "score", value: "\(score)"),
-            // Add more game state components as needed
-        ]
-        
-        message.url = components.url
-        
-        // Send the message
-        conversation.insert(message) { error in
-            if let error = error {
-                print("Error sending message: \(error.localizedDescription)")
-            }
-        }
-    }
 }
-
-//struct SteakGameView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        SteakGameView()
-//    }
-//}
-
-// This extension could be part of your SteakGameView or a separate utility class
-
