@@ -1,5 +1,4 @@
 import SwiftUI
-import Messages
 
 struct GameButtonStyle: ButtonStyle {
     var backgroundColor: Color
@@ -14,11 +13,12 @@ struct GameButtonStyle: ButtonStyle {
     }
 }
 
-struct GameState {
+struct GameState: Equatable {
     var player1Score: Int = 0
     var player2Score: Int = 0
-    var gameStatus: String = "waitingForPlayer1" // Add "turnTaken" flag
-    var turnTaken: Bool = false
+    var player1Played: Bool = false
+    var player2Played: Bool = false
+    var currentPlayer: String?
 }
 
 struct SteakSeasoning {
@@ -33,9 +33,8 @@ enum SeasoningType {
 }
 
 struct SteakGameView: View {
-    var conversationManager: ConversationManager
-    @State private var gameState: GameState
-
+    @Binding var gameState: GameState
+    var messagesViewController: MessagesViewController
     @State private var seasoning = SteakSeasoning()
     @State private var cookingProgress = 0.0
     @State private var isCooking = false
@@ -46,19 +45,13 @@ struct SteakGameView: View {
     @State private var timer: Timer?
     @State private var seasoningGraphics: [SeasoningGraphic] = []
     @State private var score = 1
-    @State private var showingCompletedDishView = false
-    @State private var playerScore = 0 // Score of the player
+    @State private var playerScore = 0
     @State private var opponentScore: Int? = nil // Score of the opponent, nil if not yet played
 
     private let minSeasoningAmount: Double = 0.6
     private let maxSeasoningAmount = 3.0
     private let perfectSeasoningRange = 0.6...1.5
     private let maxCookingProgress = 1.0
-    
-    init(conversationManager: ConversationManager, gameState: GameState = GameState()) {
-        self.conversationManager = conversationManager
-        self._gameState = State(initialValue: gameState)
-    }
     
     var body: some View {
         ZStack {
@@ -70,8 +63,11 @@ struct SteakGameView: View {
                         .edgesIgnoringSafeArea(.all)
                 )
         }
-        .sheet(isPresented: $showingCompletedDishView) {
-            GameResultView(conversationManager: conversationManager, playerScore: playerScore, opponentScore: $opponentScore)
+        .onAppear {
+            // Additional setup if needed
+        }
+        .onChange(of: gameState) { _ in
+            // React to changes in gameState if needed
         }
     }
     
@@ -128,6 +124,10 @@ struct SteakGameView: View {
         }
     }
     
+    private var canStartCooking: Bool {
+        seasoning.frontSalt >= minSeasoningAmount && seasoning.frontPepper >= minSeasoningAmount
+    }
+    
     private var startCookingButton: some View {
         Button("Start Cooking", action: startCooking)
             .disabled(!canStartCooking)
@@ -135,7 +135,7 @@ struct SteakGameView: View {
     }
     
     private var serveSteakButton: some View {
-        Button("Serve Steak", action: serveSteak)
+            Button("Serve Steak", action: serveSteak)
             .disabled(!isCooking)
             .buttonStyle(GameButtonStyle(backgroundColor: .blue))
     }
@@ -162,30 +162,37 @@ struct SteakGameView: View {
         }
     }
     
-    private var canStartCooking: Bool {
-        seasoning.frontSalt >= minSeasoningAmount && seasoning.frontPepper >= minSeasoningAmount
-    }
-    
     private var instructionText: String {
         if gameEnded {
-            return gameMessage
-        } else if !isCooking {
-            if seasoning.frontSalt < minSeasoningAmount || seasoning.frontPepper < minSeasoningAmount {
-                return "Season the steak"
+            if (gameState.player2Score != 0) {
+                if gameState.player1Score > gameState.player2Score {
+                    return "You won! 🎉"
+                } else if gameState.player1Score < gameState.player2Score {
+                    return "You lost. Try again!"
+                } else {
+                    return "It's a tie!"
+                }
             } else {
-                return "Start cooking the steak"
+                return "Waiting for opponent..."
             }
         } else {
-            if !steakFlipped {
-                return "Flip the steak"
-            } else if steakFlipped && seasoning.backSalt < minSeasoningAmount || seasoning.backPepper < minSeasoningAmount {
-                return "Season the back side of the steak"
-            } else if cookingProgress < 0.6 {
-                return "Keep cooking..."
-            } else {
-                return "Serve the steak"
-                
-            }}
+            switch gameState.currentPlayer {
+            case "player1":
+                if gameState.player1Played {
+                    return "You've played your turn. Waiting for Player 2."
+                } else {
+                    return "It's your turn, Player 1! Season and cook the steak."
+                }
+            case "player2":
+                if gameState.player2Played {
+                    return "You've played your turn. Waiting for Player 1."
+                } else {
+                    return "It's your turn, Player 2! Season and cook the steak."
+                }
+            default:
+                return "Prepare to cook!"
+            }
+        }
     }
     
     private func addSeasoningGraphics(type: SeasoningType) {
@@ -216,80 +223,70 @@ struct SteakGameView: View {
     }
     
     private func startCooking() {
-        isCooking = true
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-            self.cookingProgress += 0.1
-            if self.cookingProgress >= self.maxCookingProgress {
-                self.showFireEffect = true
-                self.endTurn()
+            isCooking = true
+            timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+                self.cookingProgress += 0.1
+                if self.cookingProgress >= self.maxCookingProgress {
+                    self.showFireEffect = true
+                    self.endTurnForPlayer()
+                }
             }
         }
-    }
-    
-    private func endTurn() {
-        isCooking = false
-        timer?.invalidate()
-        timer = nil
-        calculateScore()
-        gameEnded = true // Assuming this indicates the player has finished their turn
-        resetGame()
-        showingCompletedDishView = true
-        gameState.turnTaken = true
-    }
-    
-    private func serveSteak() {
-        endTurn()
-    }
-    
-    func updateGameState(player1Score: Int, player2Score: Int, gameStatus: String) {
-        guard let conversation = conversationManager.activeConversation else { return }
         
-        let session = conversation.selectedMessage?.session ?? MSSession()
-        let message = MSMessage(session: session)
-        let layout = MSMessageTemplateLayout()
-        layout.caption = "Steak Cooking Challenge!"
-        message.layout = layout
-        
-        // Encode the game state into the message URL
-        var components = URLComponents()
-        components.queryItems = [
-            URLQueryItem(name: "player1Score", value: String(player1Score)),
-            URLQueryItem(name: "player2Score", value: String(player2Score)),
-            URLQueryItem(name: "gameStatus", value: gameStatus)
-        ]
-        
-        message.url = components.url
-        
-        // Send the message using the conversationManager
-        conversation.insert(message) { error in
-            if let error = error {
-                print("Error sending message: \(error.localizedDescription)")
-            }
+        private func serveSteak() {
+            endTurnForPlayer()
         }
-    }
     
     private func resetGame() {
-        cookingProgress = 0
-        isCooking = false
-        steakFlipped = false
-        gameEnded = false
-        showFireEffect = false
-        seasoningGraphics = []
-    }
-    
-    private func checkCookingProgress(_ newValue: Double) {
-        if newValue >= maxCookingProgress {
-            endTurn()
+            cookingProgress = 0
+            isCooking = false
+            steakFlipped = false
+            gameEnded = false
+            showFireEffect = false
+            seasoningGraphics = []
         }
-    }
     
-    private func calculateScore() {
+    private func endTurnForPlayer() {
         let isFrontSeasoned = seasoning.frontSalt >= minSeasoningAmount && seasoning.frontPepper >= minSeasoningAmount
         let isBackSeasoned = seasoning.backSalt >= minSeasoningAmount && seasoning.backPepper >= minSeasoningAmount
         let cookingCorrectlyDone = cookingProgress >= 0.6 && cookingProgress <= 0.8
         let perfectScore = isFrontSeasoned && isBackSeasoned && cookingCorrectlyDone
         let okScore = steakFlipped && (isFrontSeasoned || isBackSeasoned) && cookingCorrectlyDone
-        playerScore = perfectScore ? 3 : okScore ? 2 : 1
+        let score = perfectScore ? 3 : okScore ? 2 : 1
+        
+        if gameState.currentPlayer == "player1" {
+            gameState.player1Score += score
+            gameState.player1Played = true
+            gameState.currentPlayer = "player2" // Switch to the next player
+        } else if gameState.currentPlayer == "player2" {
+            gameState.player2Score += score // Same as above for player 2
+            gameState.player2Played = true
+            gameState.currentPlayer = nil
+        }
+
+        resetGame()
+
+        messagesViewController.gameState = gameState
+        messagesViewController.updateAndSendGameState()
+    }
+
+    private func checkGameEnd() {
+        if gameState.player1Played && gameState.player2Played {
+            gameEnded = true
+            gameMessage = determineWinner()
+        }
     }
     
+    func determineWinner() -> String {
+        if gameState.player1Played && gameState.player2Played {
+            if gameState.player1Score > gameState.player2Score {
+                return "Player 1 wins with a score of \(gameState.player1Score)!"
+            } else if gameState.player2Score > gameState.player1Score {
+                return "Player 2 wins with a score of \(gameState.player2Score)!"
+            } else {
+                return "It's a tie!"
+            }
+        }
+        return "Game is not yet completed."
+    }
 }

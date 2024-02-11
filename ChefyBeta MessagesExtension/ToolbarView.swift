@@ -1,23 +1,21 @@
+import Foundation
 import SwiftUI
 
 struct ToolbarView: View {
+    let showProfile: () -> Void
+    let showSettings: () -> Void
+    
     var body: some View {
         HStack {
-            Button(action: {
-                // Add action for Profile
-                print("Profile Tapped")
-            }) {
-                Image(systemName: "person.circle") // Replace with your profile icon
+            Button(action: showProfile) {
+                Image(systemName: "person.circle") // Profile icon
                 Text("Profile")
             }
 
             Spacer()
 
-            Button(action: {
-                // Add action for Settings
-                print("Settings Tapped")
-            }) {
-                Image(systemName: "gear") // Replace with your settings icon
+            Button(action: showSettings) {
+                Image(systemName: "gear") // Settings icon
                 Text("Settings")
             }
         }

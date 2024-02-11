@@ -5,7 +5,10 @@ import Messages
 struct ContentView: View {
     @State private var selectedItem: ImageItem?
     @State private var showGameView = false
+    @State private var showingProfile = false
+    @State private var showingSettings = false
     var conversation: MSConversation?
+    var conversationManager: ConversationManager
 
     let imageItems: [ImageItem] = [
         ImageItem(id: 1, imageName: "steak 1", label: "Steak"),
@@ -22,36 +25,30 @@ struct ContentView: View {
         NavigationView {
             ScrollView {
                 VStack {
-                    ToolbarView()
+                    ToolbarView(showProfile: {
+                        self.showingProfile = true
+                    }, showSettings: {
+                        self.showingSettings = true
+                    })
+                    .sheet(isPresented: $showingProfile) {
+                        ProfileView() // Your profile view here
+                    }
+                    .sheet(isPresented: $showingSettings) {
+                        SettingsView() // Your settings view here
+                    }
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
                         ForEach(imageItems, id: \.imageName) { item in
-                            itemContainer(item: item)
+                            Button(action: {
+                                if item.label == "Steak" {
+                                    inviteToPlaySteakGame()
+                                }
+                            }) {
+                                itemContent(for: item)
+                            }
                         }
+                        .background(Color(UIColor.systemGroupedBackground))
                     }
-                    //                    .padding(.horizontal)
                 }
-                .background(Color(UIColor.systemGroupedBackground))
-            }
-        }
-    }
-
-    @ViewBuilder
-    private func itemContainer(item: ImageItem) -> some View {
-        if item.label == "Steak" {
-            //            Button(action: {
-            //                showGameView = true
-            //            }) {
-            //                itemContent(for: item)
-            //            }
-            //            .sheet(isPresented: $showGameView) {
-            //                SteakGameView()
-            //            }
-            NavigationLink(destination: DetailView(item: item, conversation: conversation)) {
-                itemContent(for: item)
-            }
-        } else {
-            NavigationLink(destination: DetailView(item: item, conversation: conversation)) {
-                itemContent(for: item)
             }
         }
     }
@@ -92,8 +89,29 @@ struct ContentView: View {
         .shadow(radius: 2)
         .frame(width: 80, height: 120)
     }
-}
+    
+    private func inviteToPlaySteakGame() {
+            guard let conversation = conversation else { return }
+            
+            let session = MSSession()
+            let message = MSMessage(session: session)
+            let layout = MSMessageTemplateLayout()
+            layout.caption = "Let's play Steak Game!!"
+            message.layout = layout
 
-#Preview {
-    ContentView()
+            var components = URLComponents()
+            components.queryItems = [
+                URLQueryItem(name: "player1Score", value: "0"),
+                URLQueryItem(name: "player2Score", value: "0"),
+                URLQueryItem(name: "player1Played", value: "false"),
+                URLQueryItem(name: "player2Played", value: "false")
+            ]
+            message.url = components.url
+
+            conversation.insert(message) { error in
+                if let error = error {
+                    print("Error sending game invitation: \(error.localizedDescription)")
+                }
+            }
+        }
 }

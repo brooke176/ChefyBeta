@@ -3,147 +3,152 @@ import Messages
 import SwiftUI
 
 class MessagesViewController: MSMessagesAppViewController {
+    var gameState: GameState = GameState()
+    private var conversationManager: ConversationManager?
     
-//    func sendGameState(score: Int, session: MSSession? = nil) {
-//        guard let conversation = activeConversation else { return }
-//        
-//        let session = session ?? MSSession()
-//        let message = MSMessage(session: session)
-//        
-//        let layout = MSMessageTemplateLayout()
-//        layout.caption = "Steak Cooking Game"
-//        layout.subcaption = "Score: \(score)"
-//        message.layout = layout
-//        
-//        // Add URL components for the game state if needed
-//        var components = URLComponents()
-//        let scoreQueryItem = URLQueryItem(name: "score", value: "\(score)")
-//        components.queryItems = [scoreQueryItem]
-//        message.url = components.url
-//        
-//        // Insert the message into the conversation
-//        conversation.insert(message) { error in
-//            if let error = error {
-//                print("Error sending message: \(error.localizedDescription)")
-//            }
-//        }
-//    }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
     
-    func parseGameState(from url: URL) -> GameState {
+    override func willBecomeActive(with conversation: MSConversation) {
+        super.willBecomeActive(with: conversation)
+
+        if let message = conversation.selectedMessage, let url = message.url {
+            decodeGameState(from: url) { [weak self] decodedState in
+                guard let self = self else { return }
+                if let decodedState = decodedState {
+                    self.gameState = decodedState
+                    self.showSteakGameView(with: self.gameState)
+                } else {
+                    conversationManager = ConversationManager(conversation: conversation)
+                    let contentView = ContentView(conversation: conversation, conversationManager: conversationManager!)
+                    let hostingController = UIHostingController(rootView: contentView)
+                    addChild(hostingController)
+                    view.addSubview(hostingController.view)
+                    hostingController.didMove(toParent: self)
+                    hostingController.view.frame = view.bounds
+                }
+            }
+        } else {
+            conversationManager = ConversationManager(conversation: conversation)
+            let contentView = ContentView(conversation: conversation, conversationManager: conversationManager!)
+            let hostingController = UIHostingController(rootView: contentView)
+            addChild(hostingController)
+            view.addSubview(hostingController.view)
+            hostingController.didMove(toParent: self)
+            hostingController.view.frame = view.bounds
+        }
+    }
+
+    private func decodeGameState(from url: URL, completion: @escaping (GameState?) -> Void) {
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
-              let queryItems = components.queryItems else { return GameState() }
-        
+              let queryItems = components.queryItems else {
+            completion(nil)
+            return
+        }
+
         var gameState = GameState()
+
         for item in queryItems {
             switch item.name {
             case "player1Score":
                 gameState.player1Score = Int(item.value ?? "0") ?? 0
             case "player2Score":
                 gameState.player2Score = Int(item.value ?? "0") ?? 0
-            case "gameStatus":
-                gameState.gameStatus = item.value ?? "waitingForPlayer1"
+            case "player1Played":
+                gameState.player1Played = (item.value == "true")
+            case "player2Played":
+                gameState.player2Played = (item.value == "true")
+            case "currentPlayer":
+                gameState.currentPlayer = item.value
             default:
                 break
             }
         }
-        return gameState
+
+        completion(gameState)
     }
 
-    
-    // Parse an incoming message to extract game state
-    func parseMessage(_ message: MSMessage) -> Int? {
-        guard let messageURL = message.url,
-              let urlComponents = URLComponents(url: messageURL, resolvingAgainstBaseURL: false),
-              let queryItems = urlComponents.queryItems else { return nil }
-        
-        for item in queryItems {
-            if item.name == "score", let value = item.value, let score = Int(value) {
-                return score
-            }
-        }
-        
-        return nil
-    }
-//this one works
-//    override func didBecomeActive(with conversation: MSConversation) {
-//        super.didBecomeActive(with: conversation)
-//
-//        // Set up and present the ContentView, passing the active conversation.
-//        let contentView = ContentView(conversation: conversation)
-//        let hostingController = UIHostingController(rootView: contentView)
-//
-//        // Add hostingController to the view hierarchy
-//        addChild(hostingController)
-//        view.addSubview(hostingController.view)
-//        hostingController.didMove(toParent: self)
-//
-//        // Set constraints for hostingController's view
-//        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            hostingController.view.topAnchor.constraint(equalTo: view.topAnchor),
-//            hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-//            hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-//            hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-//        ])
-//    }
-    
-    override func didBecomeActive(with conversation: MSConversation) {
-        super.didBecomeActive(with: conversation)
+    private func setupChildViewController(_ childController: UIViewController) {
+        addChild(childController)
+        view.addSubview(childController.view)
+        childController.didMove(toParent: self)
 
-        let conversationManager = ConversationManager(conversation: conversation)
-
-        // Determine if there's an existing game state
-        if let message = conversation.selectedMessage, let gameState = conversationManager.parseGameState(from: message) {
-            let steakGameView = SteakGameView(conversationManager: conversationManager, gameState: gameState)
-            presentSteakGameView(steakGameView)
-        } else {
-            // No game state, start a new game
-            let contentView = ContentView(conversation: conversation)
-            let hostingController = UIHostingController(rootView: contentView)
-                  addChild(hostingController)
-                  view.addSubview(hostingController.view)
-                  hostingController.didMove(toParent: self)
-          
-                  // Set constraints for hostingController's view
-                  hostingController.view.translatesAutoresizingMaskIntoConstraints = false
-                  NSLayoutConstraint.activate([
-                      hostingController.view.topAnchor.constraint(equalTo: view.topAnchor),
-                      hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-                      hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                      hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-                  ])
-        }
-    }
-
-    private func presentSteakGameView(_ view: SteakGameView) {
-        let hostingController = UIHostingController(rootView: view)
-
-        addChild(hostingController)
-        self.view.addSubview(hostingController.view)
-        hostingController.didMove(toParent: self)
-
-        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+        childController.view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            hostingController.view.topAnchor.constraint(equalTo: self.view.topAnchor),
-            hostingController.view.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            hostingController.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            hostingController.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
+            childController.view.topAnchor.constraint(equalTo: view.topAnchor),
+            childController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            childController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            childController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
     }
 
-    //    override func viewDidLoad() {
-    //        super.viewDidLoad()
-    //        // Do any additional setup after loading the view.
-    //    }
+        private func showSteakGameView(with gameState: GameState) {
+            let steakGameView = SteakGameView(gameState: .constant(gameState), messagesViewController: self) // Adjust initialization as needed
+            let hostingController = UIHostingController(rootView: steakGameView)
+            setupChildViewController(hostingController)
+        }
+    
+//    private func showSteakGameView(with gameState: GameState) {
+//        let viewModel = GameViewModel(gameState: gameState)
+//        let steakGameView = SeasonSteakStep(viewModel: viewModel, messagesViewController: self)
+//        let hostingController = UIHostingController(rootView: steakGameView)
+//        setupChildViewController(hostingController)
+//    }
+
+    func startOrResetGame() {
+        gameState = GameState(currentPlayer: "player1")
+        updateAndSendGameState()
+    }
+    
+    func updateAndSendGameState() {
+        guard let conversation = activeConversation else { return }
+        
+        let message = MSMessage(session: conversation.selectedMessage?.session ?? MSSession())
+        let layout = MSMessageTemplateLayout()
+        layout.caption = "Your turn!"
+        message.layout = layout
+        
+        var components = URLComponents()
+        components.queryItems = [
+            URLQueryItem(name: "player1Score", value: String(gameState.player1Score)),
+            URLQueryItem(name: "player2Score", value: String(gameState.player2Score)),
+            URLQueryItem(name: "player1Played", value: String(gameState.player1Played)),
+            URLQueryItem(name: "player2Played", value: String(gameState.player2Played))
+        ]
+        
+        message.url = components.url
+        
+        conversation.insert(message) { error in
+            if let error = error {
+                print("Error sending message: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    private func composeMessage(with gameState: GameState, session: MSSession? = nil) -> MSMessage {
+        let session = MSSession()
+        let message = MSMessage(session: session)
+        let layout = MSMessageTemplateLayout()
+        layout.caption = "Let's play Steak Game!!"
+        message.layout = layout
+        
+        var components = URLComponents()
+        components.queryItems = [
+            URLQueryItem(name: "player1Score", value: "\(gameState.player1Score)"),
+            URLQueryItem(name: "player2Score", value: "\(gameState.player2Score)"),
+            URLQueryItem(name: "player1Played", value: "\(gameState.player1Played)"),
+            URLQueryItem(name: "player2Played", value: "\(gameState.player2Played)"),
+            URLQueryItem(name: "currentPlayer", value: gameState.currentPlayer)
+        ]
+        
+        message.url = components.url
+        message.layout = layout
+                
+        return message
+    }
 
     // MARK: - Conversation Handling
-
-    override func willBecomeActive(with conversation: MSConversation) {
-        // Called when the extension is about to move from the inactive to active state.
-        // This will happen when the extension is about to present UI.
-
-        // Use this method to configure the extension and restore previously stored state.
-    }
 
     override func didResignActive(with conversation: MSConversation) {
         // Called when the extension is about to move from the active to inactive state.
@@ -153,30 +158,6 @@ class MessagesViewController: MSMessagesAppViewController {
         // Use this method to release shared resources, save user data, invalidate timers,
         // and store enough state information to restore your extension to its current state
         // in case it is terminated later.
-    }
-
-    override func didReceive(_ message: MSMessage, conversation: MSConversation) {
-        var gameState = GameState()
-
-        guard let messageURL = message.url,
-              let urlComponents = URLComponents(url: messageURL, resolvingAgainstBaseURL: false),
-              let queryItems = urlComponents.queryItems else { return }
-        
-        var opponentScore: Int?
-        var turnTaken: Bool = false
-        
-        for item in queryItems {
-            if item.name == "playerScore", let value = item.value, let score = Int(value) {
-                opponentScore = score
-            } else if item.name == "turnTaken", let value = item.value, let taken = Bool(value) {
-                turnTaken = taken
-            }
-        }
-        
-        // Update your game state with the opponent's score and proceed to determine the winner
-        if let opponentScore = opponentScore, turnTaken {
-            gameState.player2Score = opponentScore
-        }
     }
 
     override func didStartSending(_ message: MSMessage, conversation: MSConversation) {
