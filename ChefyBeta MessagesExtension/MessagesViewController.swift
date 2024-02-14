@@ -2,10 +2,14 @@ import UIKit
 import Messages
 import SwiftUI
 
+protocol GameViewDelegate: AnyObject {
+    func transitionToSteakCookingView(viewModel: GameViewModel)
+}
+
 class MessagesViewController: MSMessagesAppViewController {
     var gameState: GameState = GameState()
     private var conversationManager: ConversationManager?
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -13,33 +17,54 @@ class MessagesViewController: MSMessagesAppViewController {
     override func willBecomeActive(with conversation: MSConversation) {
         super.willBecomeActive(with: conversation)
 
-        if let message = conversation.selectedMessage, let url = message.url {
-            decodeGameState(from: url) { [weak self] decodedState in
+        if let message = conversation.selectedMessage, let messageURL = message.url {
+            decodeGameState(from: messageURL) { [weak self] decodedGameState in
                 guard let self = self else { return }
-                if let decodedState = decodedState {
-                    self.gameState = decodedState
-                    self.showSteakGameView(with: self.gameState)
+
+                if let gameState = decodedGameState {
+                    self.setupViewBasedOnGameState(gameState)
                 } else {
-                    conversationManager = ConversationManager(conversation: conversation)
-                    let contentView = ContentView(conversation: conversation, conversationManager: conversationManager!)
-                    let hostingController = UIHostingController(rootView: contentView)
-                    addChild(hostingController)
-                    view.addSubview(hostingController.view)
-                    hostingController.didMove(toParent: self)
-                    hostingController.view.frame = view.bounds
+                    self.presentContentView(conversation: conversation)
                 }
             }
         } else {
-            conversationManager = ConversationManager(conversation: conversation)
-            let contentView = ContentView(conversation: conversation, conversationManager: conversationManager!)
-            let hostingController = UIHostingController(rootView: contentView)
-            addChild(hostingController)
-            view.addSubview(hostingController.view)
-            hostingController.didMove(toParent: self)
-            hostingController.view.frame = view.bounds
+            presentContentView(conversation: conversation)
         }
     }
 
+    private func setupViewBasedOnGameState(_ gameState: GameState) {
+        let viewModel = GameViewModel(gameState: gameState, messagesViewController: self)
+        viewModel.delegate = self
+
+        if viewModel.isCooking {
+            transitionToSteakCookingView(viewModel: viewModel)
+        } else {
+            transitionToSeasonSteakStepView(viewModel: viewModel)
+        }
+    }
+
+    private func transitionBasedOnGameState(_ gameState: GameState) {
+        let viewModel = GameViewModel(gameState: gameState, messagesViewController: self)
+        viewModel.delegate = self
+        
+        if viewModel.isCooking {
+            transitionToSteakCookingView(viewModel: viewModel)
+        } else {
+            let seasonSteakStepView = SeasonSteakStep(viewModel: viewModel)
+            presentView(seasonSteakStepView)
+        }
+    }
+    
+    private func presentContentView(conversation: MSConversation) {
+                             conversationManager = ConversationManager(conversation: conversation)
+                             let contentView = ContentView(conversation: conversation, conversationManager: conversationManager!)
+                             let hostingController = UIHostingController(rootView: contentView)
+                             addChild(hostingController)
+                             view.addSubview(hostingController.view)
+                             hostingController.didMove(toParent: self)
+                             hostingController.view.frame = view.bounds
+    }
+    
     private func decodeGameState(from url: URL, completion: @escaping (GameState?) -> Void) {
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
               let queryItems = components.queryItems else {
@@ -56,9 +81,9 @@ class MessagesViewController: MSMessagesAppViewController {
             case "player2Score":
                 gameState.player2Score = Int(item.value ?? "0") ?? 0
             case "player1Played":
-                gameState.player1Played = (item.value == "true")
+                gameState.player1Played = item.value == "true"
             case "player2Played":
-                gameState.player2Played = (item.value == "true")
+                gameState.player2Played = item.value == "true"
             case "currentPlayer":
                 gameState.currentPlayer = item.value
             default:
@@ -68,64 +93,93 @@ class MessagesViewController: MSMessagesAppViewController {
 
         completion(gameState)
     }
-
-    private func setupChildViewController(_ childController: UIViewController) {
-        addChild(childController)
-        view.addSubview(childController.view)
-        childController.didMove(toParent: self)
-
-        childController.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            childController.view.topAnchor.constraint(equalTo: view.topAnchor),
-            childController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            childController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            childController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-        ])
-    }
-
-        private func showSteakGameView(with gameState: GameState) {
-            let steakGameView = SteakGameView(gameState: .constant(gameState), messagesViewController: self) // Adjust initialization as needed
-            let hostingController = UIHostingController(rootView: steakGameView)
-            setupChildViewController(hostingController)
+    
+    func updateAndSendGameState(completion: @escaping () -> Void) {
+        guard let conversation = activeConversation else {
+            completion() // Ensure to call completion even if early return
+            return
         }
-    
-//    private func showSteakGameView(with gameState: GameState) {
-//        let viewModel = GameViewModel(gameState: gameState)
-//        let steakGameView = SeasonSteakStep(viewModel: viewModel, messagesViewController: self)
-//        let hostingController = UIHostingController(rootView: steakGameView)
-//        setupChildViewController(hostingController)
-//    }
-
-    func startOrResetGame() {
-        gameState = GameState(currentPlayer: "player1")
-        updateAndSendGameState()
-    }
-    
-    func updateAndSendGameState() {
-        guard let conversation = activeConversation else { return }
-        
         let message = MSMessage(session: conversation.selectedMessage?.session ?? MSSession())
         let layout = MSMessageTemplateLayout()
         layout.caption = "Your turn!"
         message.layout = layout
-        
+
         var components = URLComponents()
         components.queryItems = [
             URLQueryItem(name: "player1Score", value: String(gameState.player1Score)),
             URLQueryItem(name: "player2Score", value: String(gameState.player2Score)),
             URLQueryItem(name: "player1Played", value: String(gameState.player1Played)),
-            URLQueryItem(name: "player2Played", value: String(gameState.player2Played))
+            URLQueryItem(name: "player2Played", value: String(gameState.player2Played)),
+            URLQueryItem(name: "currentPlayer", value: gameState.currentPlayer == "player1" ? "player2" : "player1")
         ]
         
         message.url = components.url
         
-        conversation.insert(message) { error in
+        conversation.insert(message) { [weak self] error in
             if let error = error {
                 print("Error sending message: \(error.localizedDescription)")
+            } else {
+//                DispatchQueue.main.async {
+//                    let alert = UIAlertController(title: "Score Sent", message: "Your turn has been successfully sent to the opponent.", preferredStyle: .alert)
+//                    alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+//                        self?.requestPresentationStyle(.compact)
+//                    })
+//                    self?.present(alert, animated: true, completion: nil)
+//                }
+                DispatchQueue.main.async {
+                    completion()
+                }
             }
         }
     }
     
+    func updateAndSendGameState() {
+           guard let conversation = activeConversation else { return }
+
+           let message = MSMessage(session: conversation.selectedMessage?.session ?? MSSession())
+           let layout = MSMessageTemplateLayout()
+           layout.caption = "Your turn!"
+           message.layout = layout
+
+           var components = URLComponents()
+           components.queryItems = [
+               URLQueryItem(name: "player1Score", value: String(gameState.player1Score)),
+               URLQueryItem(name: "player2Score", value: String(gameState.player2Score)),
+               URLQueryItem(name: "player1Played", value: String(gameState.player1Played)),
+               URLQueryItem(name: "player2Played", value: String(gameState.player2Played)),
+               URLQueryItem(name: "currentPlayer", value: gameState.currentPlayer == "player1" ? "player2" : "player1")
+           ]
+           
+           message.url = components.url
+           
+           conversation.insert(message) { [weak self] error in
+               if let error = error {
+                   print("Error sending message: \(error.localizedDescription)")
+               } else {
+                   DispatchQueue.main.async {
+                       let alert = UIAlertController(title: "Score Sent", message: "Your turn has been successfully sent to the opponent.", preferredStyle: .alert)
+                       alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+                           self?.requestPresentationStyle(.compact)
+                       })
+                       self?.present(alert, animated: true, completion: nil)
+                   }
+               }
+           }
+       }
+
+    private func presentOutcomeView(with gameState: GameState) {
+        let gameOutcomeView = GameOutcomeView(gameState: gameState)
+               // This closure is called when the "OK" button is tapped.
+           // Present the SwiftUI view
+           let hostingController = UIHostingController(rootView: gameOutcomeView)
+
+           // Assuming you have a setup to add this as a child view controller or present it opt
+        addChild(hostingController)
+        view.addSubview(hostingController.view)
+        hostingController.didMove(toParent: self)
+        hostingController.view.frame = view.bounds
+       }
+
     private func composeMessage(with gameState: GameState, session: MSSession? = nil) -> MSMessage {
         let session = MSSession()
         let message = MSMessage(session: session)
@@ -180,5 +234,44 @@ class MessagesViewController: MSMessagesAppViewController {
         // Called after the extension transitions to a new presentation style.
 
         // Use this method to finalize any behaviors associated with the change in presentation style.
+    }
+}
+
+extension MessagesViewController: GameViewDelegate {
+    func transitionToSteakCookingView(viewModel: GameViewModel) {
+        let steakCookingView = SteakCookingView(viewModel: viewModel)
+        presentView(steakCookingView)
+    }
+    
+    func transitionToSeasonSteakStepView(viewModel: GameViewModel) {
+        let seasonSteakStepView = SeasonSteakStep(viewModel: viewModel)
+        presentView(seasonSteakStepView)
+    }
+    
+    private func presentView<T: View>(_ view: T) {
+        let hostingController = UIHostingController(rootView: view)
+        setupChildViewController(hostingController)
+    }
+    
+    private func setupChildViewController(_ viewController: UIViewController) {
+        // Remove existing child view controllers
+        children.forEach {
+            $0.willMove(toParent: nil)
+            $0.view.removeFromSuperview()
+            $0.removeFromParent()
+        }
+        
+        // Add the new view controller
+        addChild(viewController)
+        view.addSubview(viewController.view)
+        viewController.didMove(toParent: self)
+        
+        viewController.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            viewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            viewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            viewController.view.topAnchor.constraint(equalTo: view.topAnchor),
+            viewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
     }
 }

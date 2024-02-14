@@ -1,38 +1,57 @@
 import SwiftUI
 
-struct ProgressBar: View {
-    var progress: Double
+//struct ProgressBar: View {
+//    var progress: Double
+//
+//    private let yellowZone = 0.0...0.6
+//    private let greenZone = 0.6...0.8
+//    private let redZone = 0.8...1.0
+//
+//    var body: some View {
+//        GeometryReader { geometry in
+//            ZStack(alignment: .leading) {
+//                Rectangle()
+//                    .foregroundColor(.gray.opacity(0.3))
+//                    .border(Color.gray)
+//
+//                HStack(spacing: 0) {
+//                    Rectangle()
+//                        .foregroundColor(progress <= yellowZone.upperBound ? .yellow : .clear)
+//                        .frame(width: geometry.size.width * CGFloat(min(self.progress, yellowZone.upperBound)))
+//
+//                    Rectangle()
+//                        .foregroundColor(progress > yellowZone.upperBound && progress <= greenZone.upperBound ? .green : .clear)
+//                        .frame(width: geometry.size.width * CGFloat(max(min(self.progress - yellowZone.upperBound, greenZone.upperBound - yellowZone.upperBound), 0)))
+//
+//                    Rectangle()
+//                        .foregroundColor(progress > greenZone.upperBound ? .red : .clear)
+//                        .frame(width: geometry.size.width * CGFloat(max(self.progress - greenZone.upperBound, 0)))
+//                }
+//            }
+//            .cornerRadius(45 / 2)
+//        }
+//        .frame(height: 45)
+//    }
+//}
 
-    private let yellowZone = 0.0...0.6
-    private let greenZone = 0.6...0.8
-    private let redZone = 0.8...1.0
+struct ProgressBar: View {
+    var progress: Double // Between 0.0 and 1.0
 
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .leading) {
-                Rectangle()
-                    .foregroundColor(.gray.opacity(0.3))
-                    .border(Color.gray)
+                Rectangle().frame(width: geometry.size.width , height: geometry.size.height)
+                    .opacity(0.3)
+                    .foregroundColor(Color.gray)
 
-                HStack(spacing: 0) {
-                    Rectangle()
-                        .foregroundColor(progress <= yellowZone.upperBound ? .yellow : .clear)
-                        .frame(width: geometry.size.width * CGFloat(min(self.progress, yellowZone.upperBound)))
-
-                    Rectangle()
-                        .foregroundColor(progress > yellowZone.upperBound && progress <= greenZone.upperBound ? .green : .clear)
-                        .frame(width: geometry.size.width * CGFloat(max(min(self.progress - yellowZone.upperBound, greenZone.upperBound - yellowZone.upperBound), 0)))
-
-                    Rectangle()
-                        .foregroundColor(progress > greenZone.upperBound ? .red : .clear)
-                        .frame(width: geometry.size.width * CGFloat(max(self.progress - greenZone.upperBound, 0)))
-                }
-            }
-            .cornerRadius(45 / 2)
+                Rectangle().frame(width: min(CGFloat(self.progress)*geometry.size.width, geometry.size.width), height: geometry.size.height)
+                    .foregroundColor(self.progress > 0.8 ? .red : .green)
+                    .animation(.linear, value: progress)
+            }.cornerRadius(45.0)
         }
-        .frame(height: 45)
     }
 }
+
 
 struct ProgressBar_Previews: PreviewProvider {
     static var previews: some View {

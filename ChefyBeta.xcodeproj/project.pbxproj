@@ -8,12 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		EE6E720B2B6C9C650012BF9E /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6E720A2B6C9C650012BF9E /* ProgressBar.swift */; };
-		EE6E720D2B6CAB210012BF9E /* PepperGraphic.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6E720C2B6CAB210012BF9E /* PepperGraphic.swift */; };
 		EE6E721D2B6F5CC00012BF9E /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6E721C2B6F5CC00012BF9E /* Conversation.swift */; };
 		EE6E721F2B6FDD0F0012BF9E /* GameOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6E721E2B6FDD0F0012BF9E /* GameOverView.swift */; };
 		EEC0C31B2B69E7180094E043 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EEC0C31A2B69E7180094E043 /* Assets.xcassets */; };
 		EEC0C3212B69E7190094E043 /* ChefyBeta MessagesExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = EEC0C3202B69E7190094E043 /* ChefyBeta MessagesExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		EEC0C3262B69E7190094E043 /* Messages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEC0C3252B69E7190094E043 /* Messages.framework */; };
 		EEC0C3292B69E7190094E043 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC0C3282B69E7190094E043 /* MessagesViewController.swift */; };
 		EEC0C32E2B69E71E0094E043 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EEC0C32D2B69E71E0094E043 /* Assets.xcassets */; };
 		EEC0C33A2B69E82D0094E043 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC0C3392B69E82D0094E043 /* ContentView.swift */; };
@@ -24,6 +22,9 @@
 		EEE46E072B7874AA00CB7768 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E062B7874AA00CB7768 /* ProfileView.swift */; };
 		EEE46E092B7874B400CB7768 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E082B7874B400CB7768 /* SettingsView.swift */; };
 		EEE46E0B2B787C3500CB7768 /* GameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E0A2B787C3500CB7768 /* GameViewModel.swift */; };
+		EEE46E0C2B7A7C8E00CB7768 /* Messages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEC0C3252B69E7190094E043 /* Messages.framework */; };
+		EEE46E122B7B31AA00CB7768 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E112B7B31AA00CB7768 /* Models.swift */; };
+		EEE46E142B7C30B900CB7768 /* SteakCookingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E132B7C30B900CB7768 /* SteakCookingView.swift */; };
 		EEF9BB562B6C495D002EA1BD /* MessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF9BB552B6C495D002EA1BD /* MessageHandler.swift */; };
 /* End PBXBuildFile section */
 
@@ -53,7 +54,6 @@
 
 /* Begin PBXFileReference section */
 		EE6E720A2B6C9C650012BF9E /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
-		EE6E720C2B6CAB210012BF9E /* PepperGraphic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PepperGraphic.swift; sourceTree = "<group>"; };
 		EE6E721C2B6F5CC00012BF9E /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		EE6E721E2B6FDD0F0012BF9E /* GameOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverView.swift; sourceTree = "<group>"; };
 		EEC0C3172B69E7120094E043 /* ChefyBeta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChefyBeta.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -71,6 +71,8 @@
 		EEE46E062B7874AA00CB7768 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		EEE46E082B7874B400CB7768 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		EEE46E0A2B787C3500CB7768 /* GameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewModel.swift; sourceTree = "<group>"; };
+		EEE46E112B7B31AA00CB7768 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		EEE46E132B7C30B900CB7768 /* SteakCookingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteakCookingView.swift; sourceTree = "<group>"; };
 		EEF9BB552B6C495D002EA1BD /* MessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageHandler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -79,7 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EEC0C3262B69E7190094E043 /* Messages.framework in Frameworks */,
+				EEE46E0C2B7A7C8E00CB7768 /* Messages.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,11 +91,12 @@
 		EE6E721B2B6F1E100012BF9E /* Steak */ = {
 			isa = PBXGroup;
 			children = (
+				EEE46E132B7C30B900CB7768 /* SteakCookingView.swift */,
 				EEC0C3412B69E8980094E043 /* SteakGameView.swift */,
 				EEE46E0A2B787C3500CB7768 /* GameViewModel.swift */,
+				EEE46E112B7B31AA00CB7768 /* Models.swift */,
 				EEE46E032B78704900CB7768 /* SeasonSteakStep.swift */,
 				EE6E721E2B6FDD0F0012BF9E /* GameOverView.swift */,
-				EE6E720C2B6CAB210012BF9E /* PepperGraphic.swift */,
 				EE6E720A2B6C9C650012BF9E /* ProgressBar.swift */,
 			);
 			path = Steak;
@@ -259,7 +262,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				EE6E721D2B6F5CC00012BF9E /* Conversation.swift in Sources */,
-				EE6E720D2B6CAB210012BF9E /* PepperGraphic.swift in Sources */,
 				EEC0C33E2B69E8600094E043 /* ImageItem.swift in Sources */,
 				EEC0C3402B69E8850094E043 /* ToolbarView.swift in Sources */,
 				EEE46E072B7874AA00CB7768 /* ProfileView.swift in Sources */,
@@ -267,11 +269,13 @@
 				EEE46E0B2B787C3500CB7768 /* GameViewModel.swift in Sources */,
 				EEF9BB562B6C495D002EA1BD /* MessageHandler.swift in Sources */,
 				EEC0C33A2B69E82D0094E043 /* ContentView.swift in Sources */,
+				EEE46E122B7B31AA00CB7768 /* Models.swift in Sources */,
 				EEE46E042B78704900CB7768 /* SeasonSteakStep.swift in Sources */,
 				EEC0C3422B69E8980094E043 /* SteakGameView.swift in Sources */,
 				EE6E720B2B6C9C650012BF9E /* ProgressBar.swift in Sources */,
 				EEC0C3292B69E7190094E043 /* MessagesViewController.swift in Sources */,
 				EEE46E092B7874B400CB7768 /* SettingsView.swift in Sources */,
+				EEE46E142B7C30B900CB7768 /* SteakCookingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -4,11 +4,11 @@ import Messages
 
 struct ContentView: View {
     @State private var selectedItem: ImageItem?
-    @State private var showGameView = false
     @State private var showingProfile = false
     @State private var showingSettings = false
     var conversation: MSConversation?
     var conversationManager: ConversationManager
+    @State private var showOutcomeView = false
 
     let imageItems: [ImageItem] = [
         ImageItem(id: 1, imageName: "steak 1", label: "Steak"),
@@ -31,16 +31,17 @@ struct ContentView: View {
                         self.showingSettings = true
                     })
                     .sheet(isPresented: $showingProfile) {
-                        ProfileView() // Your profile view here
+                        ProfileView()
                     }
                     .sheet(isPresented: $showingSettings) {
-                        SettingsView() // Your settings view here
+                        SettingsView()
                     }
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
                         ForEach(imageItems, id: \.imageName) { item in
                             Button(action: {
                                 if item.label == "Steak" {
                                     inviteToPlaySteakGame()
+
                                 }
                             }) {
                                 itemContent(for: item)
@@ -91,27 +92,28 @@ struct ContentView: View {
     }
     
     private func inviteToPlaySteakGame() {
-            guard let conversation = conversation else { return }
-            
-            let session = MSSession()
-            let message = MSMessage(session: session)
-            let layout = MSMessageTemplateLayout()
-            layout.caption = "Let's play Steak Game!!"
-            message.layout = layout
+        guard let conversation = conversation else { return }
+        
+        let session = MSSession()
+        let message = MSMessage(session: session)
+        let layout = MSMessageTemplateLayout()
+        layout.caption = "Let's play Steak Game!!"
+        message.layout = layout
 
-            var components = URLComponents()
-            components.queryItems = [
-                URLQueryItem(name: "player1Score", value: "0"),
-                URLQueryItem(name: "player2Score", value: "0"),
-                URLQueryItem(name: "player1Played", value: "false"),
-                URLQueryItem(name: "player2Played", value: "false")
-            ]
-            message.url = components.url
+        var components = URLComponents()
+        components.queryItems = [
+            URLQueryItem(name: "player1Score", value: "0"),
+            URLQueryItem(name: "player2Score", value: "0"),
+            URLQueryItem(name: "player1Played", value: "false"),
+            URLQueryItem(name: "player2Played", value: "false"),
+            URLQueryItem(name: "currentPlayer", value: "player1")
+        ]
+        message.url = components.url
 
-            conversation.insert(message) { error in
-                if let error = error {
-                    print("Error sending game invitation: \(error.localizedDescription)")
-                }
+        conversation.insert(message) { error in
+            if let error = error {
+                print("Error sending game invitation: \(error.localizedDescription)")
             }
         }
+    }
 }
