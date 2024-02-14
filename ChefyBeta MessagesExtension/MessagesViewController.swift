@@ -14,6 +14,28 @@ class MessagesViewController: MSMessagesAppViewController {
         super.viewDidLoad()
     }
     
+//    override func willBecomeActive(with conversation: MSConversation) {
+//        super.willBecomeActive(with: conversation)
+//
+//        let viewModel = GameViewModel(gameState: gameState, messagesViewController: self)
+//
+//        let seasonSteakStepView = SeasonSteakStep(viewModel: viewModel)
+//        let hostingController = UIHostingController(rootView: seasonSteakStepView)
+//
+//        // Ensure the child view controller fits the parent view controller
+//        addChild(hostingController)
+//        view.addSubview(hostingController.view)
+//        hostingController.didMove(toParent: self)
+//
+//        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.activate([
+//            hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+//            hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+//            hostingController.view.topAnchor.constraint(equalTo: view.topAnchor),
+//            hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+//        ])
+//    }
+    
     override func willBecomeActive(with conversation: MSConversation) {
         super.willBecomeActive(with: conversation)
 
@@ -169,15 +191,13 @@ class MessagesViewController: MSMessagesAppViewController {
 
     private func presentOutcomeView(with gameState: GameState) {
         let gameOutcomeView = GameOutcomeView(gameState: gameState)
-               // This closure is called when the "OK" button is tapped.
-           // Present the SwiftUI view
            let hostingController = UIHostingController(rootView: gameOutcomeView)
 
-           // Assuming you have a setup to add this as a child view controller or present it opt
         addChild(hostingController)
         view.addSubview(hostingController.view)
         hostingController.didMove(toParent: self)
         hostingController.view.frame = view.bounds
+        requestPresentationStyle(.compact)
        }
 
     private func composeMessage(with gameState: GameState, session: MSSession? = nil) -> MSMessage {

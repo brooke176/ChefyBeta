@@ -34,7 +34,7 @@ class GameViewModel: ObservableObject {
         generator.impactOccurred()
         let addAmount: Double = 0.1 * 5
         let seasoningColor = type == .salt ? Color.white : Color.black
-        let side: SteakSide = steakFlipped ? .back : .front
+        let side: SteakSide = !steakFlipped ? .back : .front
         switch (type, side) {
         case (.salt, .front):
             seasoning.frontSalt = min(seasoning.frontSalt + addAmount, maxSeasoningAmount)

@@ -5,33 +5,64 @@ struct GameOutcomeView: View {
 
     var body: some View {
         VStack(spacing: 20) {
-            Text("Game Over")
-                .font(.largeTitle)
-                .bold()
-                .foregroundColor(.primary) // Adapts to dark or light mode
+            // Game Over or Waiting Title
+            Text(gameState.player1Score != 0 && gameState.player2Score != 0 ? "Game Over" : "Waiting for opponent...")
+                .font(.system(size: 24, weight: .bold, design: .rounded))
+                .foregroundColor(.white)
+                .padding()
+                .background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .leading, endPoint: .trailing))
+                .cornerRadius(10)
+                .shadow(radius: 10)
 
-            if let winner = determineWinner(gameState: gameState) {
-                Text("\(winner) wins!")
-                    .foregroundColor(.primary) // Adapts to dark or light mode
+            // Outcome Message
+            if gameState.player1Score != 0 && gameState.player2Score != 0 {
+                outcomeMessage
+                    .font(.title2)
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color.gray.opacity(0.5))
+                    .cornerRadius(8)
+                    .shadow(radius: 5)
             } else {
-                Text("It's a draw!")
-                    .foregroundColor(.primary) // Adapts to dark or light mode
+                Text("Waiting for opponent...")
+                    .foregroundColor(.gray)
+                    .italic()
             }
 
-            Text("Player 1 Score: \(gameState.player1Score)")
-                .foregroundColor(.primary) // Adapts to dark or light mode
-            Text("Player 2 Score: \(gameState.player2Score)")
-                .foregroundColor(.primary) // Adapts to dark or light mode
+            // Scores
+            scoreText("Player 1 Score: \(gameState.player1Score)")
+            scoreText("Player 2 Score: \(gameState.player2Score)")
 
+            // OK Button
             Button("OK") {
-                //
+                // Action when OK is tapped
             }
-            .foregroundColor(.primary) // Adapts to dark or light mode
+            .foregroundColor(.white)
+            .padding()
+            .background(Color.green)
+            .cornerRadius(8)
+            .shadow(radius: 5)
         }
         .padding()
-        .background(Color(UIColor.systemBackground)) // Adapts to dark or light mode
-        .cornerRadius(12)
-        .shadow(radius: 8)
+        .background(Color(UIColor.secondarySystemBackground)) // Adapts to dark or light mode
+        .cornerRadius(15)
+        .shadow(radius: 10)
+        .padding()
+    }
+
+    @ViewBuilder
+    private var outcomeMessage: some View {
+        if let winner = determineWinner(gameState: gameState) {
+            Text("\(winner) wins!")
+        } else {
+            Text("It's a draw!")
+        }
+    }
+
+    private func scoreText(_ text: String) -> some View {
+        Text(text)
+            .foregroundColor(.secondary)
+            .padding(5)
     }
 
     func determineWinner(gameState: GameState) -> String? {

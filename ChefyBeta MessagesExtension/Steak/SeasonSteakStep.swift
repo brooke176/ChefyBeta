@@ -61,9 +61,9 @@ struct SeasoningInstructionText: View {
     private var instructionText: String {
         if seasoning.frontSalt < minSeasoningAmount || seasoning.frontPepper < minSeasoningAmount {
             return "Season the steak"
-        } else if !steakFlipped && seasoning.frontSalt >= minSeasoningAmount && seasoning.frontPepper >= minSeasoningAmount  {
+        } else if steakFlipped && seasoning.frontSalt >= minSeasoningAmount && seasoning.frontPepper >= minSeasoningAmount  {
             return "Flip the steak"
-        } else if steakFlipped && (seasoning.backSalt < minSeasoningAmount || seasoning.backPepper < minSeasoningAmount) {
+        } else if !steakFlipped && (seasoning.backSalt < minSeasoningAmount || seasoning.backPepper < minSeasoningAmount) {
             return "Season the back side of the steak"
         } else {
             return "Cook the steak!"
@@ -91,7 +91,7 @@ struct SteakView: View {
                             viewModel.steakFlipped.toggle()
                         }
         
-                    ForEach(seasoningGraphics.filter { $0.side == (steakFlipped ? .back : .front) }) { graphic in
+                    ForEach(seasoningGraphics.filter { $0.side == (steakFlipped ? .front : .back) }) { graphic in
                         Circle()
                             .fill(graphic.color)
                             .frame(width: 4, height: 4)
