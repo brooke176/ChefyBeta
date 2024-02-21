@@ -1,8 +1,8 @@
 import Foundation
 import SwiftUI
 
-struct SeasonSteakStep: View {
-    @ObservedObject var viewModel: GameViewModel
+struct SteakSeasoningView: View {
+    @ObservedObject var viewModel: SteakGameViewModel
 
     var body: some View {
         ZStack {
@@ -36,7 +36,7 @@ struct SeasonSteakStep: View {
             GameOutcomeView(gameState: viewModel.gameState)
         }
         .sheet(isPresented: $viewModel.showCookingView) {
-            SteakCookView(steakFlipped: viewModel.steakFlipped, isCooking: viewModel.isCooking, seasoningGraphics: viewModel.seasoningGraphics, viewModel: viewModel)
+            SteakView(steakFlipped: viewModel.steakFlipped, isCooking: viewModel.isCooking, seasoningGraphics: viewModel.seasoningGraphics, viewModel: viewModel)
         }
     }
 }
@@ -75,7 +75,7 @@ struct SteakView: View {
     var steakFlipped: Bool
     var isCooking: Bool
     var seasoningGraphics: [SeasoningGraphic]
-    @ObservedObject var viewModel: GameViewModel
+    @ObservedObject var viewModel: SteakGameViewModel
 
     var body: some View {
                 ZStack(alignment: .center) {
@@ -99,7 +99,7 @@ struct SteakView: View {
                     }
         
                     Rectangle()
-                        .fill(Color.clear)
+                        .fill(Color.red.opacity(0.01))
                         .frame(width: 80, height: 90)
                         .offset(x: -105, y: -62)
                         .onTapGesture {
@@ -107,7 +107,7 @@ struct SteakView: View {
                         }
         
                     Rectangle()
-                        .fill(Color.clear)
+                        .fill(Color.blue.opacity(0.01))
                         .frame(width: 80, height: 80)
                         .offset(x: 135, y: 137)
                         .onTapGesture {
@@ -118,7 +118,7 @@ struct SteakView: View {
 }
 
 struct ActionButtonView: View {
-    @ObservedObject var viewModel: GameViewModel
+    @ObservedObject var viewModel: SteakGameViewModel
 
     var body: some View {
         VStack {

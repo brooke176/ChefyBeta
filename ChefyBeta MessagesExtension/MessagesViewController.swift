@@ -3,7 +3,7 @@ import Messages
 import SwiftUI
 
 protocol GameViewDelegate: AnyObject {
-    func transitionToSteakCookingView(viewModel: GameViewModel)
+    func transitionToSteakCookingView(viewModel: SteakGameViewModel)
 }
 
 class MessagesViewController: MSMessagesAppViewController {
@@ -17,10 +17,10 @@ class MessagesViewController: MSMessagesAppViewController {
 //    override func willBecomeActive(with conversation: MSConversation) {
 //        super.willBecomeActive(with: conversation)
 //
-//        let viewModel = GameViewModel(gameState: gameState, messagesViewController: self)
+//        let viewModel = SteakGameViewModel(gameState: gameState, messagesViewController: self)
 //
-//        let seasonSteakStepView = SeasonSteakStep(viewModel: viewModel)
-//        let hostingController = UIHostingController(rootView: seasonSteakStepView)
+//        let SteakSeasoningViewView = SauteMushroomsView(viewModel: viewModel)
+//        let hostingController = UIHostingController(rootView: SteakSeasoningViewView)
 //
 //        // Ensure the child view controller fits the parent view controller
 //        addChild(hostingController)
@@ -55,25 +55,25 @@ class MessagesViewController: MSMessagesAppViewController {
     }
 
     private func setupViewBasedOnGameState(_ gameState: GameState) {
-        let viewModel = GameViewModel(gameState: gameState, messagesViewController: self)
+        let viewModel = SteakGameViewModel(gameState: gameState, messagesViewController: self)
         viewModel.delegate = self
 
         if viewModel.isCooking {
             transitionToSteakCookingView(viewModel: viewModel)
         } else {
-            transitionToSeasonSteakStepView(viewModel: viewModel)
+            transitionToSteakSeasoningViewView(viewModel: viewModel)
         }
     }
 
     private func transitionBasedOnGameState(_ gameState: GameState) {
-        let viewModel = GameViewModel(gameState: gameState, messagesViewController: self)
+        let viewModel = SteakGameViewModel(gameState: gameState, messagesViewController: self)
         viewModel.delegate = self
         
         if viewModel.isCooking {
             transitionToSteakCookingView(viewModel: viewModel)
         } else {
-            let seasonSteakStepView = SeasonSteakStep(viewModel: viewModel)
-            presentView(seasonSteakStepView)
+            let SteakSeasoningViewView = SteakSeasoningView(viewModel: viewModel)
+            presentView(SteakSeasoningViewView)
         }
     }
     
@@ -258,14 +258,14 @@ class MessagesViewController: MSMessagesAppViewController {
 }
 
 extension MessagesViewController: GameViewDelegate {
-    func transitionToSteakCookingView(viewModel: GameViewModel) {
+    func transitionToSteakCookingView(viewModel: SteakGameViewModel) {
         let steakCookingView = SteakCookingView(viewModel: viewModel)
         presentView(steakCookingView)
     }
     
-    func transitionToSeasonSteakStepView(viewModel: GameViewModel) {
-        let seasonSteakStepView = SeasonSteakStep(viewModel: viewModel)
-        presentView(seasonSteakStepView)
+    func transitionToSteakSeasoningViewView(viewModel: SteakGameViewModel) {
+        let SteakSeasoningViewView = SteakSeasoningView(viewModel: viewModel)
+        presentView(SteakSeasoningViewView)
     }
     
     private func presentView<T: View>(_ view: T) {

@@ -1,20 +1,34 @@
 import SwiftUI
 import Foundation
 
-class GameViewModel: ObservableObject {
+class SteakGameViewModel: ObservableObject {
     @Published var gameState: GameState
     @Published var seasoning = SteakSeasoning()
+    
+    // Steak cooking variables
     @Published var cookingProgress = 0.0
     @Published var isCooking = false
     @Published var steakFlipped = true
+    
+    // Mushroom cooking variables
+    @Published var mushroomCookingProgress = 0.0
+    @Published var isMushroomsCooking = false
+    @Published var mushroomStirred = false
+    @Published var rotationDegrees = 0
+    @Published var mushroomColor: Color = Color.brown
+    
+    // Shared variables
     @Published var gameEnded = false
     @Published var gameMessage = ""
     @Published var showFireEffect = false
     @Published var showingLoadingOverlay = false
     @Published var showOutcomeView = false
     @Published var showCookingView = false
-    weak var delegate: GameViewDelegate?
+    @Published var showMushroomView = false
+    @Published var showDoughView = false
 
+    
+    weak var delegate: GameViewDelegate?
     var timer: Timer?
     var seasoningGraphics: [SeasoningGraphic] = []
     var messagesViewController: MessagesViewController
@@ -23,6 +37,9 @@ class GameViewModel: ObservableObject {
     let maxSeasoningAmount = 3.0
     let perfectSeasoningRange = 0.6...1.5
     let maxCookingProgress = 1.0
+    let minCookingProgress = 0.0
+    let minCookingProg = 0.0
+    
     
     init(gameState: GameState, messagesViewController: MessagesViewController) {
         self.gameState = gameState
@@ -60,14 +77,57 @@ class GameViewModel: ObservableObject {
             self.cookingProgress += 0.1
             if self.cookingProgress >= self.maxCookingProgress {
                 self.showFireEffect = true
-                self.endTurnForPlayer()
+                self.showMushroomView = true
             }
         }
         delegate?.transitionToSteakCookingView(viewModel: self)
     }
     
-    func serveSteak() {
+    func startCookingMushrooms() {
+        isMushroomsCooking = true
+        mushroomCookingProgress = 0
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+            self.mushroomCookingProgress += 0.1
+            if self.mushroomCookingProgress >= self.maxCookingProgress {
+                self.endCookingMushrooms()
+            }
+        }
+    }
+    
+    func stirMushrooms() {
+        mushroomStirred.toggle()
+        rotationDegrees += 90
+    }
+    
+    func endCookingMushrooms() {
+        isMushroomsCooking = false
+        burnMushrooms()
+        timer?.invalidate()
+        resetMushroomCookingVariables()
         endTurnForPlayer()
+    }
+    
+    func deepenMushroomColor() {
+        mushroomColor = mushroomColor.opacity(0.85)
+    }
+
+    func burnMushrooms() {
+        mushroomColor = .black
+        print("Burnt!")
+    }
+    
+    func resetMushroomCookingVariables() {
+        mushroomCookingProgress = 0
+        isMushroomsCooking = false
+        mushroomStirred = false
+    }
+    
+    func serveSteak() {
+        self.showMushroomView = true
+    }
+    
+    func serveMushrooms() {
+        endCookingMushrooms()
     }
     
     func endTurnForPlayer() {

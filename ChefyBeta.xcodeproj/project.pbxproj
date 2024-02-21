@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		EE6E720B2B6C9C650012BF9E /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6E720A2B6C9C650012BF9E /* ProgressBar.swift */; };
+		EE6E720B2B6C9C650012BF9E /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6E720A2B6C9C650012BF9E /* ProgressBarView.swift */; };
 		EE6E721D2B6F5CC00012BF9E /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6E721C2B6F5CC00012BF9E /* Conversation.swift */; };
 		EE6E721F2B6FDD0F0012BF9E /* GameOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6E721E2B6FDD0F0012BF9E /* GameOverView.swift */; };
 		EEC0C31B2B69E7180094E043 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EEC0C31A2B69E7180094E043 /* Assets.xcassets */; };
@@ -17,14 +17,15 @@
 		EEC0C33A2B69E82D0094E043 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC0C3392B69E82D0094E043 /* ContentView.swift */; };
 		EEC0C33E2B69E8600094E043 /* ImageItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC0C33D2B69E8600094E043 /* ImageItem.swift */; };
 		EEC0C3402B69E8850094E043 /* ToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC0C33F2B69E8850094E043 /* ToolbarView.swift */; };
-		EEC0C3422B69E8980094E043 /* SteakGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC0C3412B69E8980094E043 /* SteakGameView.swift */; };
-		EEE46E042B78704900CB7768 /* SeasonSteakStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E032B78704900CB7768 /* SeasonSteakStep.swift */; };
+		EEE46E042B78704900CB7768 /* SteakSeasoningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E032B78704900CB7768 /* SteakSeasoningView.swift */; };
 		EEE46E072B7874AA00CB7768 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E062B7874AA00CB7768 /* ProfileView.swift */; };
 		EEE46E092B7874B400CB7768 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E082B7874B400CB7768 /* SettingsView.swift */; };
-		EEE46E0B2B787C3500CB7768 /* GameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E0A2B787C3500CB7768 /* GameViewModel.swift */; };
+		EEE46E0B2B787C3500CB7768 /* SteakGameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E0A2B787C3500CB7768 /* SteakGameViewModel.swift */; };
 		EEE46E0C2B7A7C8E00CB7768 /* Messages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEC0C3252B69E7190094E043 /* Messages.framework */; };
 		EEE46E122B7B31AA00CB7768 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E112B7B31AA00CB7768 /* Models.swift */; };
 		EEE46E142B7C30B900CB7768 /* SteakCookingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E132B7C30B900CB7768 /* SteakCookingView.swift */; };
+		EEE46E232B800B6E00CB7768 /* PastryRollingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E222B800B6E00CB7768 /* PastryRollingView.swift */; };
+		EEE46E252B800C8000CB7768 /* AltMushroomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E242B800C8000CB7768 /* AltMushroomView.swift */; };
 		EEF9BB562B6C495D002EA1BD /* MessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF9BB552B6C495D002EA1BD /* MessageHandler.swift */; };
 /* End PBXBuildFile section */
 
@@ -53,7 +54,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		EE6E720A2B6C9C650012BF9E /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
+		EE6E720A2B6C9C650012BF9E /* ProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
 		EE6E721C2B6F5CC00012BF9E /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		EE6E721E2B6FDD0F0012BF9E /* GameOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverView.swift; sourceTree = "<group>"; };
 		EEC0C3172B69E7120094E043 /* ChefyBeta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChefyBeta.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -66,13 +67,14 @@
 		EEC0C3392B69E82D0094E043 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		EEC0C33D2B69E8600094E043 /* ImageItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageItem.swift; sourceTree = "<group>"; };
 		EEC0C33F2B69E8850094E043 /* ToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarView.swift; sourceTree = "<group>"; };
-		EEC0C3412B69E8980094E043 /* SteakGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteakGameView.swift; sourceTree = "<group>"; };
-		EEE46E032B78704900CB7768 /* SeasonSteakStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonSteakStep.swift; sourceTree = "<group>"; };
+		EEE46E032B78704900CB7768 /* SteakSeasoningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteakSeasoningView.swift; sourceTree = "<group>"; };
 		EEE46E062B7874AA00CB7768 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		EEE46E082B7874B400CB7768 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		EEE46E0A2B787C3500CB7768 /* GameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewModel.swift; sourceTree = "<group>"; };
+		EEE46E0A2B787C3500CB7768 /* SteakGameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteakGameViewModel.swift; sourceTree = "<group>"; };
 		EEE46E112B7B31AA00CB7768 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		EEE46E132B7C30B900CB7768 /* SteakCookingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteakCookingView.swift; sourceTree = "<group>"; };
+		EEE46E222B800B6E00CB7768 /* PastryRollingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastryRollingView.swift; sourceTree = "<group>"; };
+		EEE46E242B800C8000CB7768 /* AltMushroomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AltMushroomView.swift; sourceTree = "<group>"; };
 		EEF9BB552B6C495D002EA1BD /* MessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageHandler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -91,13 +93,8 @@
 		EE6E721B2B6F1E100012BF9E /* Steak */ = {
 			isa = PBXGroup;
 			children = (
-				EEE46E132B7C30B900CB7768 /* SteakCookingView.swift */,
-				EEC0C3412B69E8980094E043 /* SteakGameView.swift */,
-				EEE46E0A2B787C3500CB7768 /* GameViewModel.swift */,
-				EEE46E112B7B31AA00CB7768 /* Models.swift */,
-				EEE46E032B78704900CB7768 /* SeasonSteakStep.swift */,
-				EE6E721E2B6FDD0F0012BF9E /* GameOverView.swift */,
-				EE6E720A2B6C9C650012BF9E /* ProgressBar.swift */,
+				EEE46E1D2B7D237B00CB7768 /* Views */,
+				EEE46E0A2B787C3500CB7768 /* SteakGameViewModel.swift */,
 			);
 			path = Steak;
 			sourceTree = "<group>";
@@ -140,20 +137,35 @@
 		EEC0C3272B69E7190094E043 /* ChefyBeta MessagesExtension */ = {
 			isa = PBXGroup;
 			children = (
+				EEE46E172B7D21E900CB7768 /* Common */,
+				EEE46E1C2B7D22B200CB7768 /* Recipes */,
+				EEE46E1B2B7D224D00CB7768 /* Game */,
 				EEC0C3282B69E7190094E043 /* MessagesViewController.swift */,
-				EEC0C3392B69E82D0094E043 /* ContentView.swift */,
-				EEE46E062B7874AA00CB7768 /* ProfileView.swift */,
-				EEE46E082B7874B400CB7768 /* SettingsView.swift */,
-				EEC0C33F2B69E8850094E043 /* ToolbarView.swift */,
-				EE6E721B2B6F1E100012BF9E /* Steak */,
-				EEE46E052B78741700CB7768 /* Utils */,
 				EEC0C32D2B69E71E0094E043 /* Assets.xcassets */,
 				EEC0C32F2B69E71E0094E043 /* Info.plist */,
 			);
 			path = "ChefyBeta MessagesExtension";
 			sourceTree = "<group>";
 		};
-		EEE46E052B78741700CB7768 /* Utils */ = {
+		EEE46E172B7D21E900CB7768 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				EEE46E1A2B7D222400CB7768 /* Models */,
+				EEE46E192B7D21FC00CB7768 /* Utils */,
+				EEE46E182B7D21EF00CB7768 /* Components */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		EEE46E182B7D21EF00CB7768 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				EE6E720A2B6C9C650012BF9E /* ProgressBarView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		EEE46E192B7D21FC00CB7768 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
 				EE6E721C2B6F5CC00012BF9E /* Conversation.swift */,
@@ -161,6 +173,61 @@
 				EEF9BB552B6C495D002EA1BD /* MessageHandler.swift */,
 			);
 			path = Utils;
+			sourceTree = "<group>";
+		};
+		EEE46E1A2B7D222400CB7768 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				EEE46E112B7B31AA00CB7768 /* Models.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		EEE46E1B2B7D224D00CB7768 /* Game */ = {
+			isa = PBXGroup;
+			children = (
+				EEC0C3392B69E82D0094E043 /* ContentView.swift */,
+				EEE46E062B7874AA00CB7768 /* ProfileView.swift */,
+				EEE46E082B7874B400CB7768 /* SettingsView.swift */,
+				EEC0C33F2B69E8850094E043 /* ToolbarView.swift */,
+				EE6E721E2B6FDD0F0012BF9E /* GameOverView.swift */,
+			);
+			path = Game;
+			sourceTree = "<group>";
+		};
+		EEE46E1C2B7D22B200CB7768 /* Recipes */ = {
+			isa = PBXGroup;
+			children = (
+				EEE46E202B800A3700CB7768 /* Pancakes */,
+				EE6E721B2B6F1E100012BF9E /* Steak */,
+			);
+			path = Recipes;
+			sourceTree = "<group>";
+		};
+		EEE46E1D2B7D237B00CB7768 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				EEE46E132B7C30B900CB7768 /* SteakCookingView.swift */,
+				EEE46E032B78704900CB7768 /* SteakSeasoningView.swift */,
+				EEE46E222B800B6E00CB7768 /* PastryRollingView.swift */,
+				EEE46E242B800C8000CB7768 /* AltMushroomView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		EEE46E202B800A3700CB7768 /* Pancakes */ = {
+			isa = PBXGroup;
+			children = (
+				EEE46E212B800A4800CB7768 /* Views */,
+			);
+			path = Pancakes;
+			sourceTree = "<group>";
+		};
+		EEE46E212B800A4800CB7768 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -265,14 +332,15 @@
 				EEC0C33E2B69E8600094E043 /* ImageItem.swift in Sources */,
 				EEC0C3402B69E8850094E043 /* ToolbarView.swift in Sources */,
 				EEE46E072B7874AA00CB7768 /* ProfileView.swift in Sources */,
+				EEE46E252B800C8000CB7768 /* AltMushroomView.swift in Sources */,
 				EE6E721F2B6FDD0F0012BF9E /* GameOverView.swift in Sources */,
-				EEE46E0B2B787C3500CB7768 /* GameViewModel.swift in Sources */,
+				EEE46E0B2B787C3500CB7768 /* SteakGameViewModel.swift in Sources */,
 				EEF9BB562B6C495D002EA1BD /* MessageHandler.swift in Sources */,
+				EEE46E232B800B6E00CB7768 /* PastryRollingView.swift in Sources */,
 				EEC0C33A2B69E82D0094E043 /* ContentView.swift in Sources */,
 				EEE46E122B7B31AA00CB7768 /* Models.swift in Sources */,
-				EEE46E042B78704900CB7768 /* SeasonSteakStep.swift in Sources */,
-				EEC0C3422B69E8980094E043 /* SteakGameView.swift in Sources */,
-				EE6E720B2B6C9C650012BF9E /* ProgressBar.swift in Sources */,
+				EEE46E042B78704900CB7768 /* SteakSeasoningView.swift in Sources */,
+				EE6E720B2B6C9C650012BF9E /* ProgressBarView.swift in Sources */,
 				EEC0C3292B69E7190094E043 /* MessagesViewController.swift in Sources */,
 				EEE46E092B7874B400CB7768 /* SettingsView.swift in Sources */,
 				EEE46E142B7C30B900CB7768 /* SteakCookingView.swift in Sources */,
