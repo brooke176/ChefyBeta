@@ -34,7 +34,7 @@ enum SteakSide {
 }
 
 enum GameType: String {
-    case beefWelly = "beef_welly"
+    case BeefWelly = "Beef Welly"
     case pancakes = "pancakes"
 }
 

@@ -19,6 +19,7 @@ class PancakeGameViewModel: ObservableObject {
     @Published var showOutcomeView: Bool = false
     @Published var eggsCracked: Int = 0
     @Published var currentEggState: EggState = .whole
+    @Published var showMixingView = false
 
     let eggsToCrack: Int = 5
     var dragStartTime: Date?
@@ -79,6 +80,11 @@ class PancakeGameViewModel: ObservableObject {
     func endCooking() {
         pancakeState = .idle
         timer?.invalidate()
+    }
+
+    func startMixing() {
+        showMixingView = true
+//        timer?.invalidate()
     }
 }
 

@@ -30,18 +30,21 @@ struct CrackEggsView: View {
                 Spacer()
 
                 Rectangle()
-                    .fill(Color.red.opacity(0.2))
+                    .fill(Color.red.opacity(0.0001))
                     .frame(width: 250, height: 200)
                     .offset(x: 0, y: -150)
                     .onDrop(of: [.plainText], isTargeted: nil) { _, _ in
                         viewModel.handleDrop()
-                        print("slay")
                         return true
                     }
                 Spacer().frame(height: 100)
             }
 
             DraggableEgg(viewModel: viewModel)
+            VStack {
+                Spacer()
+                EggButtons(viewModel: viewModel)
+            }
         }
     }
 }
@@ -56,9 +59,22 @@ struct DraggableEgg: View {
         Image(imageName)
             .resizable()
             .frame(width: 50, height: 70)
+            .offset(x: -50, y: 0)
             .onDrag {
                 viewModel.startDrag()
                 return NSItemProvider(object: "egg" as NSString)
             }
+    }
+}
+
+struct EggButtons: View {
+    @ObservedObject var viewModel: PancakeGameViewModel
+
+    var body: some View {
+        VStack {
+            Button("Mix eggs", action: viewModel.startMixing)
+                .buttonStyle(GameButtonStyle(backgroundColor: .blue))
+//            ProgressBar(progress: viewModel.wellingtonCookingProgress).frame(height: 20).padding()
+        }
     }
 }

@@ -23,7 +23,6 @@ class SteakGameViewModel: ObservableObject {
     // Shared variables
     @Published var gameEnded = false
     @Published var gameMessage = ""
-    @Published var showFireEffect = false
     @Published var showingLoadingOverlay = false
     @Published var showOutcomeView = false
     @Published var showCookingView = false
@@ -32,7 +31,6 @@ class SteakGameViewModel: ObservableObject {
     @Published var showDoughPrepView = false
     @Published var showOvenCookingView = false
 
-    weak var delegate: GameViewDelegate?
     var timer: Timer?
     var seasoningGraphics: [SeasoningGraphic] = []
     var messagesViewController: MessagesViewController
@@ -79,11 +77,9 @@ class SteakGameViewModel: ObservableObject {
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
             self.cookingProgress += 0.1
             if self.cookingProgress >= self.maxCookingProgress {
-                self.showFireEffect = true
                 self.showMushroomView = true
             }
         }
-        delegate?.transitionToSteakCookingView(viewModel: self)
     }
 
     func startCookingWellington() {
@@ -193,7 +189,6 @@ class SteakGameViewModel: ObservableObject {
         isCooking = false
         steakFlipped = false
         gameEnded = false
-        showFireEffect = false
         seasoningGraphics = []
     }
 

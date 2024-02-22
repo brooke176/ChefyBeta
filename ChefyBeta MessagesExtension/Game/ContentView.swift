@@ -91,6 +91,7 @@ struct ContentView: View {
 
     private func inviteToGame(for item: ImageItem) {
         guard let conversation = conversation else { return }
+        print(item.label)
         inviteToGame(gameType: item.label)
     }
 
