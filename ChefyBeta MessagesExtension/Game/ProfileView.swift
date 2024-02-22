@@ -6,7 +6,7 @@ struct ProfileView: View {
 
     // Placeholder for lifetime wins; replace with actual data retrieval
     let lifetimeWins: Int = 0 // This will be replaced with actual data retrieval logic
-    
+
     // Environment to dismiss the view
     @Environment(\.presentationMode) var presentationMode
 
@@ -22,7 +22,7 @@ struct ProfileView: View {
 
             Text("Lifetime Wins: \(lifetimeWins)")
                 .font(.headline)
-                
+
             Button("Back") {
                 self.presentationMode.wrappedValue.dismiss()
             }

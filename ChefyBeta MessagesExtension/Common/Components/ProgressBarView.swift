@@ -6,7 +6,7 @@ struct ProgressBar: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .leading) {
-                Rectangle().frame(width: geometry.size.width , height: geometry.size.height)
+                Rectangle().frame(width: geometry.size.width, height: geometry.size.height)
                     .opacity(0.3)
                     .foregroundColor(Color.gray)
 

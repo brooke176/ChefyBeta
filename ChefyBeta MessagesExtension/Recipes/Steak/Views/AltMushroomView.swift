@@ -7,14 +7,14 @@ struct SauteMushroomsView: View {
     let totalCookingTime = 15
     let stirInterval = 3
     let colorChangeInterval = 4
-    
+
     var body: some View {
         ZStack {
             Image("stovie2")
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .edgesIgnoringSafeArea(.all)
-            
+
             Image("mushrooms")
                 .resizable()
                 .scaledToFit()
@@ -33,19 +33,19 @@ struct SauteMushroomsView: View {
             }}
         .onAppear { viewModel.startCookingMushrooms() }
         .onDisappear { viewModel.endCookingMushrooms() }
-        .sheet(isPresented: $viewModel.showOutcomeView) {
-            GameOutcomeView(gameState: viewModel.gameState)
+        .sheet(isPresented: $viewModel.showDoughRollingView) {
+            PastryRollingView(viewModel: viewModel)
         }
     }
-    
+
     struct MushroomInstructionText: View {
         @ObservedObject var viewModel: SteakGameViewModel
         let maxCookingProgress = 0.6
-        
+
         var body: some View {
             Text(instructionText)
         }
-        
+
         private var instructionText: String {
             if viewModel.mushroomCookingProgress < maxCookingProgress {
                 return "Keep stirring the mushrooms."
@@ -54,10 +54,10 @@ struct SauteMushroomsView: View {
             }
         }
     }
-    
+
     struct ShroomButtons: View {
         @ObservedObject var viewModel: SteakGameViewModel
-        
+
         var body: some View {
             VStack {
                 Button("Finish cooking shrooms", action: viewModel.serveMushrooms)

@@ -7,7 +7,7 @@ class ConversationManager {
     init(conversation: MSConversation?) {
         self.activeConversation = conversation
     }
-    
+
 //        func sendGameInvitation(completion: @escaping () -> Void) {
 //            guard let conversation = activeConversation else { return }
 //            
@@ -30,7 +30,6 @@ class ConversationManager {
 //            }
 //        }
 
-    
 //    func parseGameState(from message: MSMessage) -> GameState? {
 //        guard let messageURL = message.url,
 //              let urlComponents = URLComponents(url: messageURL, resolvingAgainstBaseURL: false),

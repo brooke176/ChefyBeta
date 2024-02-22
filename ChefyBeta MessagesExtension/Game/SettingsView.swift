@@ -17,7 +17,7 @@ struct SettingsView: View {
 
             Text("Lifetime Wins: \(lifetimeWins)")
                 .font(.headline)
-                
+
             Button("Back") {
                 self.presentationMode.wrappedValue.dismiss()
             }

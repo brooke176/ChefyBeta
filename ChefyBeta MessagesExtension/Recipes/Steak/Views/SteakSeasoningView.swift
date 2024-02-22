@@ -10,7 +10,7 @@ struct SteakSeasoningView: View {
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .edgesIgnoringSafeArea(.all)
-            
+
             VStack {
                 Spacer()
                 SeasoningInstructionText(gameEnded: viewModel.gameEnded, isCooking: viewModel.isCooking, steakFlipped: viewModel.steakFlipped, cookingProgress: viewModel.cookingProgress, seasoning: viewModel.seasoning, gameState: viewModel.gameState)
@@ -48,20 +48,20 @@ struct SeasoningInstructionText: View {
     var cookingProgress: Double
     var seasoning: SteakSeasoning
     var gameState: GameState
-    
+
     private let minSeasoningAmount: Double = 0.6
     private let maxSeasoningAmount = 3.0
     private let perfectSeasoningRange = 0.6...1.5
     private let maxCookingProgress = 1.0
-    
+
     var body: some View {
         Text(instructionText)
     }
-    
+
     private var instructionText: String {
         if seasoning.frontSalt < minSeasoningAmount || seasoning.frontPepper < minSeasoningAmount {
             return "Season the steak"
-        } else if steakFlipped && seasoning.frontSalt >= minSeasoningAmount && seasoning.frontPepper >= minSeasoningAmount  {
+        } else if steakFlipped && seasoning.frontSalt >= minSeasoningAmount && seasoning.frontPepper >= minSeasoningAmount {
             return "Flip the steak"
         } else if !steakFlipped && (seasoning.backSalt < minSeasoningAmount || seasoning.backPepper < minSeasoningAmount) {
             return "Season the back side of the steak"
@@ -90,14 +90,14 @@ struct SteakView: View {
                         .onTapGesture {
                             viewModel.steakFlipped.toggle()
                         }
-        
+
                     ForEach(seasoningGraphics.filter { $0.side == (steakFlipped ? .front : .back) }) { graphic in
                         Circle()
                             .fill(graphic.color)
                             .frame(width: 4, height: 4)
                             .position(graphic.position)
                     }
-        
+
                     Rectangle()
                         .fill(Color.red.opacity(0.01))
                         .frame(width: 80, height: 90)
@@ -105,7 +105,7 @@ struct SteakView: View {
                         .onTapGesture {
                             viewModel.addSeasoningGraphics(type: .salt)
                         }
-        
+
                     Rectangle()
                         .fill(Color.blue.opacity(0.01))
                         .frame(width: 80, height: 80)

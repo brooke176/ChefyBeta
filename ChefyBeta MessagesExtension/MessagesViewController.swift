@@ -6,23 +6,64 @@ protocol GameViewDelegate: AnyObject {
     func transitionToSteakCookingView(viewModel: SteakGameViewModel)
 }
 
+protocol GameViewModelProtocol: AnyObject {
+    func setupGameView(messagesViewController: MessagesViewController)
+}
+
 class MessagesViewController: MSMessagesAppViewController {
     var gameState: GameState = GameState()
     private var conversationManager: ConversationManager?
+    private var currentGameViewModel: GameViewModelProtocol?
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+        override func willBecomeActive(with conversation: MSConversation) {
+            super.willBecomeActive(with: conversation)
+
+            if let message = conversation.selectedMessage, let messageURL = message.url {
+                decodeGameState(from: messageURL) { [weak self] _ in
+                    guard let self = self else { return }
+
+                        if let selectedGameType = decodeSelectedGameType(from: conversation) {
+
+                        switch selectedGameType {
+                        case .beefWelly:
+                            let viewModel = SteakGameViewModel(gameState: gameState, messagesViewController: self)
+                            presentSteakGame(viewModel: viewModel)
+                        case .pancakes:
+                            let viewModel = PancakeGameViewModel(gameState: gameState)
+                            presentPancakeGame(viewModel: viewModel)
+                        }
+                    } else {
+                        self.presentContentView(conversation: conversation)
+                    }
+                }
+            } else {
+                presentContentView(conversation: conversation)
+            }
+        }
+
+    private func presentSteakGame(viewModel: SteakGameViewModel) {
+        let view = SteakCookingView(viewModel: viewModel)
+        presentView(view)
     }
-    
+
+    private func presentPancakeGame(viewModel: PancakeGameViewModel) {
+        let view = CrackEggsView(viewModel: viewModel)
+        presentView(view)
+    }
+
+    func presentView<T: View>(_ view: T) {
+        let hostingController = UIHostingController(rootView: view)
+        setupChildViewController(hostingController)
+    }
+
 //    override func willBecomeActive(with conversation: MSConversation) {
 //        super.willBecomeActive(with: conversation)
 //
-//        let viewModel = SteakGameViewModel(gameState: gameState, messagesViewController: self)
+//        let viewModel = PancakeGameViewModel(gameState: gameState)
 //
-//        let SteakSeasoningViewView = SauteMushroomsView(viewModel: viewModel)
+//        let SteakSeasoningViewView = CrackEggsView(viewModel: viewModel)
 //        let hostingController = UIHostingController(rootView: SteakSeasoningViewView)
 //
-//        // Ensure the child view controller fits the parent view controller
 //        addChild(hostingController)
 //        view.addSubview(hostingController.view)
 //        hostingController.didMove(toParent: self)
@@ -35,24 +76,6 @@ class MessagesViewController: MSMessagesAppViewController {
 //            hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
 //        ])
 //    }
-    
-    override func willBecomeActive(with conversation: MSConversation) {
-        super.willBecomeActive(with: conversation)
-
-        if let message = conversation.selectedMessage, let messageURL = message.url {
-            decodeGameState(from: messageURL) { [weak self] decodedGameState in
-                guard let self = self else { return }
-
-                if let gameState = decodedGameState {
-                    self.setupViewBasedOnGameState(gameState)
-                } else {
-                    self.presentContentView(conversation: conversation)
-                }
-            }
-        } else {
-            presentContentView(conversation: conversation)
-        }
-    }
 
     private func setupViewBasedOnGameState(_ gameState: GameState) {
         let viewModel = SteakGameViewModel(gameState: gameState, messagesViewController: self)
@@ -68,7 +91,7 @@ class MessagesViewController: MSMessagesAppViewController {
     private func transitionBasedOnGameState(_ gameState: GameState) {
         let viewModel = SteakGameViewModel(gameState: gameState, messagesViewController: self)
         viewModel.delegate = self
-        
+
         if viewModel.isCooking {
             transitionToSteakCookingView(viewModel: viewModel)
         } else {
@@ -76,7 +99,7 @@ class MessagesViewController: MSMessagesAppViewController {
             presentView(SteakSeasoningViewView)
         }
     }
-    
+
     private func presentContentView(conversation: MSConversation) {
                              conversationManager = ConversationManager(conversation: conversation)
                              let contentView = ContentView(conversation: conversation, conversationManager: conversationManager!)
@@ -86,7 +109,21 @@ class MessagesViewController: MSMessagesAppViewController {
                              hostingController.didMove(toParent: self)
                              hostingController.view.frame = view.bounds
     }
-    
+
+    private func decodeSelectedGameType(from conversation: MSConversation) -> GameType? {
+        guard let messageURL = conversation.selectedMessage?.url,
+              let urlComponents = URLComponents(url: messageURL, resolvingAgainstBaseURL: false),
+              let queryItems = urlComponents.queryItems else { return nil }
+
+        for queryItem in queryItems {
+            if queryItem.name == "gameType", let value = queryItem.value {
+                return GameType(rawValue: value)
+            }
+        }
+
+        return nil
+    }
+
     private func decodeGameState(from url: URL, completion: @escaping (GameState?) -> Void) {
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
               let queryItems = components.queryItems else {
@@ -98,6 +135,8 @@ class MessagesViewController: MSMessagesAppViewController {
 
         for item in queryItems {
             switch item.name {
+            case "gameType":
+                gameState.gameType = item.value
             case "player1Score":
                 gameState.player1Score = Int(item.value ?? "0") ?? 0
             case "player2Score":
@@ -115,7 +154,7 @@ class MessagesViewController: MSMessagesAppViewController {
 
         completion(gameState)
     }
-    
+
     func updateAndSendGameState(completion: @escaping () -> Void) {
         guard let conversation = activeConversation else {
             completion() // Ensure to call completion even if early return
@@ -134,9 +173,9 @@ class MessagesViewController: MSMessagesAppViewController {
             URLQueryItem(name: "player2Played", value: String(gameState.player2Played)),
             URLQueryItem(name: "currentPlayer", value: gameState.currentPlayer == "player1" ? "player2" : "player1")
         ]
-        
+
         message.url = components.url
-        
+
         conversation.insert(message) { [weak self] error in
             if let error = error {
                 print("Error sending message: \(error.localizedDescription)")
@@ -154,7 +193,7 @@ class MessagesViewController: MSMessagesAppViewController {
             }
         }
     }
-    
+
     func updateAndSendGameState() {
            guard let conversation = activeConversation else { return }
 
@@ -171,9 +210,9 @@ class MessagesViewController: MSMessagesAppViewController {
                URLQueryItem(name: "player2Played", value: String(gameState.player2Played)),
                URLQueryItem(name: "currentPlayer", value: gameState.currentPlayer == "player1" ? "player2" : "player1")
            ]
-           
+
            message.url = components.url
-           
+
            conversation.insert(message) { [weak self] error in
                if let error = error {
                    print("Error sending message: \(error.localizedDescription)")
@@ -206,7 +245,7 @@ class MessagesViewController: MSMessagesAppViewController {
         let layout = MSMessageTemplateLayout()
         layout.caption = "Let's play Steak Game!!"
         message.layout = layout
-        
+
         var components = URLComponents()
         components.queryItems = [
             URLQueryItem(name: "player1Score", value: "\(gameState.player1Score)"),
@@ -215,10 +254,10 @@ class MessagesViewController: MSMessagesAppViewController {
             URLQueryItem(name: "player2Played", value: "\(gameState.player2Played)"),
             URLQueryItem(name: "currentPlayer", value: gameState.currentPlayer)
         ]
-        
+
         message.url = components.url
         message.layout = layout
-                
+
         return message
     }
 
@@ -262,17 +301,17 @@ extension MessagesViewController: GameViewDelegate {
         let steakCookingView = SteakCookingView(viewModel: viewModel)
         presentView(steakCookingView)
     }
-    
+
     func transitionToSteakSeasoningViewView(viewModel: SteakGameViewModel) {
         let SteakSeasoningViewView = SteakSeasoningView(viewModel: viewModel)
         presentView(SteakSeasoningViewView)
     }
-    
-    private func presentView<T: View>(_ view: T) {
-        let hostingController = UIHostingController(rootView: view)
-        setupChildViewController(hostingController)
-    }
-    
+
+//    func presentView<T: View>(_ view: T) {
+//        let hostingController = UIHostingController(rootView: view)
+//        setupChildViewController(hostingController)
+//    }
+
     private func setupChildViewController(_ viewController: UIViewController) {
         // Remove existing child view controllers
         children.forEach {
@@ -280,12 +319,12 @@ extension MessagesViewController: GameViewDelegate {
             $0.view.removeFromSuperview()
             $0.removeFromParent()
         }
-        
+
         // Add the new view controller
         addChild(viewController)
         view.addSubview(viewController.view)
         viewController.didMove(toParent: self)
-        
+
         viewController.view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             viewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),

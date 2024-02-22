@@ -11,9 +11,9 @@ struct ContentView: View {
     @State private var showOutcomeView = false
 
     let imageItems: [ImageItem] = [
-        ImageItem(id: 1, imageName: "steak 1", label: "Steak"),
-        ImageItem(id: 2, imageName: "carbonara", label: "Carbonara"),
-        ImageItem(id: 3, imageName: "beef_wellington", label: "Beef Welly"),
+        ImageItem(id: 1, imageName: "beef_wellington", label: "Beef Welly"),
+        ImageItem(id: 2, imageName: "pancakes", label: "Pancakes"),
+        ImageItem(id: 3, imageName: "carbonara", label: "Carbonara"),
         ImageItem(id: 4, imageName: "california_roll", label: "Sushi"),
         ImageItem(id: 5, imageName: "nachos", label: "Nachos"),
         ImageItem(id: 6, imageName: "potato", label: "Potato"),
@@ -39,10 +39,8 @@ struct ContentView: View {
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
                         ForEach(imageItems, id: \.imageName) { item in
                             Button(action: {
-                                if item.label == "Steak" {
-                                    inviteToPlaySteakGame()
-
-                                }
+                                selectedItem = item
+                                inviteToGame(for: item)
                             }) {
                                 itemContent(for: item)
                             }
@@ -64,7 +62,7 @@ struct ContentView: View {
                 .shadow(radius: 1)
                 .frame(width: 70, height: 80)
                 .overlay(
-                    item.label != "Steak" ?
+                    item.label != "Beef Welly" && item.label != "Pancakes" ?
                         Text("Coming Soon")
                         .font(.system(size: 11, weight: .medium, design: .rounded))
                         .padding(2)
@@ -75,7 +73,7 @@ struct ContentView: View {
                         : nil,
                     alignment: .bottomTrailing
                 )
-            
+
             Text(item.label)
                 .font(.system(size: 12, weight: .medium, design: .rounded))
                 .foregroundColor(.black)
@@ -90,18 +88,24 @@ struct ContentView: View {
         .shadow(radius: 2)
         .frame(width: 80, height: 120)
     }
-    
-    private func inviteToPlaySteakGame() {
+
+    private func inviteToGame(for item: ImageItem) {
         guard let conversation = conversation else { return }
-        
+        inviteToGame(gameType: item.label)
+    }
+
+    private func inviteToGame(gameType: String) {
+        guard let conversation = conversation else { return }
+
         let session = MSSession()
         let message = MSMessage(session: session)
         let layout = MSMessageTemplateLayout()
-        layout.caption = "Let's play Steak Game!!"
+        layout.caption = "Let's play \(gameType)!!"
         message.layout = layout
 
         var components = URLComponents()
         components.queryItems = [
+            URLQueryItem(name: "gameType", value: gameType.lowercased()),
             URLQueryItem(name: "player1Score", value: "0"),
             URLQueryItem(name: "player2Score", value: "0"),
             URLQueryItem(name: "player1Played", value: "false"),

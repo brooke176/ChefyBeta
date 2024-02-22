@@ -7,6 +7,7 @@ struct GameState: Equatable {
     var player1Played: Bool = false
     var player2Played: Bool = false
     var currentPlayer: String?
+    var gameType: String?
 }
 
 struct SteakSeasoning {
@@ -30,6 +31,11 @@ struct SeasoningGraphic: Identifiable {
 
 enum SteakSide {
     case front, back
+}
+
+enum GameType: String {
+    case beefWelly = "beef_welly"
+    case pancakes = "pancakes"
 }
 
     struct GameButtonStyle: ButtonStyle {

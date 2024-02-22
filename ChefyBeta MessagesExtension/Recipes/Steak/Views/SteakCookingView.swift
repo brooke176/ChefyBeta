@@ -3,14 +3,14 @@ import SwiftUI
 
 struct SteakCookingView: View {
     @ObservedObject var viewModel: SteakGameViewModel
-    
+
     var body: some View {
         ZStack {
             Image("stovie2")
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .edgesIgnoringSafeArea(.all)
-            
+
             VStack {
                 Spacer()
                 InstructionText(gameEnded: viewModel.gameEnded, isCooking: viewModel.isCooking, steakFlipped: viewModel.steakFlipped, cookingProgress: viewModel.cookingProgress, seasoning: viewModel.seasoning, gameState: viewModel.gameState)
@@ -37,7 +37,7 @@ struct SteakCookingView: View {
             SauteMushroomsView(viewModel: viewModel)
         }
     }
-    
+
     struct InstructionText: View {
         var gameEnded: Bool
         var isCooking: Bool
@@ -45,16 +45,16 @@ struct SteakCookingView: View {
         var cookingProgress: Double
         var seasoning: SteakSeasoning
         var gameState: GameState
-        
+
         private let minSeasoningAmount: Double = 0.6
         private let maxSeasoningAmount = 3.0
         private let perfectSeasoningRange = 0.6...1.5
         private let maxCookingProgress = 1.0
-        
+
         var body: some View {
             Text(instructionText)
         }
-        
+
         private var instructionText: String {
             if gameEnded {
                 if gameState.player2Score != 0 {
@@ -67,22 +67,20 @@ struct SteakCookingView: View {
                     }
                 } else {
                     return "Waiting for opponent..."
-                }}
-            else if cookingProgress < 0.6 {
+                }} else if cookingProgress < 0.6 {
                 return "Keep cooking..."
             } else {
                 return "Serve the steak"
             }
         }
     }
-    
-    
+
     struct SteakCookView: View {
         var steakFlipped: Bool
         var isCooking: Bool
         var seasoningGraphics: [SeasoningGraphic]
         @ObservedObject var viewModel: SteakGameViewModel
-        
+
         var body: some View {
             ZStack(alignment: .center) {
                 Image("steakie")
@@ -96,7 +94,7 @@ struct SteakCookingView: View {
                     .onTapGesture {
                         viewModel.steakFlipped.toggle()
                     }
-                
+
                 ForEach(seasoningGraphics.filter { $0.side == (steakFlipped ? .back : .front) }) { graphic in
                     Circle()
                         .fill(graphic.color)
@@ -106,10 +104,10 @@ struct SteakCookingView: View {
             }
         }
     }
-    
+
     struct ActionButtonsView: View {
         @ObservedObject var viewModel: SteakGameViewModel
-        
+
         var body: some View {
             VStack {
                 Button("Serve Steak", action: viewModel.serveSteak)
@@ -118,5 +116,5 @@ struct SteakCookingView: View {
             }
         }
     }
-    
+
 }

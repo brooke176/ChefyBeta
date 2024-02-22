@@ -26,6 +26,10 @@
 		EEE46E142B7C30B900CB7768 /* SteakCookingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E132B7C30B900CB7768 /* SteakCookingView.swift */; };
 		EEE46E232B800B6E00CB7768 /* PastryRollingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E222B800B6E00CB7768 /* PastryRollingView.swift */; };
 		EEE46E252B800C8000CB7768 /* AltMushroomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E242B800C8000CB7768 /* AltMushroomView.swift */; };
+		EEE46E272B859A6400CB7768 /* PrepPastryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E262B859A6400CB7768 /* PrepPastryView.swift */; };
+		EEE46E292B86B90700CB7768 /* OvenCookingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E282B86B90700CB7768 /* OvenCookingView.swift */; };
+		EEE46E2B2B86D64700CB7768 /* CrackEggsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E2A2B86D64700CB7768 /* CrackEggsView.swift */; };
+		EEE46E2D2B86D6BD00CB7768 /* PancakeGameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E2C2B86D6BD00CB7768 /* PancakeGameViewModel.swift */; };
 		EEF9BB562B6C495D002EA1BD /* MessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF9BB552B6C495D002EA1BD /* MessageHandler.swift */; };
 /* End PBXBuildFile section */
 
@@ -75,6 +79,10 @@
 		EEE46E132B7C30B900CB7768 /* SteakCookingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteakCookingView.swift; sourceTree = "<group>"; };
 		EEE46E222B800B6E00CB7768 /* PastryRollingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastryRollingView.swift; sourceTree = "<group>"; };
 		EEE46E242B800C8000CB7768 /* AltMushroomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AltMushroomView.swift; sourceTree = "<group>"; };
+		EEE46E262B859A6400CB7768 /* PrepPastryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrepPastryView.swift; sourceTree = "<group>"; };
+		EEE46E282B86B90700CB7768 /* OvenCookingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OvenCookingView.swift; sourceTree = "<group>"; };
+		EEE46E2A2B86D64700CB7768 /* CrackEggsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrackEggsView.swift; sourceTree = "<group>"; };
+		EEE46E2C2B86D6BD00CB7768 /* PancakeGameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PancakeGameViewModel.swift; sourceTree = "<group>"; };
 		EEF9BB552B6C495D002EA1BD /* MessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageHandler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -211,6 +219,8 @@
 				EEE46E032B78704900CB7768 /* SteakSeasoningView.swift */,
 				EEE46E222B800B6E00CB7768 /* PastryRollingView.swift */,
 				EEE46E242B800C8000CB7768 /* AltMushroomView.swift */,
+				EEE46E262B859A6400CB7768 /* PrepPastryView.swift */,
+				EEE46E282B86B90700CB7768 /* OvenCookingView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -219,6 +229,7 @@
 			isa = PBXGroup;
 			children = (
 				EEE46E212B800A4800CB7768 /* Views */,
+				EEE46E2C2B86D6BD00CB7768 /* PancakeGameViewModel.swift */,
 			);
 			path = Pancakes;
 			sourceTree = "<group>";
@@ -226,6 +237,7 @@
 		EEE46E212B800A4800CB7768 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				EEE46E2A2B86D64700CB7768 /* CrackEggsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -257,6 +269,7 @@
 				EEC0C31C2B69E7190094E043 /* Sources */,
 				EEC0C31D2B69E7190094E043 /* Frameworks */,
 				EEC0C31E2B69E7190094E043 /* Resources */,
+				EEE46E2E2B87A2EA00CB7768 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -323,6 +336,26 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		EEE46E2E2B87A2EA00CB7768 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nswiftlint --fix\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		EEC0C31C2B69E7190094E043 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -331,7 +364,9 @@
 				EE6E721D2B6F5CC00012BF9E /* Conversation.swift in Sources */,
 				EEC0C33E2B69E8600094E043 /* ImageItem.swift in Sources */,
 				EEC0C3402B69E8850094E043 /* ToolbarView.swift in Sources */,
+				EEE46E292B86B90700CB7768 /* OvenCookingView.swift in Sources */,
 				EEE46E072B7874AA00CB7768 /* ProfileView.swift in Sources */,
+				EEE46E272B859A6400CB7768 /* PrepPastryView.swift in Sources */,
 				EEE46E252B800C8000CB7768 /* AltMushroomView.swift in Sources */,
 				EE6E721F2B6FDD0F0012BF9E /* GameOverView.swift in Sources */,
 				EEE46E0B2B787C3500CB7768 /* SteakGameViewModel.swift in Sources */,
@@ -340,9 +375,11 @@
 				EEC0C33A2B69E82D0094E043 /* ContentView.swift in Sources */,
 				EEE46E122B7B31AA00CB7768 /* Models.swift in Sources */,
 				EEE46E042B78704900CB7768 /* SteakSeasoningView.swift in Sources */,
+				EEE46E2D2B86D6BD00CB7768 /* PancakeGameViewModel.swift in Sources */,
 				EE6E720B2B6C9C650012BF9E /* ProgressBarView.swift in Sources */,
 				EEC0C3292B69E7190094E043 /* MessagesViewController.swift in Sources */,
 				EEE46E092B7874B400CB7768 /* SettingsView.swift in Sources */,
+				EEE46E2B2B86D64700CB7768 /* CrackEggsView.swift in Sources */,
 				EEE46E142B7C30B900CB7768 /* SteakCookingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -484,6 +521,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = KP5XB6RW79;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ChefyBeta MessagesExtension/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = ChefyBeta;
@@ -510,6 +548,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = KP5XB6RW79;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ChefyBeta MessagesExtension/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = ChefyBeta;
