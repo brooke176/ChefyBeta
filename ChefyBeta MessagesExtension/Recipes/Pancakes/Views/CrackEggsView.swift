@@ -72,7 +72,7 @@ struct CrackEggsView: View {
                 VStack {
                     Button("Mix eggs", action: viewModel.startMixing)
                         .buttonStyle(GameButtonStyle(backgroundColor: viewModel.eggsCracked >= 5 ? .blue : .gray))
-//                        .disabled(viewModel.eggsCracked >= 5)
+                        .disabled(viewModel.eggsCracked >= 5)
                 }
             }
         }

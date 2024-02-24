@@ -13,7 +13,7 @@ enum EggState {
 
 struct Egg {
     var state: EggState = .whole
-    var position: CGPoint? // Updated to be optional
+    var position: CGPoint?
     var isSelected: Bool = false
 
     var imageName: String {
