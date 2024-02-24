@@ -30,6 +30,7 @@
 		EEE46E292B86B90700CB7768 /* OvenCookingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E282B86B90700CB7768 /* OvenCookingView.swift */; };
 		EEE46E2B2B86D64700CB7768 /* CrackEggsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E2A2B86D64700CB7768 /* CrackEggsView.swift */; };
 		EEE46E2D2B86D6BD00CB7768 /* PancakeGameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E2C2B86D6BD00CB7768 /* PancakeGameViewModel.swift */; };
+		EEE46E302B89846700CB7768 /* MeasureIngrediantsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E2F2B89846700CB7768 /* MeasureIngrediantsView.swift */; };
 		EEF9BB562B6C495D002EA1BD /* MessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF9BB552B6C495D002EA1BD /* MessageHandler.swift */; };
 /* End PBXBuildFile section */
 
@@ -83,6 +84,7 @@
 		EEE46E282B86B90700CB7768 /* OvenCookingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OvenCookingView.swift; sourceTree = "<group>"; };
 		EEE46E2A2B86D64700CB7768 /* CrackEggsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrackEggsView.swift; sourceTree = "<group>"; };
 		EEE46E2C2B86D6BD00CB7768 /* PancakeGameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PancakeGameViewModel.swift; sourceTree = "<group>"; };
+		EEE46E2F2B89846700CB7768 /* MeasureIngrediantsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureIngrediantsView.swift; sourceTree = "<group>"; };
 		EEF9BB552B6C495D002EA1BD /* MessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageHandler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -238,6 +240,7 @@
 			isa = PBXGroup;
 			children = (
 				EEE46E2A2B86D64700CB7768 /* CrackEggsView.swift */,
+				EEE46E2F2B89846700CB7768 /* MeasureIngrediantsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -339,6 +342,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		EEE46E2E2B87A2EA00CB7768 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -372,6 +376,7 @@
 				EEE46E0B2B787C3500CB7768 /* SteakGameViewModel.swift in Sources */,
 				EEF9BB562B6C495D002EA1BD /* MessageHandler.swift in Sources */,
 				EEE46E232B800B6E00CB7768 /* PastryRollingView.swift in Sources */,
+				EEE46E302B89846700CB7768 /* MeasureIngrediantsView.swift in Sources */,
 				EEC0C33A2B69E82D0094E043 /* ContentView.swift in Sources */,
 				EEE46E122B7B31AA00CB7768 /* Models.swift in Sources */,
 				EEE46E042B78704900CB7768 /* SteakSeasoningView.swift in Sources */,

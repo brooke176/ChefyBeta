@@ -6,7 +6,7 @@ struct CrackEggsView: View {
 
     var body: some View {
         ZStack {
-            Image("mixing_bowls")
+            Image("eggbackground")
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .edgesIgnoringSafeArea(.all)
@@ -26,55 +26,61 @@ struct CrackEggsView: View {
                     .background(Color.black.opacity(0.5))
                     .foregroundColor(.white)
                     .cornerRadius(8)
+                ZStack {
+                    Rectangle()
+                        .fill(Color.red.opacity(0.003))
+                        .frame(width: 200, height: 150)
+                        .position(x: UIScreen.main.bounds.width / 1.6, y: UIScreen.main.bounds.height / 2.5)
+                        .onTapGesture { _ in
+                            let tapLocation = CGPoint(x: 100, y: 100)
+                            viewModel.crackPickedEgg(at: tapLocation)
+                        }
 
-                Spacer()
-
-                Rectangle()
-                    .fill(Color.red.opacity(0.0001))
-                    .frame(width: 250, height: 200)
-                    .offset(x: 0, y: -150)
-                    .onDrop(of: [.plainText], isTargeted: nil) { _, _ in
-                        viewModel.handleDrop()
-                        return true
+                    ForEach(0..<viewModel.eggs.count, id: \.self) { index in
+                        if viewModel.eggs[index].state == .whole {
+                            Image(viewModel.eggs[index].imageName)
+                                .resizable()
+                                .frame(width: 20, height: 30)
+                                .offset(x: 140, y: 235)
+                                .padding()
+                                .onTapGesture {
+                                    viewModel.pickUpEgg(at: index)
+                                }
+                        }
                     }
-                Spacer().frame(height: 100)
-            }
-
-            DraggableEgg(viewModel: viewModel)
-            VStack {
+                }
                 Spacer()
-                EggButtons(viewModel: viewModel)
+                VStack {
+                    ForEach(0..<viewModel.eggs.count, id: \.self) { index in
+                        if viewModel.eggs[index].state == .cracked, let position = viewModel.eggs[index].position {
+                            Image(viewModel.eggs[index].imageName)
+                                .resizable()
+                                .frame(width: 100, height: 100)
+                                .position(x: 190, y: -80)
+                                .animation(.easeInOut, value: viewModel.eggs[index].position)
+                                .onAppear {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                        withAnimation {
+                                            viewModel.eggs[index].state = .exploded
+                                        }
+                                    }
+                                }
+                        }
+                    }
+                }
+                .frame(width: UIScreen.main.bounds.width, height: 200, alignment: .trailing)
+                VStack {
+                    Button("Mix eggs", action: viewModel.startMixing)
+                        .buttonStyle(GameButtonStyle(backgroundColor: viewModel.eggsCracked >= 5 ? .blue : .gray))
+//                        .disabled(viewModel.eggsCracked >= 5)
+                }
             }
         }
-    }
-}
-
-struct DraggableEgg: View {
-    @ObservedObject var viewModel: PancakeGameViewModel
-
-    var body: some View {
-        let imageName = viewModel.currentEggState == .whole ? "egg" :
-            viewModel.currentEggState == .cracked ? "cracked_eggy" : "exploded_egg"
-
-        Image(imageName)
-            .resizable()
-            .frame(width: 50, height: 70)
-            .offset(x: -50, y: 0)
-            .onDrag {
-                viewModel.startDrag()
-                return NSItemProvider(object: "egg" as NSString)
-            }
-    }
-}
-
-struct EggButtons: View {
-    @ObservedObject var viewModel: PancakeGameViewModel
-
-    var body: some View {
-        VStack {
-            Button("Mix eggs", action: viewModel.startMixing)
-                .buttonStyle(GameButtonStyle(backgroundColor: .blue))
-//            ProgressBar(progress: viewModel.wellingtonCookingProgress).frame(height: 20).padding()
+        .onAppear {
+            viewModel.resetEggs()
+        }
+        .sheet(isPresented: $viewModel.showMixingView) {
+            MeasuringIngredientsView(viewModel: viewModel)
         }
     }
 }
