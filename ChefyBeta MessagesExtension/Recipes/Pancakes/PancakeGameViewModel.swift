@@ -37,9 +37,8 @@ class PancakeGameViewModel: ObservableObject {
     @Published var currentEggState: EggState = .whole
     @Published var showMixingView = false
     @Published var eggs: [Egg] = []
-    var pickedEggIndex: Int? // Track the index of the picked-up egg
+    var pickedEggIndex: Int?
 
-    // Measuring Ingredients for Step 2
     @Published var milkAmount: Double = 0
     @Published var flourAmount: Double = 0
     @Published var sugarAmount: Double = 0
@@ -59,7 +58,7 @@ class PancakeGameViewModel: ObservableObject {
     init(gameState: GameState) {
         self.gameState = gameState
         self.pancakeState = .idle
-        resetEggs() // Ensure this is called to initialize eggs to .whole
+        resetEggs()
     }
 
     func startCooking() {
@@ -85,19 +84,19 @@ class PancakeGameViewModel: ObservableObject {
     }
 
     func resetEggs() {
-         eggs = Array(repeating: Egg(), count: eggsToCrack) // Initialize eggs with default states and positions
+         eggs = Array(repeating: Egg(), count: eggsToCrack)
      }
 
     func pickUpEgg(at index: Int) {
         guard eggs.indices.contains(index), eggs[index].state == .whole else { return }
-        pickedEggIndex = index // Mark this egg as being picked up
+        pickedEggIndex = index
     }
 
     func crackPickedEgg(at position: CGPoint) {
         eggsCracked += 1
         guard let index = pickedEggIndex else { return }
         eggs[index].state = .cracked
-        eggs[index].position = position // Update to use the exact tap location
+        eggs[index].position = position
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             withAnimation {
