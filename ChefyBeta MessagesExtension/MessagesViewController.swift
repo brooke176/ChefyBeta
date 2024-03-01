@@ -42,7 +42,7 @@ class MessagesViewController: MSMessagesAppViewController {
 
             let viewModel = PancakeGameViewModel(gameState: gameState)
 
-            let SteakSeasoningViewView = MeasuringIngredientsView(viewModel: viewModel)
+            let SteakSeasoningViewView = CrackEggsView(viewModel: viewModel)
             let hostingController = UIHostingController(rootView: SteakSeasoningViewView)
 
             addChild(hostingController)

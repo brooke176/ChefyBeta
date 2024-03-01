@@ -2,13 +2,12 @@ import SwiftUI
 
 struct MeasuringIngredientsView: View {
     @ObservedObject var viewModel: PancakeGameViewModel
-    @State private var showAlert = false
     @State private var currentAmount: Double = 0.0
     let targetAmount: Double = 1.0
     
     var body: some View {
         ZStack {
-            Image("eggbackground")
+            Image(viewModel.backgroundImageName())
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .edgesIgnoringSafeArea(.all)
@@ -29,22 +28,18 @@ struct MeasuringIngredientsView: View {
                     .foregroundColor(.white)
                     .cornerRadius(8)
                 HStack {
-                    DraggableIngredientView(ingredientName: "milk", viewModel: viewModel, position: CGPoint(x: 55, y: 49))
-                    DraggableIngredientView(ingredientName: "sugar", viewModel: viewModel, position: CGPoint(x: 224, y: 49))
-                    DraggableIngredientView(ingredientName: "flour", viewModel: viewModel, position: CGPoint(x: 26, y: 49))
+                    DraggableIngredientView(ingredientName: "milk", viewModel: viewModel, initialPosition: CGPoint(x: 60, y: 65))
+                    DraggableIngredientView(ingredientName: "sugar", viewModel: viewModel, initialPosition: CGPoint(x: 237, y: 65))
+                    DraggableIngredientView(ingredientName: "flour", viewModel: viewModel, initialPosition: CGPoint(x: 36, y: 65))
                 }
 
                 VStack {
-                    Button("Check Ingredients") {
-                        showAlert = true
+                    Button("Start Cooking!") {
+                        viewModel.showCookingView = true
                     }
                 }
-                .alert(isPresented: $showAlert) {
-                    Alert(
-                        title: Text("Ingredients Check"),
-                        message: Text(viewModel.checkIngredientsMeasuredCorrectly() ? "Correct Amounts! 🎉" : "Incorrect, try again! 😞"),
-                        dismissButton: .default(Text("OK"))
-                    )
+                .sheet(isPresented: $viewModel.showCookingView) {
+                    CookPancakesView(viewModel: viewModel)
                 }
             }
             .padding()
@@ -56,11 +51,13 @@ struct DraggableIngredientView: View {
     @State private var position: CGPoint
     var ingredientName: String
     @ObservedObject var viewModel: PancakeGameViewModel
+    let initialPosition: CGPoint
 
-    init(ingredientName: String, viewModel: PancakeGameViewModel, position: CGPoint) {
+    init(ingredientName: String, viewModel: PancakeGameViewModel, initialPosition: CGPoint) {
         self.ingredientName = ingredientName
         self.viewModel = viewModel
-        self._position = State(initialValue: position)
+        self.initialPosition = initialPosition
+        self._position = State(initialValue: initialPosition)
     }
 
     var body: some View {
@@ -74,11 +71,16 @@ struct DraggableIngredientView: View {
                     .onChanged { value in
                         self.position = value.location
                     }
-                    .onEnded { _ in
-                        // Handle dropping logic here
+                    .onEnded { value in
+//                        if self.viewModel.isDropLocationCorrect(value.location, for: ingredientName) {
+                        // TODO: fix isDropLocationCorrect function
+                        self.viewModel.ingredientsDropped.insert(self.ingredientName)
+                            self.position = self.initialPosition
+//                        } else {
+//                            self.position = self.initialPosition
+//                        }
                     }
             )
-            .padding()
     }
 }
 

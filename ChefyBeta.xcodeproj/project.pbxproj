@@ -31,6 +31,7 @@
 		EEE46E2B2B86D64700CB7768 /* CrackEggsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E2A2B86D64700CB7768 /* CrackEggsView.swift */; };
 		EEE46E2D2B86D6BD00CB7768 /* PancakeGameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E2C2B86D6BD00CB7768 /* PancakeGameViewModel.swift */; };
 		EEE46E302B89846700CB7768 /* MeasureIngrediantsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E2F2B89846700CB7768 /* MeasureIngrediantsView.swift */; };
+		EEE46E322B8FDAD600CB7768 /* CookPancakesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E312B8FDAD600CB7768 /* CookPancakesView.swift */; };
 		EEF9BB562B6C495D002EA1BD /* MessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF9BB552B6C495D002EA1BD /* MessageHandler.swift */; };
 /* End PBXBuildFile section */
 
@@ -85,6 +86,7 @@
 		EEE46E2A2B86D64700CB7768 /* CrackEggsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrackEggsView.swift; sourceTree = "<group>"; };
 		EEE46E2C2B86D6BD00CB7768 /* PancakeGameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PancakeGameViewModel.swift; sourceTree = "<group>"; };
 		EEE46E2F2B89846700CB7768 /* MeasureIngrediantsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureIngrediantsView.swift; sourceTree = "<group>"; };
+		EEE46E312B8FDAD600CB7768 /* CookPancakesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookPancakesView.swift; sourceTree = "<group>"; };
 		EEF9BB552B6C495D002EA1BD /* MessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageHandler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -241,6 +243,7 @@
 			children = (
 				EEE46E2A2B86D64700CB7768 /* CrackEggsView.swift */,
 				EEE46E2F2B89846700CB7768 /* MeasureIngrediantsView.swift */,
+				EEE46E312B8FDAD600CB7768 /* CookPancakesView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -345,6 +348,7 @@
 			files = (
 				EE6E721D2B6F5CC00012BF9E /* Conversation.swift in Sources */,
 				EEC0C33E2B69E8600094E043 /* ImageItem.swift in Sources */,
+				EEE46E322B8FDAD600CB7768 /* CookPancakesView.swift in Sources */,
 				EEC0C3402B69E8850094E043 /* ToolbarView.swift in Sources */,
 				EEE46E292B86B90700CB7768 /* OvenCookingView.swift in Sources */,
 				EEE46E072B7874AA00CB7768 /* ProfileView.swift in Sources */,
