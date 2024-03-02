@@ -11,52 +11,52 @@ class MessagesViewController: MSMessagesAppViewController {
     private var conversationManager: ConversationManager?
     private var currentGameViewModel: GameViewModelProtocol?
 
-//    override func willBecomeActive(with conversation: MSConversation) {
-//        super.willBecomeActive(with: conversation)
-//
-//        if let message = conversation.selectedMessage, let messageURL = message.url {
-//            decodeGameState(from: messageURL) { [weak self] _ in
-//                guard let self = self else { return }
-//
-//                if let selectedGameType = decodeSelectedGameType(from: conversation) {
-//                    print(selectedGameType)
-//                           switch selectedGameType {
-//                           case .BeefWelly:
-//                               let viewModel = SteakGameViewModel(gameState: gameState, messagesViewController: self)
-//                               presentSteakGame(viewModel: viewModel)
-//                           case .pancakes:
-//                               let viewModel = PancakeGameViewModel(gameState: gameState)
-//                               presentPancakeGame(viewModel: viewModel)
-//                           }
-//                       } else {
-//                           presentContentView(conversation: conversation)
-//                       }
-//            }
-//        } else {
-//            presentContentView(conversation: conversation)
-//        }
-//    }
+    override func willBecomeActive(with conversation: MSConversation) {
+        super.willBecomeActive(with: conversation)
 
-        override func willBecomeActive(with conversation: MSConversation) {
-            super.willBecomeActive(with: conversation)
+        if let message = conversation.selectedMessage, let messageURL = message.url {
+            decodeGameState(from: messageURL) { [weak self] _ in
+                guard let self = self else { return }
 
-            let viewModel = PancakeGameViewModel(gameState: gameState)
-
-            let SteakSeasoningViewView = CrackEggsView(viewModel: viewModel)
-            let hostingController = UIHostingController(rootView: SteakSeasoningViewView)
-
-            addChild(hostingController)
-            view.addSubview(hostingController.view)
-            hostingController.didMove(toParent: self)
-
-            hostingController.view.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                hostingController.view.topAnchor.constraint(equalTo: view.topAnchor),
-                hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-            ])
+                if let selectedGameType = decodeSelectedGameType(from: conversation) {
+                    print(selectedGameType)
+                           switch selectedGameType {
+                           case .BeefWelly:
+                               let viewModel = SteakGameViewModel(gameState: gameState, messagesViewController: self)
+                               presentSteakGame(viewModel: viewModel)
+                           case .pancakes:
+                               let viewModel = PancakeGameViewModel(gameState: gameState, messagesViewController: self)
+                               presentPancakeGame(viewModel: viewModel)
+                           }
+                       } else {
+                           presentContentView(conversation: conversation)
+                       }
+            }
+        } else {
+            presentContentView(conversation: conversation)
         }
+    }
+
+//        override func willBecomeActive(with conversation: MSConversation) {
+//            super.willBecomeActive(with: conversation)
+//
+//            let viewModel = PancakeGameViewModel(gameState: gameState, messagesViewController: self)
+//
+//            let SteakSeasoningViewView = CookPancakesView(viewModel: viewModel)
+//            let hostingController = UIHostingController(rootView: SteakSeasoningViewView)
+//
+//            addChild(hostingController)
+//            view.addSubview(hostingController.view)
+//            hostingController.didMove(toParent: self)
+//
+//            hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+//            NSLayoutConstraint.activate([
+//                hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+//                hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+//                hostingController.view.topAnchor.constraint(equalTo: view.topAnchor),
+//                hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+//            ])
+//        }
 
     private func presentContentView(conversation: MSConversation) {
         conversationManager = ConversationManager(conversation: conversation)

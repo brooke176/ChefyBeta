@@ -4,7 +4,7 @@ struct MeasuringIngredientsView: View {
     @ObservedObject var viewModel: PancakeGameViewModel
     @State private var currentAmount: Double = 0.0
     let targetAmount: Double = 1.0
-    
+
     var body: some View {
         ZStack {
             Image(viewModel.backgroundImageName())
@@ -12,7 +12,7 @@ struct MeasuringIngredientsView: View {
                 .aspectRatio(contentMode: .fill)
                 .edgesIgnoringSafeArea(.all)
                 .offset(x: -25, y: 0)
-            
+
             VStack {
                 Text("Let's Measure Ingredients!")
                     .font(.headline)
@@ -20,7 +20,7 @@ struct MeasuringIngredientsView: View {
                     .background(Color.black.opacity(0.5))
                     .foregroundColor(.white)
                     .cornerRadius(8)
-                
+
                 Text("Drag the flour, sugar, and milk ingredients to the bowl.")
                     .font(.subheadline)
                     .padding()
@@ -71,7 +71,7 @@ struct DraggableIngredientView: View {
                     .onChanged { value in
                         self.position = value.location
                     }
-                    .onEnded { value in
+                    .onEnded { _ in
 //                        if self.viewModel.isDropLocationCorrect(value.location, for: ingredientName) {
                         // TODO: fix isDropLocationCorrect function
                         self.viewModel.ingredientsDropped.insert(self.ingredientName)
@@ -83,5 +83,3 @@ struct DraggableIngredientView: View {
             )
     }
 }
-
-

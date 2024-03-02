@@ -29,18 +29,22 @@ struct Pancake: Identifiable {
     var cookingProgress: Double = 0.0
     var hasBeenFlipped: Bool = false
     var cookingTime: TimeInterval = 0
+    var type: PancakeType = .plain
 }
 
 enum PancakeState {
-    case batter, cooking, readyToFlip, flipped, cooked, done, burned
+    case batter, readyToFlip, flipped, done, burned
 }
 
+enum PancakeType {
+    case plain, blueberry, chocolateChip
+}
 
 class PancakeGameViewModel: ObservableObject {
     var timer: Timer?
     var pickedEggIndex: Int?
     let eggsToCrack: Int = 5
-    
+
     @Published var gameState: GameState
     @Published var eggTimer: Double = 0
     @Published var eggsCracked: Int = 0
@@ -48,16 +52,21 @@ class PancakeGameViewModel: ObservableObject {
 
     @Published var ingredientsDropped: Set<String> = []
     @Published var pancakes: [Pancake] = []
-    
+    @Published var currentOrder = PancakeOrder.generateRandomOrder()
+    @Published var score: Int = 0
+
     @Published var showMixingView = false
     @Published var showCookingView = false
     @Published var showOutcomeView: Bool = false
 
-    init(gameState: GameState, timeLimit: Int = 300) {
+    var messagesViewController: MessagesViewController
+
+    init(gameState: GameState, messagesViewController: MessagesViewController, timeLimit: Int = 300) {
         self.gameState = gameState
+        self.messagesViewController = messagesViewController
         self.eggs = Array(repeating: Egg(), count: eggsToCrack)
     }
-    
+
     // PANCAKES
 
     func pourBatter() {
@@ -68,7 +77,7 @@ class PancakeGameViewModel: ObservableObject {
 
         let xPosition = 180 + CGFloat(column) * 63
         let yPosition = 450 + CGFloat(row) * 60
-        
+
         let newPancake = Pancake(position: CGPoint(x: xPosition, y: yPosition), state: .batter, cookingProgress: 0.0, hasBeenFlipped: false)
         DispatchQueue.main.async {
             self.pancakes.append(newPancake)
@@ -76,51 +85,93 @@ class PancakeGameViewModel: ObservableObject {
         }
     }
     
-    func moveToPlate(pancakeID: UUID) {
-        guard let index = pancakes.firstIndex(where: { $0.id == pancakeID }),
-              pancakes[index].state == .done else { return }
+    func startPancakeTimer(for pancakeID: UUID) {
+        guard let index = pancakes.firstIndex(where: { $0.id == pancakeID }) else { return }
 
-        let offsetX: CGFloat = CGFloat(pancakes.filter { $0.state == .done }.count * 1)
-        let platePositionX: CGFloat = UIScreen.main.bounds.width / 1.5 - offsetX
-        let platePositionY: CGFloat = 240
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
+            guard let self = self else { return }
+            var pancake = self.pancakes[index]
 
-        DispatchQueue.main.async {
-            self.pancakes[index].position = CGPoint(x: platePositionX, y: platePositionY)
+            switch pancake.cookingTime {
+            case 0..<4:
+                pancake.state = .batter
+            case 4..<5:
+                pancake.state = .readyToFlip
+            case 5..<10:
+                if pancake.hasBeenFlipped { pancake.state = .flipped }
+            case 10..<15:
+                if pancake.hasBeenFlipped { pancake.state = .done }
+            case 15...:
+                pancake.state = .burned
+            default:
+                break
+            }
+
+            pancake.cookingTime += 1
+            self.pancakes[index] = pancake
+            self.checkIfAllPancakesAreBurned()
         }
     }
     
-    func servePancakes() {
-        showOutcomeView = true
-    }
-    
-    func startPancakeTimer(for pancakeID: UUID) {
-            guard let index = pancakes.firstIndex(where: { $0.id == pancakeID }) else { return }
+    func endTurnForPlayer() {
+        let score = calculateScore()
+        gameState.currentPlayer = "player1"
 
-            Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
-                guard let self = self else { return }
-                var pancake = self.pancakes[index]
+        if gameState.currentPlayer == "player1" {
+            gameState.player1Score = score
+            gameState.player1Played = true
+        } else if gameState.currentPlayer == "player2" {
+            gameState.player2Score = score
+            gameState.player2Played = true
+        }
+        timer?.invalidate()
+        self.resetGame()
 
-                switch pancake.cookingTime {
-                case 0..<4:
-                    pancake.state = .batter
-                case 4:
-                    pancake.state = .readyToFlip
-                case 5..<8 where pancake.hasBeenFlipped:
-                    pancake.state = .cooking
-                case 8 where pancake.hasBeenFlipped:
-                    pancake.state = .done
-                case 10:
-                    pancake.state = .burned
-                    timer.invalidate()
-                    showOutcomeView = true
-                default:
-                    break
-                }
-
-                pancake.cookingTime += 1
-                self.pancakes[index] = pancake
+        messagesViewController.gameState = gameState
+        messagesViewController.updateAndSendGameState {
+            DispatchQueue.main.async {
+                self.showOutcomeView = true
             }
         }
+    }
+
+    
+    func resetGame() {
+        print()
+    }
+
+    func checkIfAllPancakesAreBurned() {
+        let allBurned = pancakes.allSatisfy { $0.state == .burned }
+        if allBurned {
+            let score = calculateScore()
+            print("Score: \(score)")
+
+            DispatchQueue.main.async {
+                self.showOutcomeView = true
+            }
+        }
+    }
+    
+    func calculateScore() -> Int {
+        let donePancakes = pancakes.filter { $0.state == .done }.count
+        // Update the score property if needed, but importantly, return the count.
+        self.score = donePancakes
+        return donePancakes
+    }
+
+    
+    func addTopping(toPancakeID id: UUID, topping: String) {
+        if let index = pancakes.firstIndex(where: { $0.id == id }) {
+            switch topping {
+            case "chocolatechips":
+                pancakes[index].type = .chocolateChip
+            case "booberry":
+                pancakes[index].type = .blueberry
+            default:
+                break
+            }
+        }
+    }
 
     func cookPancake(id: UUID) {
         guard let index = pancakes.firstIndex(where: { $0.id == id }) else { return }
@@ -140,23 +191,36 @@ class PancakeGameViewModel: ObservableObject {
             }
         }
     }
-
+    
     func flipPancake(id: UUID) {
-         guard let index = pancakes.firstIndex(where: { $0.id == id }), pancakes[index].state == .readyToFlip else { return }
+        guard let index = pancakes.firstIndex(where: { $0.id == id }), pancakes[index].state == .readyToFlip || pancakes[index].state == .flipped else { return }
          pancakes[index].hasBeenFlipped = true
          pancakes[index].cookingProgress = 0.0
-         pancakes[index].state = .cooking
+         pancakes[index].state = .flipped
          cookPancake(id: id)
      }
-    
+
+    func moveToPlate(pancakeID: UUID) {
+        guard let index = pancakes.firstIndex(where: { $0.id == pancakeID }),
+              pancakes[index].state == .done else { return }
+
+        let offsetX: CGFloat = CGFloat(pancakes.filter { $0.state == .done }.count * 1)
+        let platePositionX: CGFloat = UIScreen.main.bounds.width / 1.47 - offsetX
+        let platePositionY: CGFloat = 235
+
+        DispatchQueue.main.async {
+            self.pancakes[index].position = CGPoint(x: platePositionX, y: platePositionY)
+        }
+    }
+
     func finishCooking() {
         timer?.invalidate()
         showOutcomeView = true
         resetEggs()
     }
-    
+
     // EGGS
-    
+
     func backgroundImageName() -> String {
         @ObservedObject var viewModel: PancakeGameViewModel
         // TODO: update to check for each indivudual ingrediant
@@ -169,10 +233,10 @@ class PancakeGameViewModel: ObservableObject {
         } else if ingredientsDropped.contains("sugar") {
             return "sugarbackground"
         }
-        
+
         return "eggybackground"
     }
-    
+
     func isDropLocationCorrect(_ location: CGPoint, for ingredientName: String) -> Bool {
         let targetRect = CGRect(x: 100, y: 300, width: 200, height: 100)
         return targetRect.contains(location)
