@@ -2,10 +2,10 @@ import SwiftUI
 
 struct GameOutcomeView: View {
     var gameState: GameState
+    @ObservedObject var viewModel: PancakeGameViewModel
 
     var body: some View {
         VStack(spacing: 20) {
-            // Game Over or Waiting Title
             Text(gameState.player1Score != 0 && gameState.player2Score != 0 ? "Game Over" : "Waiting for opponent...")
                 .font(.system(size: 24, weight: .bold, design: .rounded))
                 .foregroundColor(.white)
@@ -14,7 +14,6 @@ struct GameOutcomeView: View {
                 .cornerRadius(10)
                 .shadow(radius: 10)
 
-            // Outcome Message
             if gameState.player1Score != 0 && gameState.player2Score != 0 {
                 outcomeMessage
                     .font(.title2)
@@ -29,13 +28,12 @@ struct GameOutcomeView: View {
                     .italic()
             }
 
-            // Scores
             scoreText("Player 1 Score: \(gameState.player1Score)")
             scoreText("Player 2 Score: \(gameState.player2Score)")
 
-            // OK Button
             Button("OK") {
-                // Action when OK is tapped
+                viewModel.showOutcomeView = false
+                viewModel.currentStage = nil
             }
             .foregroundColor(.white)
             .padding()
@@ -44,7 +42,7 @@ struct GameOutcomeView: View {
             .shadow(radius: 5)
         }
         .padding()
-        .background(Color(UIColor.secondarySystemBackground)) // Adapts to dark or light mode
+        .background(Color(UIColor.secondarySystemBackground))
         .cornerRadius(15)
         .shadow(radius: 10)
         .padding()
@@ -71,7 +69,7 @@ struct GameOutcomeView: View {
         } else if gameState.player2Score > gameState.player1Score {
             return "Player 2"
         } else {
-            return nil // It's a draw
+            return nil
         }
     }
 }

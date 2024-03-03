@@ -12,6 +12,7 @@ struct PancakeOrder {
 
 struct CookPancakesView: View {
     @ObservedObject var viewModel: PancakeGameViewModel
+    var messagesViewController: MessagesViewController
 
     var body: some View {
         ZStack {
@@ -19,7 +20,7 @@ struct CookPancakesView: View {
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .edgesIgnoringSafeArea(.all)
-            
+
                 Image("plate")
                     .resizable()
                     .frame(width: 100, height: 100)
@@ -94,9 +95,6 @@ struct CookPancakesView: View {
                         .cornerRadius(8)
                 }, alignment: .bottom
             )
-            .sheet(isPresented: $viewModel.showOutcomeView) {
-                GameOutcomeView(gameState: viewModel.gameState)
-        }
     }
 }
 

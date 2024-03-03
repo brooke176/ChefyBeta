@@ -1,50 +1,14 @@
 import Foundation
 import SwiftUI
-
-enum EggState {
-    case whole, cracked, exploded
-}
-
-struct Egg {
-    var state: EggState = .whole
-    var position: CGPoint?
-    var isSelected: Bool = false
-
-    var imageName: String {
-        switch state {
-        case .whole:
-            return "egg"
-        case .cracked:
-            return "cracked_eggy"
-        case .exploded:
-            return "exploded_egg"
-        }
-    }
-}
-
-struct Pancake: Identifiable {
-    let id = UUID()
-    var position: CGPoint
-    var state: PancakeState = .batter
-    var cookingProgress: Double = 0.0
-    var hasBeenFlipped: Bool = false
-    var cookingTime: TimeInterval = 0
-    var type: PancakeType = .plain
-}
-
-enum PancakeState {
-    case batter, readyToFlip, flipped, done, burned
-}
-
-enum PancakeType {
-    case plain, blueberry, chocolateChip
-}
+import Combine
 
 class PancakeGameViewModel: ObservableObject {
     var timer: Timer?
+    var messagesViewController: MessagesViewController
+    var conversationManager: ConversationManager?
+
     var pickedEggIndex: Int?
     let eggsToCrack: Int = 5
-
     @Published var gameState: GameState
     @Published var eggTimer: Double = 0
     @Published var eggsCracked: Int = 0
@@ -54,12 +18,7 @@ class PancakeGameViewModel: ObservableObject {
     @Published var pancakes: [Pancake] = []
     @Published var currentOrder = PancakeOrder.generateRandomOrder()
     @Published var score: Int = 0
-
-    @Published var showMixingView = false
-    @Published var showCookingView = false
-    @Published var showOutcomeView: Bool = false
-
-    var messagesViewController: MessagesViewController
+    @Published var currentStage: GameStage? = nil
 
     init(gameState: GameState, messagesViewController: MessagesViewController, timeLimit: Int = 300) {
         self.gameState = gameState
@@ -84,11 +43,11 @@ class PancakeGameViewModel: ObservableObject {
             self.startPancakeTimer(for: newPancake.id)
         }
     }
-    
+
     func startPancakeTimer(for pancakeID: UUID) {
         guard let index = pancakes.firstIndex(where: { $0.id == pancakeID }) else { return }
 
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             guard let self = self else { return }
             var pancake = self.pancakes[index]
 
@@ -112,32 +71,32 @@ class PancakeGameViewModel: ObservableObject {
             self.checkIfAllPancakesAreBurned()
         }
     }
-    
-    func endTurnForPlayer() {
-        let score = calculateScore()
-        gameState.currentPlayer = "player1"
 
-        if gameState.currentPlayer == "player1" {
-            gameState.player1Score = score
-            gameState.player1Played = true
-        } else if gameState.currentPlayer == "player2" {
-            gameState.player2Score = score
-            gameState.player2Played = true
-        }
-        timer?.invalidate()
-        self.resetGame()
-
-        messagesViewController.gameState = gameState
-        messagesViewController.updateAndSendGameState {
-            DispatchQueue.main.async {
-                self.showOutcomeView = true
-            }
-        }
+    func resetGame() {
+        // TODO: add resetters
+        print()
     }
 
-    
-    func resetGame() {
-        print()
+    func endTurnForPlayer() {
+        let score = calculateScore()
+
+        if gameState.currentPlayer == "player1" {
+            gameState.player1Score += score
+            gameState.player1Played = true
+            gameState.currentPlayer = "player2"
+        } else {
+            gameState.player2Score += score
+            gameState.player2Played = true
+            gameState.currentPlayer = "player1"
+        }
+
+        conversationManager?.sendUpdatedGameState()
+        messagesViewController.updateAndSendGameState {
+            DispatchQueue.main.async {
+                // TODO: if this doesnt work just delete next line and add to line 90 in cook pancake view
+                self.currentStage = .outcome
+            }
+    }
     }
 
     func checkIfAllPancakesAreBurned() {
@@ -145,21 +104,16 @@ class PancakeGameViewModel: ObservableObject {
         if allBurned {
             let score = calculateScore()
             print("Score: \(score)")
-
-            DispatchQueue.main.async {
-                self.showOutcomeView = true
-            }
+            endTurnForPlayer()
         }
     }
-    
+
     func calculateScore() -> Int {
         let donePancakes = pancakes.filter { $0.state == .done }.count
-        // Update the score property if needed, but importantly, return the count.
         self.score = donePancakes
         return donePancakes
     }
 
-    
     func addTopping(toPancakeID id: UUID, topping: String) {
         if let index = pancakes.firstIndex(where: { $0.id == id }) {
             switch topping {
@@ -191,7 +145,7 @@ class PancakeGameViewModel: ObservableObject {
             }
         }
     }
-    
+
     func flipPancake(id: UUID) {
         guard let index = pancakes.firstIndex(where: { $0.id == id }), pancakes[index].state == .readyToFlip || pancakes[index].state == .flipped else { return }
          pancakes[index].hasBeenFlipped = true
@@ -211,12 +165,6 @@ class PancakeGameViewModel: ObservableObject {
         DispatchQueue.main.async {
             self.pancakes[index].position = CGPoint(x: platePositionX, y: platePositionY)
         }
-    }
-
-    func finishCooking() {
-        timer?.invalidate()
-        showOutcomeView = true
-        resetEggs()
     }
 
     // EGGS
@@ -267,7 +215,7 @@ class PancakeGameViewModel: ObservableObject {
 
 extension PancakeGameViewModel: GameViewModelProtocol {
     func setupGameView(messagesViewController: MessagesViewController) {
-        let view = CrackEggsView(viewModel: self)
+        let view = CrackEggsView(viewModel: self, messagesViewController: messagesViewController)
         messagesViewController.presentView(view)
     }
 }

@@ -3,6 +3,7 @@ import SwiftUI
 
 struct SteakSeasoningView: View {
     @ObservedObject var viewModel: SteakGameViewModel
+    var messagesViewController: MessagesViewController
 
     var body: some View {
         ZStack {
@@ -31,9 +32,6 @@ struct SteakSeasoningView: View {
                 ActionButtonView(viewModel: viewModel)
                     .padding(.bottom, 100)
             }
-        }
-        .sheet(isPresented: $viewModel.showOutcomeView) {
-            GameOutcomeView(gameState: viewModel.gameState)
         }
         .sheet(isPresented: $viewModel.showCookingView) {
             SteakView(steakFlipped: viewModel.steakFlipped, isCooking: viewModel.isCooking, seasoningGraphics: viewModel.seasoningGraphics, viewModel: viewModel)

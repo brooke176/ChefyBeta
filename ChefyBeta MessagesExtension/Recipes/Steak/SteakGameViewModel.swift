@@ -34,6 +34,8 @@ class SteakGameViewModel: ObservableObject {
     var timer: Timer?
     var seasoningGraphics: [SeasoningGraphic] = []
     var messagesViewController: MessagesViewController
+    var onRequestCompactMode: (() -> Void)?
+    private var conversationManager: ConversationManager?
 
     let minSeasoningAmount: Double = 0.6
     let maxSeasoningAmount = 3.0

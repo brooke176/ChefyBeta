@@ -4,6 +4,7 @@ struct MeasuringIngredientsView: View {
     @ObservedObject var viewModel: PancakeGameViewModel
     @State private var currentAmount: Double = 0.0
     let targetAmount: Double = 1.0
+    var messagesViewController: MessagesViewController
 
     var body: some View {
         ZStack {
@@ -35,11 +36,9 @@ struct MeasuringIngredientsView: View {
 
                 VStack {
                     Button("Start Cooking!") {
-                        viewModel.showCookingView = true
+                        viewModel.currentStage = .cookPancakes
+
                     }
-                }
-                .sheet(isPresented: $viewModel.showCookingView) {
-                    CookPancakesView(viewModel: viewModel)
                 }
             }
             .padding()

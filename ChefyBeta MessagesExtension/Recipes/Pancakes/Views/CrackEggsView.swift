@@ -3,6 +3,8 @@ import SwiftUI
 
 struct CrackEggsView: View {
     @ObservedObject var viewModel: PancakeGameViewModel
+    var messagesViewController: MessagesViewController
+    var gameState: GameState = GameState()
 
     var body: some View {
         ZStack {
@@ -71,7 +73,7 @@ struct CrackEggsView: View {
                 .frame(width: UIScreen.main.bounds.width, height: 200, alignment: .trailing)
                 VStack {
                     Button("Mix eggs") {
-                        viewModel.showMixingView = true
+                        viewModel.currentStage = .measureIngredients
                     }
                     .buttonStyle(GameButtonStyle(backgroundColor: viewModel.eggsCracked >= 5 ? .blue : .gray))
                     .disabled(viewModel.eggsCracked < 5)
@@ -81,8 +83,20 @@ struct CrackEggsView: View {
         .onAppear {
             viewModel.resetEggs()
         }
-        .sheet(isPresented: $viewModel.showMixingView) {
-            MeasuringIngredientsView(viewModel: viewModel)
+        
+        .sheet(item: $viewModel.currentStage, onDismiss: {
+        }) { stage in
+            switch stage {
+            case .crackEggs:
+                CrackEggsView(viewModel: viewModel, messagesViewController: messagesViewController)
+            case .measureIngredients:
+                MeasuringIngredientsView(viewModel: viewModel, messagesViewController: messagesViewController)
+            case .cookPancakes:
+                CookPancakesView(viewModel: viewModel, messagesViewController: messagesViewController)
+            case .outcome:
+                GameOutcomeView(gameState: viewModel.gameState, viewModel: viewModel)
+            }
         }
+
     }
 }

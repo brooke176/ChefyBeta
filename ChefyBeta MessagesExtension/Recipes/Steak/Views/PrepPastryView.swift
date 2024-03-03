@@ -7,14 +7,16 @@ struct PrepPastryView: View {
 
     @State private var showProsciutto = false
     @State private var showSteak = false
+    var messagesViewController: MessagesViewController
 
     let doughWidth: CGFloat = 300 // Width of the dough area, adjust as needed
     let doughHeight: CGFloat = 200 // Height of the dough area, adjust as needed
     let brushWidth: CGFloat = 10 // Width of the "brush" used for spreading
     let interactiveAreaRect: CGRect
 
-    init(viewModel: SteakGameViewModel) {
+    init(viewModel: SteakGameViewModel, messagesViewController: MessagesViewController) {
         self.viewModel = viewModel
+        self.messagesViewController = messagesViewController
         self.interactiveAreaRect = CGRect(
             x: UIScreen.main.bounds.width / 1.6,
             y: UIScreen.main.bounds.height / 2.5,
@@ -80,7 +82,7 @@ struct PrepPastryView: View {
             viewModel.mushroomsSpread = false
         }
         .sheet(isPresented: $viewModel.showOvenCookingView) {
-            OvenCookingView(viewModel: viewModel)
+            OvenCookingView(viewModel: viewModel, messagesViewController: messagesViewController)
         }
     }
 

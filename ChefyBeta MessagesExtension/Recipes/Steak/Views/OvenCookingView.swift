@@ -2,6 +2,7 @@ import SwiftUI
 
 struct OvenCookingView: View {
     @ObservedObject var viewModel: SteakGameViewModel
+    var messagesViewController: MessagesViewController
 
     var body: some View {
             ZStack {
@@ -19,9 +20,9 @@ struct OvenCookingView: View {
                         .shadow(radius: 5)
                     OvenButtons(viewModel: viewModel)
                         }}
-        .sheet(isPresented: $viewModel.showOutcomeView) {
-            GameOutcomeView(gameState: viewModel.gameState)
-        }
+//        .sheet(isPresented: $viewModel.showOutcomeView) {
+//            GameOutcomeView(gameState: viewModel.gameState, messagesViewController: messagesViewController, viewModel: Pan)
+//        }
     }
 
     struct OvenButtons: View {

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct PastryRollingView: View {
     @ObservedObject var viewModel: SteakGameViewModel
+    var messagesViewController: MessagesViewController
 
     @State private var rollCount = 0
     @State private var dragOffset = CGSize.zero
@@ -41,7 +42,7 @@ struct PastryRollingView: View {
             rollingInstructions
         }
         .sheet(isPresented: $viewModel.showDoughPrepView) {
-            PrepPastryView(viewModel: viewModel)
+            PrepPastryView(viewModel: viewModel, messagesViewController: messagesViewController)
         }
     }
 

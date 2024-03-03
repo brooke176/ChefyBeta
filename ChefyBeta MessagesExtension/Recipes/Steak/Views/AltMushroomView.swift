@@ -3,6 +3,7 @@ import Combine
 
 struct SauteMushroomsView: View {
     @ObservedObject var viewModel: SteakGameViewModel
+    var messagesViewController: MessagesViewController
 
     let totalCookingTime = 15
     let stirInterval = 3
@@ -34,7 +35,7 @@ struct SauteMushroomsView: View {
         .onAppear { viewModel.startCookingMushrooms() }
         .onDisappear { viewModel.endCookingMushrooms() }
         .sheet(isPresented: $viewModel.showDoughRollingView) {
-            PastryRollingView(viewModel: viewModel)
+            PastryRollingView(viewModel: viewModel, messagesViewController: messagesViewController)
         }
     }
 

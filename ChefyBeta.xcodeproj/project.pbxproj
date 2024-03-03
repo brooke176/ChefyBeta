@@ -15,7 +15,6 @@
 		EEC0C3292B69E7190094E043 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC0C3282B69E7190094E043 /* MessagesViewController.swift */; };
 		EEC0C32E2B69E71E0094E043 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EEC0C32D2B69E71E0094E043 /* Assets.xcassets */; };
 		EEC0C33A2B69E82D0094E043 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC0C3392B69E82D0094E043 /* ContentView.swift */; };
-		EEC0C33E2B69E8600094E043 /* ImageItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC0C33D2B69E8600094E043 /* ImageItem.swift */; };
 		EEC0C3402B69E8850094E043 /* ToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC0C33F2B69E8850094E043 /* ToolbarView.swift */; };
 		EEE46E042B78704900CB7768 /* SteakSeasoningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E032B78704900CB7768 /* SteakSeasoningView.swift */; };
 		EEE46E072B7874AA00CB7768 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E062B7874AA00CB7768 /* ProfileView.swift */; };
@@ -71,7 +70,6 @@
 		EEC0C32D2B69E71E0094E043 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EEC0C32F2B69E71E0094E043 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EEC0C3392B69E82D0094E043 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		EEC0C33D2B69E8600094E043 /* ImageItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageItem.swift; sourceTree = "<group>"; };
 		EEC0C33F2B69E8850094E043 /* ToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarView.swift; sourceTree = "<group>"; };
 		EEE46E032B78704900CB7768 /* SteakSeasoningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteakSeasoningView.swift; sourceTree = "<group>"; };
 		EEE46E062B7874AA00CB7768 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
@@ -181,7 +179,6 @@
 			isa = PBXGroup;
 			children = (
 				EE6E721C2B6F5CC00012BF9E /* Conversation.swift */,
-				EEC0C33D2B69E8600094E043 /* ImageItem.swift */,
 				EEF9BB552B6C495D002EA1BD /* MessageHandler.swift */,
 			);
 			path = Utils;
@@ -347,7 +344,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				EE6E721D2B6F5CC00012BF9E /* Conversation.swift in Sources */,
-				EEC0C33E2B69E8600094E043 /* ImageItem.swift in Sources */,
 				EEE46E322B8FDAD600CB7768 /* CookPancakesView.swift in Sources */,
 				EEC0C3402B69E8850094E043 /* ToolbarView.swift in Sources */,
 				EEE46E292B86B90700CB7768 /* OvenCookingView.swift in Sources */,

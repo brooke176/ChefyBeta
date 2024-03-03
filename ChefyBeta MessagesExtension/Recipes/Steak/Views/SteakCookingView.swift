@@ -3,6 +3,7 @@ import SwiftUI
 
 struct SteakCookingView: View {
     @ObservedObject var viewModel: SteakGameViewModel
+    var messagesViewController: MessagesViewController
 
     var body: some View {
         ZStack {
@@ -34,7 +35,7 @@ struct SteakCookingView: View {
             }
         }
         .sheet(isPresented: $viewModel.showMushroomView) {
-            SauteMushroomsView(viewModel: viewModel)
+            SauteMushroomsView(viewModel: viewModel, messagesViewController: messagesViewController)
         }
     }
 

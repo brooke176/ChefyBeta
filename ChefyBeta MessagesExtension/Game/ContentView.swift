@@ -6,20 +6,11 @@ struct ContentView: View {
     @State private var selectedItem: ImageItem?
     @State private var showingProfile = false
     @State private var showingSettings = false
-    var conversation: MSConversation?
-    var conversationManager: ConversationManager
-    @State private var showOutcomeView = false
+    private var conversationManager: ConversationManager?
 
-    let imageItems: [ImageItem] = [
-        ImageItem(id: 1, imageName: "beef_wellington", label: "Beef Welly"),
-        ImageItem(id: 2, imageName: "pancakes", label: "Pancakes"),
-        ImageItem(id: 3, imageName: "carbonara", label: "Carbonara"),
-        ImageItem(id: 4, imageName: "california_roll", label: "Sushi"),
-        ImageItem(id: 5, imageName: "nachos", label: "Nachos"),
-        ImageItem(id: 6, imageName: "potato", label: "Potato"),
-        ImageItem(id: 7, imageName: "cake", label: "Cake"),
-        ImageItem(id: 8, imageName: "burrito", label: "Burrito")
-    ]
+    init(conversation: MSConversation?) {
+        self.conversationManager = ConversationManager(conversation: conversation)
+    }
 
     var body: some View {
         NavigationView {
@@ -40,7 +31,7 @@ struct ContentView: View {
                         ForEach(imageItems, id: \.imageName) { item in
                             Button(action: {
                                 selectedItem = item
-                                inviteToGame(for: item)
+                                self.conversationManager?.inviteToGame(for: item)
                             }) {
                                 itemContent(for: item)
                             }
@@ -87,38 +78,5 @@ struct ContentView: View {
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .shadow(radius: 2)
         .frame(width: 80, height: 120)
-    }
-
-    private func inviteToGame(for item: ImageItem) {
-        guard let conversation = conversation else { return }
-        print(item.label)
-        inviteToGame(gameType: item.label)
-    }
-
-    private func inviteToGame(gameType: String) {
-        guard let conversation = conversation else { return }
-
-        let session = MSSession()
-        let message = MSMessage(session: session)
-        let layout = MSMessageTemplateLayout()
-        layout.caption = "Let's play \(gameType)!!"
-        message.layout = layout
-
-        var components = URLComponents()
-        components.queryItems = [
-            URLQueryItem(name: "gameType", value: gameType.lowercased()),
-            URLQueryItem(name: "player1Score", value: "0"),
-            URLQueryItem(name: "player2Score", value: "0"),
-            URLQueryItem(name: "player1Played", value: "false"),
-            URLQueryItem(name: "player2Played", value: "false"),
-            URLQueryItem(name: "currentPlayer", value: "player1")
-        ]
-        message.url = components.url
-
-        conversation.insert(message) { error in
-            if let error = error {
-                print("Error sending game invitation: \(error.localizedDescription)")
-            }
-        }
     }
 }

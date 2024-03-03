@@ -6,9 +6,26 @@ struct GameState: Equatable {
     var player2Score: Int = 0
     var player1Played: Bool = false
     var player2Played: Bool = false
-    var currentPlayer: String?
+    var currentPlayer: String = "player1" // or "player2"
     var gameType: String?
 }
+
+struct ImageItem: Identifiable {
+    let id: Int
+    let imageName: String
+    let label: String
+}
+
+var imageItems: [ImageItem] = [
+    ImageItem(id: 1, imageName: "beef_wellington", label: "Beef Welly"),
+    ImageItem(id: 2, imageName: "pancakes", label: "Pancakes"),
+    ImageItem(id: 3, imageName: "carbonara", label: "Carbonara"),
+    ImageItem(id: 4, imageName: "california_roll", label: "Sushi"),
+    ImageItem(id: 5, imageName: "nachos", label: "Nachos"),
+    ImageItem(id: 6, imageName: "potato", label: "Potato"),
+    ImageItem(id: 7, imageName: "cake", label: "Cake"),
+    ImageItem(id: 8, imageName: "burrito", label: "Burrito")
+]
 
 struct SteakSeasoning {
     var frontSalt: Double = 0
@@ -36,6 +53,55 @@ enum SteakSide {
 enum GameType: String {
     case BeefWelly = "Beef Welly"
     case pancakes = "pancakes"
+}
+
+enum EggState {
+    case whole, cracked, exploded
+}
+
+struct Egg {
+    var state: EggState = .whole
+    var position: CGPoint?
+    var isSelected: Bool = false
+    var dragSpeed: CGFloat = 0
+
+    var imageName: String {
+        switch state {
+        case .whole:
+            return "egg"
+        case .cracked:
+            return "cracked_eggy"
+        case .exploded:
+            return "exploded_egg"
+        }
+    }
+}
+
+struct Pancake: Identifiable {
+    let id = UUID()
+    var position: CGPoint
+    var state: PancakeState = .batter
+    var cookingProgress: Double = 0.0
+    var hasBeenFlipped: Bool = false
+    var cookingTime: TimeInterval = 0
+    var type: PancakeType = .plain
+}
+
+enum PancakeState {
+    case batter, readyToFlip, flipped, done, burned
+}
+
+enum PancakeType {
+    case plain, blueberry, chocolateChip
+}
+
+enum GameStage: String, CaseIterable, Identifiable {
+    case crackEggs
+    case measureIngredients
+    case cookPancakes
+    case outcome
+
+    var id: String { self.rawValue }
 }
 
     struct GameButtonStyle: ButtonStyle {
