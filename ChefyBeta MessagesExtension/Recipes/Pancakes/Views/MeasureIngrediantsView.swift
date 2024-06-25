@@ -29,16 +29,16 @@ struct MeasuringIngredientsView: View {
                     .foregroundColor(.white)
                     .cornerRadius(8)
                 HStack {
-                    DraggableIngredientView(ingredientName: "milk", viewModel: viewModel, initialPosition: CGPoint(x: 60, y: 65))
-                    DraggableIngredientView(ingredientName: "sugar", viewModel: viewModel, initialPosition: CGPoint(x: 237, y: 65))
-                    DraggableIngredientView(ingredientName: "flour", viewModel: viewModel, initialPosition: CGPoint(x: 36, y: 65))
+                    DraggableIngredientView(ingredientName: "milk", viewModel: viewModel, initialPosition: CGPoint(x: 63, y: 85))
+                    DraggableIngredientView(ingredientName: "sugar", viewModel: viewModel, initialPosition: CGPoint(x: 238, y: 85))
+                    DraggableIngredientView(ingredientName: "flour", viewModel: viewModel, initialPosition: CGPoint(x: 34, y: 85))
                 }
 
                 VStack {
-                    Button("Start Cooking!") {
+                    Button("Start cooking!") {
                         viewModel.currentStage = .cookPancakes
-
                     }
+                    .buttonStyle(GameButtonStyle(backgroundColor: .blue))
                 }
             }
             .padding()

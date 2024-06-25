@@ -5,7 +5,7 @@ struct CrackEggsView: View {
     @ObservedObject var viewModel: PancakeGameViewModel
     var messagesViewController: MessagesViewController
     var gameState: GameState = GameState()
-
+    
     var body: some View {
         ZStack {
             Image("eggbackground")
@@ -13,7 +13,7 @@ struct CrackEggsView: View {
                 .aspectRatio(contentMode: .fill)
                 .edgesIgnoringSafeArea(.all)
                 .offset(x: -25, y: 0)
-
+            
             VStack {
                 Text("Crack \(viewModel.eggsToCrack) Eggs!")
                     .font(.headline)
@@ -21,7 +21,7 @@ struct CrackEggsView: View {
                     .background(Color.black.opacity(0.5))
                     .foregroundColor(.white)
                     .cornerRadius(8)
-
+                
                 Text("Eggs Cracked: \(viewModel.eggsCracked)/\(viewModel.eggsToCrack)")
                     .font(.subheadline)
                     .padding()
@@ -29,55 +29,41 @@ struct CrackEggsView: View {
                     .foregroundColor(.white)
                     .cornerRadius(8)
                 ZStack {
-                    Rectangle()
-                        .fill(Color.red.opacity(0.003))
-                        .frame(width: 200, height: 150)
-                        .position(x: UIScreen.main.bounds.width / 1.6, y: UIScreen.main.bounds.height / 2.5)
-                        .onTapGesture { _ in
-                            let tapLocation = CGPoint(x: 100, y: 100)
-                            viewModel.crackPickedEgg(at: tapLocation)
-                        }
-
-                    ForEach(0..<viewModel.eggs.count, id: \.self) { index in
-                        if viewModel.eggs[index].state == .whole {
-                            Image(viewModel.eggs[index].imageName)
+                    ForEach(viewModel.eggs) { egg in
+                        if egg.state == .whole {
+                            Image(egg.imageName)
                                 .resizable()
-                                .frame(width: 20, height: 30)
-                                .offset(x: 140, y: 235)
-                                .padding()
-                                .onTapGesture {
-                                    viewModel.pickUpEgg(at: index)
-                                }
-                        }
-                    }
-                }
-                Spacer()
-                VStack {
-                    ForEach(0..<viewModel.eggs.count, id: \.self) { index in
-                        if viewModel.eggs[index].state == .cracked, let position = viewModel.eggs[index].position {
-                            Image(viewModel.eggs[index].imageName)
+                                .frame(width: 40, height: 50)
+                                .position(egg.position ?? CGPoint(x: 150, y: 0))
+                                .gesture(
+                                    DragGesture()
+                                        .onChanged { gesture in
+                                            viewModel.updateEggPosition(id: egg.id, newPosition: gesture.location)
+                                        }
+                                        .onEnded { gesture in
+                                            let speed = gesture.predictedEndLocation.y - gesture.startLocation.y
+                                            viewModel.handleEggDrop(eggId: egg.id, atLocation: gesture.location, withSpeed: speed)
+                                        }
+                                )
+                        } else if egg.state == .cracked || egg.state == .exploded {
+                            Image(egg.imageName)
                                 .resizable()
-                                .frame(width: 100, height: 100)
-                                .position(x: 190, y: -80)
-                                .animation(.easeInOut, value: viewModel.eggs[index].position)
+                                .frame(width: 80, height: 70)
+                                .position(egg.position ?? CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2))
                                 .onAppear {
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                        withAnimation {
-                                            viewModel.eggs[index].state = .exploded
-                                        }
+                                        viewModel.eggs.removeAll { $0.id == egg.id }
                                     }
                                 }
                         }
                     }
                 }
-                .frame(width: UIScreen.main.bounds.width, height: 200, alignment: .trailing)
-                VStack {
-                    Button("Mix eggs") {
-                        viewModel.currentStage = .measureIngredients
+                    VStack {
+                        Button("Mix eggs") {
+                            viewModel.currentStage = .measureIngredients
+                        }
+                        .buttonStyle(GameButtonStyle(backgroundColor: viewModel.eggsCracked >= 5 ? .blue : .gray))
                     }
-                    .buttonStyle(GameButtonStyle(backgroundColor: viewModel.eggsCracked >= 5 ? .blue : .gray))
-                    .disabled(viewModel.eggsCracked < 5)
-                }
             }
         }
         .onAppear {
@@ -97,6 +83,6 @@ struct CrackEggsView: View {
                 GameOutcomeView(gameState: viewModel.gameState, viewModel: viewModel)
             }
         }
-
+        
     }
 }

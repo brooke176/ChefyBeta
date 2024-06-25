@@ -56,12 +56,13 @@ enum GameType: String {
 }
 
 enum EggState {
-    case whole, cracked, exploded
+    case whole, cracked, exploded, gone
 }
 
-struct Egg {
+struct Egg: Identifiable {
+    var id = UUID()
     var state: EggState = .whole
-    var position: CGPoint?
+    var position: CGPoint? = nil
     var isSelected: Bool = false
     var dragSpeed: CGFloat = 0
 
@@ -73,7 +74,16 @@ struct Egg {
             return "cracked_eggy"
         case .exploded:
             return "exploded_egg"
+        case .gone:
+            return ""
         }
+    }
+
+    init(id: UUID = UUID(), state: EggState = .whole, position: CGPoint? = nil, isSelected: Bool = false) {
+        self.id = id
+        self.state = state
+        self.position = position
+        self.isSelected = isSelected
     }
 }
 

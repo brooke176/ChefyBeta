@@ -24,6 +24,9 @@ class PancakeGameViewModel: ObservableObject {
         self.gameState = gameState
         self.messagesViewController = messagesViewController
         self.eggs = Array(repeating: Egg(), count: eggsToCrack)
+        self.eggs = (0..<5).map { _ in Egg() }
+        resetEggs()
+
     }
 
     // PANCAKES
@@ -191,23 +194,35 @@ class PancakeGameViewModel: ObservableObject {
     }
 
     func resetEggs() {
-         eggs = Array(repeating: Egg(), count: eggsToCrack)
-     }
-
-    func pickUpEgg(at index: Int) {
-        guard eggs.indices.contains(index), eggs[index].state == .whole else { return }
-        pickedEggIndex = index
+        eggs = (0..<5).map { _ in Egg() }
+        for (index, egg) in eggs.enumerated() {
+            eggs[index].position = CGPoint(x: 380 + CGFloat(index * 5), y: 400 - CGFloat(index * 5))
+        }
     }
+    
+    func updateEggPosition(id: UUID, newPosition: CGPoint) {
+        if let index = eggs.firstIndex(where: { $0.id == id }) {
+            eggs[index].position = newPosition
+        }
+    }
+    
+    func handleEggDrop(eggId: UUID, atLocation location: CGPoint, withSpeed speed: CGFloat) {
+        guard let index = eggs.firstIndex(where: { $0.id == eggId }) else { return }
+        let crackZone = CGRect(x: UIScreen.main.bounds.width / 2.2 + 50, y: UIScreen.main.bounds.height / 1.7 - 175, width: 300, height: 100)
 
-    func crackPickedEgg(at position: CGPoint) {
-        eggsCracked += 1
-        guard let index = pickedEggIndex else { return }
-        eggs[index].state = .cracked
-        eggs[index].position = position
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            withAnimation {
-                self.eggs[index].state = .exploded
+        if crackZone.contains(location) {
+            if speed > 1000 {
+                eggs[index].state = .exploded
+            } else {
+                eggs[index].state = .cracked
+                eggsCracked += 1
+            }
+            
+            let generator = UIImpactFeedbackGenerator(style: .medium)
+            generator.impactOccurred()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.eggs[index].state = .gone
             }
         }
     }
