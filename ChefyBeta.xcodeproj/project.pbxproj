@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EE45750C2C1DEA96006DBEB3 /* TODOS.rtf in Resources */ = {isa = PBXBuildFile; fileRef = EE45750B2C1DEA96006DBEB3 /* TODOS.rtf */; };
 		EE6E720B2B6C9C650012BF9E /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6E720A2B6C9C650012BF9E /* ProgressBarView.swift */; };
 		EE6E721D2B6F5CC00012BF9E /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6E721C2B6F5CC00012BF9E /* Conversation.swift */; };
 		EE6E721F2B6FDD0F0012BF9E /* GameOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6E721E2B6FDD0F0012BF9E /* GameOverView.swift */; };
@@ -59,6 +60,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		EE45750B2C1DEA96006DBEB3 /* TODOS.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = TODOS.rtf; sourceTree = "<group>"; };
 		EE6E720A2B6C9C650012BF9E /* ProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
 		EE6E721C2B6F5CC00012BF9E /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		EE6E721E2B6FDD0F0012BF9E /* GameOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverView.swift; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 				EEE46E1A2B7D222400CB7768 /* Models */,
 				EEE46E192B7D21FC00CB7768 /* Utils */,
 				EEE46E182B7D21EF00CB7768 /* Components */,
+				EE45750B2C1DEA96006DBEB3 /* TODOS.rtf */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -332,6 +335,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE45750C2C1DEA96006DBEB3 /* TODOS.rtf in Resources */,
 				EEC0C32E2B69E71E0094E043 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

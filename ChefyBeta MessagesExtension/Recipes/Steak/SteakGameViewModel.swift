@@ -24,7 +24,6 @@ class SteakGameViewModel: ObservableObject {
     @Published var gameEnded = false
     @Published var gameMessage = ""
     @Published var showingLoadingOverlay = false
-    @Published var showOutcomeView = false
     @Published var showCookingView = false
     @Published var showMushroomView = false
     @Published var showDoughRollingView = false
@@ -36,6 +35,7 @@ class SteakGameViewModel: ObservableObject {
     var messagesViewController: MessagesViewController
     var onRequestCompactMode: (() -> Void)?
     private var conversationManager: ConversationManager?
+    @Published var currentStage: GameStage? = nil
 
     let minSeasoningAmount: Double = 0.6
     let maxSeasoningAmount = 3.0
@@ -171,7 +171,7 @@ class SteakGameViewModel: ObservableObject {
         messagesViewController.gameState = gameState
         messagesViewController.updateAndSendGameState {
             DispatchQueue.main.async {
-                self.showOutcomeView = true
+                self.currentStage = .outcome
             }
         }
     }
