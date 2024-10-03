@@ -9,6 +9,40 @@ class ConversationManager {
     init(conversation: MSConversation?) {
         self.conversation = conversation
     }
+    
+    init(gameState: GameState) {
+        self.gameState = gameState
+    }
+    
+    func updateGameState(newGameState: GameState) {
+        self.gameState = newGameState
+    }
+
+//    func sendUpdatedGameState() {
+//        guard let conversation = conversation else { return }
+//        let message = MSMessage(session: conversation.selectedMessage?.session ?? MSSession())
+//        let layout = MSMessageTemplateLayout()
+//        layout.caption = gameState.currentPlayer == "player1" ? "Player 1's Turn" : "Player 2's Turn"
+//        message.layout = layout
+//        print("gamestate", GameState())
+//
+//        var components = URLComponents()
+//        components.queryItems = [
+//            URLQueryItem(name: "gameType", value: gameState.gameType),
+//            URLQueryItem(name: "player1Score", value: String(gameState.player1Score)),
+//            URLQueryItem(name: "player2Score", value: String(gameState.player2Score)),
+//            URLQueryItem(name: "player1Played", value: String(gameState.player1Played)),
+//            URLQueryItem(name: "player2Played", value: String(gameState.player2Played)),
+//            URLQueryItem(name: "currentPlayer", value: gameState.currentPlayer)
+//        ]
+//        message.url = components.url
+//
+//        conversation.insert(message) { error in
+//            if let error = error {
+//                print("Error sending updated game state: \(error.localizedDescription)")
+//            }
+//        }
+//    }
 
      func inviteToGame(for item: ImageItem) {
         print(item.label)
@@ -23,46 +57,22 @@ class ConversationManager {
         let layout = MSMessageTemplateLayout()
         layout.caption = "Let's play \(gameType)!!"
         message.layout = layout
+         print("gameType", gameType.lowercased())
 
         var components = URLComponents()
         components.queryItems = [
             URLQueryItem(name: "gameType", value: gameType.lowercased()),
             URLQueryItem(name: "player1Score", value: "0"),
             URLQueryItem(name: "player2Score", value: "0"),
-            URLQueryItem(name: "player1Played", value: "false"),
+            URLQueryItem(name: "player1Played", value: "true"),
             URLQueryItem(name: "player2Played", value: "false"),
-            URLQueryItem(name: "currentPlayer", value: "player1")
+            URLQueryItem(name: "currentPlayer", value: "player2")
         ]
         message.url = components.url
 
         conversation.insert(message) { error in
             if let error = error {
                 print("Error sending game invitation: \(error.localizedDescription)")
-            }
-        }
-    }
-    
-    func sendUpdatedGameState() {
-        guard let conversation = conversation else { return }
-        let message = MSMessage(session: conversation.selectedMessage?.session ?? MSSession())
-        let layout = MSMessageTemplateLayout()
-        layout.caption = gameState.currentPlayer == "player1" ? "Player 1's Turn" : "Player 2's Turn"
-        message.layout = layout
-
-        var components = URLComponents()
-        components.queryItems = [
-            URLQueryItem(name: "gameType", value: gameState.gameType),
-            URLQueryItem(name: "player1Score", value: String(gameState.player1Score)),
-            URLQueryItem(name: "player2Score", value: String(gameState.player2Score)),
-            URLQueryItem(name: "player1Played", value: String(gameState.player1Played)),
-            URLQueryItem(name: "player2Played", value: String(gameState.player2Played)),
-            URLQueryItem(name: "currentPlayer", value: gameState.currentPlayer)
-        ]
-        message.url = components.url
-
-        conversation.insert(message) { error in
-            if let error = error {
-                print("Error sending updated game state: \(error.localizedDescription)")
             }
         }
     }
@@ -89,6 +99,7 @@ class ConversationManager {
         }
 
         var gameState = GameState()
+        print("gamestate2", GameState())
 
         for item in queryItems {
             switch item.name {

@@ -1,13 +1,17 @@
 import Foundation
 import SwiftUI
 
-struct GameState: Equatable {
+struct GameState {
+    var gameType: String?
     var player1Score: Int = 0
     var player2Score: Int = 0
     var player1Played: Bool = false
     var player2Played: Bool = false
-    var currentPlayer: String = "player1" // or "player2"
-    var gameType: String?
+    var currentPlayer: String = "player1"
+
+    var gameHasStarted: Bool {
+        return player1Played
+    }
 }
 
 struct ImageItem: Identifiable {

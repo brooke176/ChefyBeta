@@ -32,7 +32,8 @@ struct GameOutcomeView: View {
             scoreText("Player 2 Score: \(gameState.player2Score)")
 
             Button("OK") {
-                viewModel.currentStage = nil
+                viewModel.gameOver = true
+                viewModel.endGame()
             }
             .foregroundColor(.white)
             .padding()

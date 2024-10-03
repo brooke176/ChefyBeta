@@ -15,6 +15,7 @@ class MessagesViewController: MSMessagesAppViewController {
             conversationManager.decodeGameState(from: messageURL) { [weak self] decodedGameState in
                 guard let self = self else { return }
                 self.gameState = decodedGameState ?? GameState()
+                print("decoded", self.gameState)
 
                 if self.gameState.player1Played && self.gameState.player2Played {
                     self.presentOutcomeView(with: self.gameState)
@@ -26,6 +27,28 @@ class MessagesViewController: MSMessagesAppViewController {
             presentContentView(conversation: conversation)
         }
     }
+    
+//    override func willBecomeActive(with conversation: MSConversation) {
+//        super.willBecomeActive(with: conversation)
+//
+//        let viewModel = PancakeGameViewModel(gameState: gameState, messagesViewController: self)
+//        let SteakSeasoningViewView = CrackEggsView(viewModel: viewModel, messagesViewController: self)
+//        presentPancakeGame(viewModel: viewModel)
+//
+//        let hostingController = UIHostingController(rootView: SteakSeasoningViewView)
+//
+//        addChild(hostingController)
+//        view.addSubview(hostingController.view)
+//        hostingController.didMove(toParent: self)
+//
+//        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.activate([
+//            hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+//            hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+//            hostingController.view.topAnchor.constraint(equalTo: view.topAnchor),
+//            hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+//        ])
+//    }
 
     func updateAndSendGameState(completion: @escaping () -> Void) {
         guard let conversation = activeConversation else {
@@ -36,6 +59,7 @@ class MessagesViewController: MSMessagesAppViewController {
         let layout = MSMessageTemplateLayout()
         layout.caption = "Your turn!"
         message.layout = layout
+        print("gameStategameState", gameState)
 
         var components = URLComponents()
         components.queryItems = [
@@ -151,8 +175,10 @@ class MessagesViewController: MSMessagesAppViewController {
 
     override func didStartSending(_ message: MSMessage, conversation: MSConversation) {
         // Handle sending the game state when the user taps the send button.
-        updateAndSendGameState {
-            print("Game state sent successfully.")
+        if gameState.gameHasStarted {
+            updateAndSendGameState {
+                print("Game state sent successfully.")
+            }
         }
     }
 

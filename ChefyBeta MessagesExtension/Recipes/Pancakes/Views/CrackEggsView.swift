@@ -60,8 +60,9 @@ import OSLog
                     }
                         VStack {
                             Button("Mix eggs") {
-                                viewModel.currentStage = .measureIngredients
-                                print("testMIXEGGs")
+                                viewModel.endTurnForPlayer()
+//                                viewModel.gameOver = true
+//                                viewModel.endGame()
                             }
                             .buttonStyle(GameButtonStyle(backgroundColor: viewModel.eggsCracked >= 5 ? .blue : .gray))
                         }
@@ -72,6 +73,9 @@ import OSLog
             }
             
             .sheet(item: $viewModel.currentStage, onDismiss: {
+                if viewModel.gameOver {
+                    viewModel.currentStage = nil
+                }
             }) { stage in
                 switch stage {
                 case .crackEggs:

@@ -10,50 +10,50 @@ class MessagesViewController: MSMessagesAppViewController {
     var gameState: GameState = GameState()
     private var conversationManager: ConversationManager?
     
-//            override func willBecomeActive(with conversation: MSConversation) {
-//                super.willBecomeActive(with: conversation)
-//        
-//                let viewModel = PancakeGameViewModel(gameState: gameState, messagesViewController: self)
-//                let SteakSeasoningViewView = CrackEggsView(viewModel: viewModel, messagesViewController: self)
-//                presentPancakeGame(viewModel: viewModel)
-//   
-//                let hostingController = UIHostingController(rootView: SteakSeasoningViewView)
-//    
-//                addChild(hostingController)
-//                view.addSubview(hostingController.view)
-//                hostingController.didMove(toParent: self)
-//    
-//                hostingController.view.translatesAutoresizingMaskIntoConstraints = false
-//                NSLayoutConstraint.activate([
-//                    hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-//                    hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-//                    hostingController.view.topAnchor.constraint(equalTo: view.topAnchor),
-//                    hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-//                ])
-//            }
+           override func willBecomeActive(with conversation: MSConversation) {
+               super.willBecomeActive(with: conversation)
+       
+               let viewModel = PancakeGameViewModel(gameState: gameState, messagesViewController: self)
+               let SteakSeasoningViewView = CrackEggsView(viewModel: viewModel, messagesViewController: self)
+               presentPancakeGame(viewModel: viewModel)
+  
+               let hostingController = UIHostingController(rootView: SteakSeasoningViewView)
+   
+               addChild(hostingController)
+               view.addSubview(hostingController.view)
+               hostingController.didMove(toParent: self)
+   
+               hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+               NSLayoutConstraint.activate([
+                   hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                   hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                   hostingController.view.topAnchor.constraint(equalTo: view.topAnchor),
+                   hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+               ])
+           }
 
-    override func willBecomeActive(with conversation: MSConversation) {
-        super.willBecomeActive(with: conversation)
-        let conversationManager = ConversationManager(conversation: conversation)
-        self.conversationManager = conversationManager
+    // override func willBecomeActive(with conversation: MSConversation) {
+    //     super.willBecomeActive(with: conversation)
+    //     let conversationManager = ConversationManager(conversation: conversation)
+    //     self.conversationManager = conversationManager
 
-        if let messageURL = conversation.selectedMessage?.url {
-            conversationManager.decodeGameState(from: messageURL) { [weak self] decodedGameState in
-                guard let self = self else { return }
-                if decodedGameState != nil {
-                    if self.gameState.player1Played && self.gameState.player2Played {
-                        self.presentOutcomeView(with: self.gameState)
-                    } else {
-                        self.handleGameSelection(using: conversationManager, conversation: conversation)
-                    }
-                } else {
-                    self.presentContentView(conversation: conversation)
-                }
-            }
-        } else {
-            presentContentView(conversation: conversation)
-        }
-    }
+    //     if let messageURL = conversation.selectedMessage?.url {
+    //         conversationManager.decodeGameState(from: messageURL) { [weak self] decodedGameState in
+    //             guard let self = self else { return }
+    //             if decodedGameState != nil {
+    //                 if self.gameState.player1Played && self.gameState.player2Played {
+    //                     self.presentOutcomeView(with: self.gameState)
+    //                 } else {
+    //                     self.handleGameSelection(using: conversationManager, conversation: conversation)
+    //                 }
+    //             } else {
+    //                 self.presentContentView(conversation: conversation)
+    //             }
+    //         }
+    //     } else {
+    //         presentContentView(conversation: conversation)
+    //     }
+    // }
     
     func updateAndSendGameState(completion: @escaping () -> Void) {
          guard let conversation = activeConversation else {

@@ -13,6 +13,7 @@ class PancakeGameViewModel: ObservableObject {
     @Published var eggTimer: Double = 0
     @Published var eggsCracked: Int = 0
     @Published var eggs: [Egg] = []
+    @Published var gameOver: Bool = false
 
     @Published var ingredientsDropped: Set<String> = []
     @Published var pancakes: [Pancake] = []
@@ -44,6 +45,16 @@ class PancakeGameViewModel: ObservableObject {
         DispatchQueue.main.async {
             self.pancakes.append(newPancake)
             self.startPancakeTimer(for: newPancake.id)
+        }
+    }
+
+    // In PancakeGameViewModel.swift
+    func endGame() {
+        self.gameOver = true
+        messagesViewController.updateAndSendGameState {
+            DispatchQueue.main.async {
+                self.messagesViewController.dismiss(animated: true, completion: nil)
+            }
         }
     }
 
@@ -81,7 +92,8 @@ class PancakeGameViewModel: ObservableObject {
     }
 
     func endTurnForPlayer() {
-        let score = calculateScore()
+//        let score = calculateScore()
+        let score = 3
 
         if gameState.currentPlayer == "player1" {
             gameState.player1Score += score
@@ -93,13 +105,16 @@ class PancakeGameViewModel: ObservableObject {
             gameState.currentPlayer = "player1"
         }
 
-        conversationManager?.sendUpdatedGameState()
+        // Update the gameState property
+        self.gameState = gameState
+        print("testgame", gameState)
+
+        messagesViewController.gameState = gameState
         messagesViewController.updateAndSendGameState {
             DispatchQueue.main.async {
-                // TODO: if this doesnt work just delete next line and add to line 90 in cook pancake view
                 self.currentStage = .outcome
             }
-    }
+        }
     }
 
     func checkIfAllPancakesAreBurned() {
