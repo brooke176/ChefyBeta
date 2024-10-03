@@ -17,7 +17,7 @@ struct ImageItem: Identifiable {
 }
 
 var imageItems: [ImageItem] = [
-    ImageItem(id: 1, imageName: "beef_wellington", label: "Beef Welly"),
+    ImageItem(id: 1, imageName: "beef_wellington", label: "Welly"),
     ImageItem(id: 2, imageName: "pancakes", label: "Pancakes"),
     ImageItem(id: 3, imageName: "carbonara", label: "Carbonara"),
     ImageItem(id: 4, imageName: "california_roll", label: "Sushi"),
@@ -51,7 +51,7 @@ enum SteakSide {
 }
 
 enum GameType: String {
-    case BeefWelly = "Beef Welly"
+    case BeefWelly = "welly"
     case pancakes = "pancakes"
 }
 

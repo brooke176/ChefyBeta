@@ -14,27 +14,39 @@ struct SteakSeasoningView: View {
 
             VStack {
                 Spacer()
-                SeasoningInstructionText(gameEnded: viewModel.gameEnded, isCooking: viewModel.isCooking, steakFlipped: viewModel.steakFlipped, cookingProgress: viewModel.cookingProgress, seasoning: viewModel.seasoning, gameState: viewModel.gameState)
-                    .padding()
-                    .background(Color.white.opacity(0.8))
-                    .foregroundColor(Color.black)
-                    .font(.headline)
-                    .cornerRadius(10)
-                    .shadow(radius: 5)
-                    .padding(.horizontal, 10)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.8), Color.purple.opacity(0.8)]), startPoint: .leading, endPoint: .trailing), lineWidth: 2)
-                    )
-                    .padding(.vertical, 5)
+                SeasoningInstructionText(
+                    gameEnded: viewModel.gameEnded,
+                    isCooking: viewModel.isCooking,
+                    steakFlipped: viewModel.steakFlipped,
+                    cookingProgress: viewModel.cookingProgress,
+                    seasoning: viewModel.seasoning,
+                    gameState: viewModel.gameState
+                )
+                .padding()
+                .background(Color.white.opacity(0.8))
+                .foregroundColor(Color.black)
+                .font(.headline)
+                .cornerRadius(10)
+                .shadow(radius: 5)
+                .padding(.horizontal, 10)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.8), Color.purple.opacity(0.8)]), startPoint: .leading, endPoint: .trailing), lineWidth: 2)
+                )
+                .padding(.vertical, 5)
                 Spacer()
-                SteakView(steakFlipped: viewModel.steakFlipped, isCooking: viewModel.isCooking, seasoningGraphics: viewModel.seasoningGraphics, viewModel: viewModel)
+                SteakView(
+                    steakFlipped: viewModel.steakFlipped,
+                    isCooking: viewModel.isCooking,
+                    seasoningGraphics: viewModel.seasoningGraphics,
+                    viewModel: viewModel
+                )
                 ActionButtonView(viewModel: viewModel)
                     .padding(.bottom, 100)
             }
         }
         .sheet(isPresented: $viewModel.showCookingView) {
-            SteakView(steakFlipped: viewModel.steakFlipped, isCooking: viewModel.isCooking, seasoningGraphics: viewModel.seasoningGraphics, viewModel: viewModel)
+            OvenCookingView(viewModel: viewModel, messagesViewController: messagesViewController)
         }
     }
 }
@@ -121,8 +133,11 @@ struct ActionButtonView: View {
     var body: some View {
         VStack {
             Button("Start Cooking") {
+                NSLog("hellobrbkjbefjk")
                 viewModel.startCooking()
+                viewModel.isCooking = true
                 viewModel.showCookingView = true
+                viewModel.showOvenCookingView = true
             }
             .buttonStyle(GameButtonStyle(backgroundColor: .green))
         }

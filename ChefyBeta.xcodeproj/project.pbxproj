@@ -13,7 +13,6 @@
 		EE6E721F2B6FDD0F0012BF9E /* GameOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6E721E2B6FDD0F0012BF9E /* GameOverView.swift */; };
 		EEC0C31B2B69E7180094E043 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EEC0C31A2B69E7180094E043 /* Assets.xcassets */; };
 		EEC0C3212B69E7190094E043 /* ChefyBeta MessagesExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = EEC0C3202B69E7190094E043 /* ChefyBeta MessagesExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		EEC0C3292B69E7190094E043 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC0C3282B69E7190094E043 /* MessagesViewController.swift */; };
 		EEC0C32E2B69E71E0094E043 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EEC0C32D2B69E71E0094E043 /* Assets.xcassets */; };
 		EEC0C33A2B69E82D0094E043 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC0C3392B69E82D0094E043 /* ContentView.swift */; };
 		EEC0C3402B69E8850094E043 /* ToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC0C33F2B69E8850094E043 /* ToolbarView.swift */; };
@@ -32,7 +31,7 @@
 		EEE46E2D2B86D6BD00CB7768 /* PancakeGameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E2C2B86D6BD00CB7768 /* PancakeGameViewModel.swift */; };
 		EEE46E302B89846700CB7768 /* MeasureIngrediantsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E2F2B89846700CB7768 /* MeasureIngrediantsView.swift */; };
 		EEE46E322B8FDAD600CB7768 /* CookPancakesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E312B8FDAD600CB7768 /* CookPancakesView.swift */; };
-		EEF9BB562B6C495D002EA1BD /* MessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF9BB552B6C495D002EA1BD /* MessageHandler.swift */; };
+		EEEEBE3F2C2CF2C4008C0701 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEEBE3E2C2CF2C4008C0701 /* MessagesViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,7 +67,6 @@
 		EEC0C31A2B69E7180094E043 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EEC0C3202B69E7190094E043 /* ChefyBeta MessagesExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ChefyBeta MessagesExtension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEC0C3252B69E7190094E043 /* Messages.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Messages.framework; path = System/Library/Frameworks/Messages.framework; sourceTree = SDKROOT; };
-		EEC0C3282B69E7190094E043 /* MessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
 		EEC0C32D2B69E71E0094E043 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EEC0C32F2B69E71E0094E043 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EEC0C3392B69E82D0094E043 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -87,7 +85,7 @@
 		EEE46E2C2B86D6BD00CB7768 /* PancakeGameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PancakeGameViewModel.swift; sourceTree = "<group>"; };
 		EEE46E2F2B89846700CB7768 /* MeasureIngrediantsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureIngrediantsView.swift; sourceTree = "<group>"; };
 		EEE46E312B8FDAD600CB7768 /* CookPancakesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookPancakesView.swift; sourceTree = "<group>"; };
-		EEF9BB552B6C495D002EA1BD /* MessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageHandler.swift; sourceTree = "<group>"; };
+		EEEEBE3E2C2CF2C4008C0701 /* MessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,7 +150,6 @@
 				EEE46E172B7D21E900CB7768 /* Common */,
 				EEE46E1C2B7D22B200CB7768 /* Recipes */,
 				EEE46E1B2B7D224D00CB7768 /* Game */,
-				EEC0C3282B69E7190094E043 /* MessagesViewController.swift */,
 				EEC0C32D2B69E71E0094E043 /* Assets.xcassets */,
 				EEC0C32F2B69E71E0094E043 /* Info.plist */,
 			);
@@ -182,7 +179,7 @@
 			isa = PBXGroup;
 			children = (
 				EE6E721C2B6F5CC00012BF9E /* Conversation.swift */,
-				EEF9BB552B6C495D002EA1BD /* MessageHandler.swift */,
+				EEEEBE3E2C2CF2C4008C0701 /* MessagesViewController.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -356,15 +353,14 @@
 				EEE46E252B800C8000CB7768 /* AltMushroomView.swift in Sources */,
 				EE6E721F2B6FDD0F0012BF9E /* GameOverView.swift in Sources */,
 				EEE46E0B2B787C3500CB7768 /* SteakGameViewModel.swift in Sources */,
-				EEF9BB562B6C495D002EA1BD /* MessageHandler.swift in Sources */,
 				EEE46E232B800B6E00CB7768 /* PastryRollingView.swift in Sources */,
 				EEE46E302B89846700CB7768 /* MeasureIngrediantsView.swift in Sources */,
 				EEC0C33A2B69E82D0094E043 /* ContentView.swift in Sources */,
 				EEE46E122B7B31AA00CB7768 /* Models.swift in Sources */,
 				EEE46E042B78704900CB7768 /* SteakSeasoningView.swift in Sources */,
+				EEEEBE3F2C2CF2C4008C0701 /* MessagesViewController.swift in Sources */,
 				EEE46E2D2B86D6BD00CB7768 /* PancakeGameViewModel.swift in Sources */,
 				EE6E720B2B6C9C650012BF9E /* ProgressBarView.swift in Sources */,
-				EEC0C3292B69E7190094E043 /* MessagesViewController.swift in Sources */,
 				EEE46E092B7874B400CB7768 /* SettingsView.swift in Sources */,
 				EEE46E2B2B86D64700CB7768 /* CrackEggsView.swift in Sources */,
 				EEE46E142B7C30B900CB7768 /* SteakCookingView.swift in Sources */,

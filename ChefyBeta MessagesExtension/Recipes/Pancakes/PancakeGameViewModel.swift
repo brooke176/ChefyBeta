@@ -228,9 +228,9 @@ class PancakeGameViewModel: ObservableObject {
     }
 }
 
-extension PancakeGameViewModel: GameViewModelProtocol {
-    func setupGameView(messagesViewController: MessagesViewController) {
-        let view = CrackEggsView(viewModel: self, messagesViewController: messagesViewController)
-        messagesViewController.presentView(view)
-    }
-}
+//extension PancakeGameViewModel: GameViewModelProtocol {
+//    func setupGameView(messagesViewController: MessagesViewController) {
+//        let view = CrackEggsView(viewModel: self, messagesViewController: messagesViewController)
+//        messagesViewController.presentView(view)
+//    }
+//}

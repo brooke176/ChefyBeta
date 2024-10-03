@@ -21,7 +21,7 @@ struct OvenCookingView: View {
                     OvenButtons(viewModel: viewModel)
                         }}
 //        .sheet(isPresented: $viewModel.showOutcomeView) {
-//            GameOutcomeView(gameState: viewModel.gameState, messagesViewController: messagesViewController, viewModel: Pan)
+//            GameOutcomeView(gameState: viewModel.gameState, messagesViewController: messagesViewController, viewModel: viewModel)
 //        }
     }
 
