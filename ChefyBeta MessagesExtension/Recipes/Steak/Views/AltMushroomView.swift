@@ -28,15 +28,22 @@ struct SauteMushroomsView: View {
                     viewModel.stirMushrooms()
                 }
             VStack {
-                MushroomInstructionText(viewModel: viewModel)
-                Spacer()
-                ShroomButtons(viewModel: viewModel)
+                    MushroomInstructionText(viewModel: viewModel)
+                        .padding()
+                        .background(Color.white.opacity(0.8))
+                        .foregroundColor(Color.black)
+                        .font(.headline)
+                        .cornerRadius(10)
+                        .shadow(radius: 5)
+                        .padding(.horizontal, 10)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(LinearGradient(gradient: Gradient(colors: [Color.green.opacity(0.8), Color.brown.opacity(0.8)]), startPoint: .leading, endPoint: .trailing), lineWidth: 2)
+                        )
+                        .padding(.vertical, 5)
+                    Spacer()
+                    ShroomButtons(viewModel: viewModel)
             }}
-        .onAppear { viewModel.startCookingMushrooms() }
-        .onDisappear { viewModel.endCookingMushrooms() }
-        .sheet(isPresented: $viewModel.showDoughRollingView) {
-            PastryRollingView(viewModel: viewModel, messagesViewController: messagesViewController)
-        }
     }
 
     struct MushroomInstructionText: View {
@@ -61,8 +68,12 @@ struct SauteMushroomsView: View {
 
         var body: some View {
             VStack {
-                Button("Finish cooking shrooms", action: viewModel.serveMushrooms)
-                    .buttonStyle(GameButtonStyle(backgroundColor: .blue))
+                Button("Finish cooking shrooms") {
+                    viewModel.currentStage = .rollPastry
+//                    viewModel.endCookingMushrooms()
+                    viewModel.showDoughRollingView = true
+                }
+                .buttonStyle(GameButtonStyle(backgroundColor: .blue))
                 ProgressBar(progress: viewModel.mushroomCookingProgress).frame(height: 20).padding()
             }
         }

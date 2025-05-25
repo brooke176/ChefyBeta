@@ -45,9 +45,6 @@ struct SteakSeasoningView: View {
                     .padding(.bottom, 100)
             }
         }
-        .sheet(isPresented: $viewModel.showCookingView) {
-            OvenCookingView(viewModel: viewModel, messagesViewController: messagesViewController)
-        }
     }
 }
 
@@ -133,11 +130,9 @@ struct ActionButtonView: View {
     var body: some View {
         VStack {
             Button("Start Cooking") {
-                NSLog("hellobrbkjbefjk")
-                viewModel.startCooking()
-                viewModel.isCooking = true
-                viewModel.showCookingView = true
-                viewModel.showOvenCookingView = true
+                viewModel.currentStage = .sauteMushrooms
+                viewModel.startCookingMushrooms()
+                viewModel.showMushroomView = true
             }
             .buttonStyle(GameButtonStyle(backgroundColor: .green))
         }

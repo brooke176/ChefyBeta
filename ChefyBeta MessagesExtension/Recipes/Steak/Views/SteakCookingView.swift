@@ -34,9 +34,6 @@ struct SteakCookingView: View {
                 Spacer()
             }
         }
-        .sheet(isPresented: $viewModel.showMushroomView) {
-            SauteMushroomsView(viewModel: viewModel, messagesViewController: messagesViewController)
-        }
     }
     
     struct InstructionText: View {
@@ -113,8 +110,11 @@ struct SteakCookingView: View {
         
         var body: some View {
             VStack {
-                Button("Serve Steak", action: viewModel.serveSteak)
-                    .buttonStyle(GameButtonStyle(backgroundColor: .blue))
+                Button("Serve Steak") {
+                    viewModel.currentStage = .sauteMushrooms
+                    viewModel.serveSteak()
+                }
+                .buttonStyle(GameButtonStyle(backgroundColor: .blue))
                 ProgressBar(progress: viewModel.cookingProgress).frame(height: 20).padding()
             }
         }

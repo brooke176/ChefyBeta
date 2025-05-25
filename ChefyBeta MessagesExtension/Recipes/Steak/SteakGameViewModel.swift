@@ -74,17 +74,8 @@ class SteakGameViewModel: ObservableObject {
         }
     }
 
-    func startCooking() {
-        isCooking = true
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-            self.cookingProgress += 0.1
-            if self.cookingProgress >= self.maxCookingProgress {
-                self.showMushroomView = true
-            }
-        }
-    }
-
     func startCookingWellington() {
+        currentStage = .cookWelly
         isWellingtonCooking = true
         showOvenCookingView = true
         wellingtonCookingProgress = 0
@@ -114,17 +105,47 @@ class SteakGameViewModel: ObservableObject {
 
     func endCookingMushrooms() {
         isMushroomsCooking = false
-        showDoughRollingView = true
         burnMushrooms()
         timer?.invalidate()
         resetMushroomCookingVariables()
-        endTurnForPlayer()
+    }
+    
+    func startCooking() {
+        isCooking = true
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+            self.cookingProgress += 0.1
+            if self.cookingProgress >= self.maxCookingProgress {
+                self.showMushroomView = true
+            }
+        }
     }
 
     func endCookingWellington() {
         isWellingtonCooking = false
         timer?.invalidate()
-        endTurnForPlayer()
+        showingLoadingOverlay = true
+
+        let score = calculateScore()
+
+        if gameState.currentPlayer == "player1" {
+            gameState.player1Score = score
+            gameState.player1Played = true
+            gameState.currentPlayer = "player2"
+        } else if gameState.currentPlayer == "player2" {
+            gameState.player2Score = score
+            gameState.player2Played = true
+            gameState.currentPlayer = "player1"
+        }
+
+        messagesViewController.gameState = gameState
+        messagesViewController.updateAndSendGameState {
+            DispatchQueue.main.async {
+                self.checkGameEnd()
+                self.resetGame()
+                self.currentStage = .outcome
+                self.onRequestCompactMode?()
+            }
+        }
     }
 
     func finishRollingDough() {
@@ -147,33 +168,8 @@ class SteakGameViewModel: ObservableObject {
     }
 
     func serveSteak() {
+        currentStage = .sauteMushrooms
         self.showMushroomView = true
-    }
-
-    func serveMushrooms() {
-        endCookingMushrooms()
-    }
-
-    func endTurnForPlayer() {
-        showingLoadingOverlay = true
-        let score = calculateScore()
-
-        if gameState.currentPlayer == "player1" {
-            gameState.player1Score = score
-            gameState.player1Played = true
-        } else if gameState.currentPlayer == "player2" {
-            gameState.player2Score = score
-            gameState.player2Played = true
-        }
-
-        self.resetGame()
-
-        messagesViewController.gameState = gameState
-        messagesViewController.updateAndSendGameState {
-            DispatchQueue.main.async {
-                self.currentStage = .outcome
-            }
-        }
     }
 
     private func calculateScore() -> Int {

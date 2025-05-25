@@ -6,21 +6,71 @@ class MessagesViewController: MSMessagesAppViewController {
     var gameState: GameState = GameState()
     private var conversationManager: ConversationManager?
     
+//    override func willBecomeActive(with conversation: MSConversation) {
+//        super.willBecomeActive(with: conversation)
+//        let conversationManager = ConversationManager(conversation: conversation)
+//        self.conversationManager = conversationManager
+//
+//        if gameState.currentPlayer == nil {
+//            gameState.currentPlayer = "player1"
+//            gameState.player1Id = conversation.localParticipantIdentifier.uuidString
+//        }
+//
+//        if let messageURL = conversation.selectedMessage?.url {
+//            conversationManager.decodeGameState(from: messageURL) { [weak self] decodedGameState in
+//                guard let self = self else { return }
+//                if let decodedGameState = decodedGameState {
+//                    self.gameState = decodedGameState
+//                    if conversation.localParticipantIdentifier.uuidString == self.gameState.player1Id {
+//                        self.gameState.currentPlayer = "player1"
+//                    } else {
+//                        self.gameState.currentPlayer = "player2"
+//                    }
+//
+//                    if self.gameState.player1Played && self.gameState.player2Played {
+//                        self.presentOutcomeView(with: self.gameState)
+//                    } else {
+//                        self.handleGameSelection(using: conversationManager, conversation: conversation)
+//                    }
+//                } else {
+//                    self.presentContentView(conversation: conversation)
+//                }
+//            }
+//        } else {
+//            presentContentView(conversation: conversation)
+//        }
+//    }
+    
     override func willBecomeActive(with conversation: MSConversation) {
         super.willBecomeActive(with: conversation)
         let conversationManager = ConversationManager(conversation: conversation)
         self.conversationManager = conversationManager
 
+        if gameState.currentPlayer == nil {
+            gameState.currentPlayer = "player1"
+            gameState.player1Id = conversation.localParticipantIdentifier.uuidString
+        }
+
         if let messageURL = conversation.selectedMessage?.url {
             conversationManager.decodeGameState(from: messageURL) { [weak self] decodedGameState in
                 guard let self = self else { return }
-                self.gameState = decodedGameState ?? GameState()
-                print("decoded", self.gameState)
 
-                if self.gameState.player1Played && self.gameState.player2Played {
-                    self.presentOutcomeView(with: self.gameState)
+                if let decodedGameState = decodedGameState {
+                    self.gameState = decodedGameState
+
+                    if conversation.localParticipantIdentifier.uuidString == self.gameState.player1Id {
+                        self.gameState.currentPlayer = "player1"
+                    } else {
+                        self.gameState.currentPlayer = "player2"
+                    }
+
+                    if self.gameState.player1Played && self.gameState.player2Played {
+                        self.presentOutcomeView(with: self.gameState)
+                    } else {
+                        self.handleGameSelection(using: conversationManager, conversation: conversation)
+                    }
                 } else {
-                    self.handleGameSelection(using: conversationManager, conversation: conversation)
+                    self.presentContentView(conversation: conversation)
                 }
             }
         } else {
@@ -72,6 +122,7 @@ class MessagesViewController: MSMessagesAppViewController {
         ]
 
         message.url = components.url
+        self.presentOutcomeView(with: self.gameState)
 
         conversation.insert(message) { [weak self] error in
             if let error = error {
@@ -111,16 +162,13 @@ class MessagesViewController: MSMessagesAppViewController {
     }
 
     private func presentContentView(conversation: MSConversation) {
-        let contentView = ContentView(conversation: conversation)
+        let contentView = ContentView(conversation: conversation, delegate: self)
         let hostingController = UIHostingController(rootView: contentView)
-        addChild(hostingController)
-        view.addSubview(hostingController.view)
-        hostingController.didMove(toParent: self)
-        hostingController.view.frame = view.bounds
+        setupChildViewController(hostingController)
     }
 
     private func presentOutcomeView(with gameState: GameState) {
-        let viewModel = PancakeGameViewModel(gameState: gameState, messagesViewController: self)
+        let viewModel = SteakGameViewModel(gameState: gameState, messagesViewController: self)
         let gameOutcomeView = GameOutcomeView(gameState: gameState, viewModel: viewModel)
         let hostingController = UIHostingController(rootView: gameOutcomeView)
         addChild(hostingController)
@@ -131,8 +179,15 @@ class MessagesViewController: MSMessagesAppViewController {
     }
 
     private func presentSteakGame(viewModel: SteakGameViewModel) {
-        let view = SteakSeasoningView(viewModel: viewModel, messagesViewController: self)
-        presentView(view)
+        let rootView = ZStack {
+            switch viewModel.currentStage {
+            case .some(.outcome):
+                GameOutcomeView(gameState: viewModel.gameState, viewModel: viewModel)
+            default:
+                SteakGameFlowView(viewModel: viewModel, messagesViewController: self)
+            }
+        }
+        presentView(rootView)
     }
 
     private func presentPancakeGame(viewModel: PancakeGameViewModel) {
@@ -217,6 +272,31 @@ class MessagesViewController: MSMessagesAppViewController {
             // Handle transcript style specific changes if needed.
         @unknown default:
             fatalError("Unknown presentation style.")
+        }
+    }
+}
+
+extension MessagesViewController: GameLaunchDelegate {
+    func launchGame(for item: ImageItem) {
+        switch item.label.lowercased() {
+        case "pancakes":
+            let viewModel = PancakeGameViewModel(gameState: gameState, messagesViewController: self)
+            presentPancakeGame(viewModel: viewModel)
+        case "beef welly":
+//            let viewModel = SteakGameViewModel(gameState: gameState, messagesViewController: self)
+//            presentSteakGame(viewModel: viewModel)
+            let viewModel = SteakGameViewModel(gameState: gameState, messagesViewController: self)
+//            if gameState.player1Played && gameState.player2Played || !gameState.player1Played && gameState.currentPlayer == "player2" && gameState.player2Played || !gameState.player2Played && gameState.currentPlayer == "player1" && gameState.player1Played {
+//                DispatchQueue.main.async {
+//                    viewModel.currentStage = .outcome
+//                }
+//            }
+            presentSteakGame(viewModel: viewModel)
+//            viewModel.onRequestCompactMode = { [weak self] in
+//                self?.requestPresentationStyle(.compact)
+//            }
+        default:
+            break
         }
     }
 }

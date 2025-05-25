@@ -39,22 +39,22 @@ struct PastryRollingView: View {
                         }
                 )
 
-            rollingInstructions
-        }
-        .sheet(isPresented: $viewModel.showDoughPrepView) {
-            PrepPastryView(viewModel: viewModel, messagesViewController: messagesViewController)
+            VStack {
+                rollingInstructions
+            }
+            .padding()
         }
     }
 
     private var thresholdIndicators: some View {
         Group {
             Rectangle()
-                .fill(Color.red.opacity(0.2))
+                .fill(Color.clear)
                 .frame(height: 50)
                 .position(x: UIScreen.main.bounds.width / 2, y: rollThresholdUpper)
 
             Rectangle()
-                .fill(Color.blue.opacity(0.2))
+                .fill(Color.clear)
                 .frame(height: 50)
                 .position(x: UIScreen.main.bounds.width / 2, y: rollThresholdLower)
         }
@@ -63,9 +63,31 @@ struct PastryRollingView: View {
     private var rollingInstructions: some View {
         VStack {
             PastryInstructionText(rollCount: rollCount, requiredRolls: requiredRolls)
+                .padding()
+                .background(Color.white.opacity(0.8))
+                .foregroundColor(Color.black)
+                .font(.headline)
+                .cornerRadius(10)
+                .shadow(radius: 5)
+                .padding(.horizontal, 10)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(
+                            LinearGradient(
+                                gradient: Gradient(colors: [Color.orange.opacity(0.8), Color.yellow.opacity(0.8)]),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            ),
+                            lineWidth: 2
+                        )
+                )
+                .padding(.vertical, 5)
             Spacer()
             if rollCount >= requiredRolls {
-                Button("Finish rolling dough", action: viewModel.finishRollingDough)
+                Button("Finish rolling dough") {
+                    viewModel.currentStage = .prepPastry
+                    viewModel.showDoughPrepView = true
+                }
                     .buttonStyle(GameButtonStyle(backgroundColor: .blue))
             }
             ProgressView(value: Double(rollCount), total: Double(requiredRolls))
@@ -103,9 +125,11 @@ struct PastryInstructionText: View {
     }
 }
 
+
+
 //    struct PastryButtons: View {
 //        @ObservedObject var viewModel: SteakGameViewModel
-//        
+//
 //        var body: some View {
 //            VStack {
 //                Button("Finish rolling dough", action: viewModel.serveMushrooms)

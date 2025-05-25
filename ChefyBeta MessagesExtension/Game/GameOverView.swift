@@ -2,7 +2,7 @@ import SwiftUI
 
 struct GameOutcomeView: View {
     var gameState: GameState
-    @ObservedObject var viewModel: PancakeGameViewModel
+    @ObservedObject var viewModel: SteakGameViewModel
 
     var body: some View {
         VStack(spacing: 20) {
@@ -32,8 +32,7 @@ struct GameOutcomeView: View {
             scoreText("Player 2 Score: \(gameState.player2Score)")
 
             Button("OK") {
-                viewModel.gameOver = true
-                viewModel.endGame()
+                viewModel.currentStage = nil
             }
             .foregroundColor(.white)
             .padding()

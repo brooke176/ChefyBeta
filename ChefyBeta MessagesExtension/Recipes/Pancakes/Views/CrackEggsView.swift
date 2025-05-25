@@ -15,7 +15,7 @@ import OSLog
                     .offset(x: -25, y: 0)
                 
                 VStack {
-                    Text("Crack \(viewModel.eggsToCrack) EggerCoooCoo!")
+                    Text("Crack \(viewModel.eggsToCrack) eggs  \(gameState.currentPlayer)!")
                         .font(.headline)
                         .padding()
                         .background(Color.black.opacity(0.5))
@@ -60,9 +60,7 @@ import OSLog
                     }
                         VStack {
                             Button("Mix eggs") {
-                                viewModel.endTurnForPlayer()
-//                                viewModel.gameOver = true
-//                                viewModel.endGame()
+                              viewModel.currentStage = .measureIngredients
                             }
                             .buttonStyle(GameButtonStyle(backgroundColor: viewModel.eggsCracked >= 5 ? .blue : .gray))
                         }
@@ -85,7 +83,9 @@ import OSLog
                 case .cookPancakes:
                     CookPancakesView(viewModel: viewModel, messagesViewController: messagesViewController)
                 case .outcome:
-                    GameOutcomeView(gameState: viewModel.gameState, viewModel: viewModel)
+//                    GameOutcomeView(gameState: viewModel.gameState, viewModel: viewModel)
+                        // TODO: remove
+                    CookPancakesView(viewModel: viewModel, messagesViewController: messagesViewController)
                 }
             }
             

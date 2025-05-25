@@ -31,6 +31,8 @@
 		EEE46E2D2B86D6BD00CB7768 /* PancakeGameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E2C2B86D6BD00CB7768 /* PancakeGameViewModel.swift */; };
 		EEE46E302B89846700CB7768 /* MeasureIngrediantsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E2F2B89846700CB7768 /* MeasureIngrediantsView.swift */; };
 		EEE46E322B8FDAD600CB7768 /* CookPancakesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE46E312B8FDAD600CB7768 /* CookPancakesView.swift */; };
+		EEEC96002DE277CE002A180C /* GamePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEC95FF2DE277C7002A180C /* GamePickerView.swift */; };
+		EEEC96022DE29558002A180C /* SteakGameFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEC96012DE29556002A180C /* SteakGameFlowView.swift */; };
 		EEEEBE3F2C2CF2C4008C0701 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEEBE3E2C2CF2C4008C0701 /* MessagesViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -85,6 +87,8 @@
 		EEE46E2C2B86D6BD00CB7768 /* PancakeGameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PancakeGameViewModel.swift; sourceTree = "<group>"; };
 		EEE46E2F2B89846700CB7768 /* MeasureIngrediantsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureIngrediantsView.swift; sourceTree = "<group>"; };
 		EEE46E312B8FDAD600CB7768 /* CookPancakesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookPancakesView.swift; sourceTree = "<group>"; };
+		EEEC95FF2DE277C7002A180C /* GamePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamePickerView.swift; sourceTree = "<group>"; };
+		EEEC96012DE29556002A180C /* SteakGameFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteakGameFlowView.swift; sourceTree = "<group>"; };
 		EEEEBE3E2C2CF2C4008C0701 /* MessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -105,6 +109,7 @@
 			children = (
 				EEE46E1D2B7D237B00CB7768 /* Views */,
 				EEE46E0A2B787C3500CB7768 /* SteakGameViewModel.swift */,
+				EEEC96012DE29556002A180C /* SteakGameFlowView.swift */,
 			);
 			path = Steak;
 			sourceTree = "<group>";
@@ -195,6 +200,7 @@
 		EEE46E1B2B7D224D00CB7768 /* Game */ = {
 			isa = PBXGroup;
 			children = (
+				EEEC95FF2DE277C7002A180C /* GamePickerView.swift */,
 				EEC0C3392B69E82D0094E043 /* ContentView.swift */,
 				EEE46E062B7874AA00CB7768 /* ProfileView.swift */,
 				EEE46E082B7874B400CB7768 /* SettingsView.swift */,
@@ -216,10 +222,10 @@
 		EEE46E1D2B7D237B00CB7768 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				EEE46E132B7C30B900CB7768 /* SteakCookingView.swift */,
 				EEE46E032B78704900CB7768 /* SteakSeasoningView.swift */,
-				EEE46E222B800B6E00CB7768 /* PastryRollingView.swift */,
+				EEE46E132B7C30B900CB7768 /* SteakCookingView.swift */,
 				EEE46E242B800C8000CB7768 /* AltMushroomView.swift */,
+				EEE46E222B800B6E00CB7768 /* PastryRollingView.swift */,
 				EEE46E262B859A6400CB7768 /* PrepPastryView.swift */,
 				EEE46E282B86B90700CB7768 /* OvenCookingView.swift */,
 			);
@@ -290,7 +296,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1520;
-				LastUpgradeCheck = 1520;
+				LastUpgradeCheck = 1630;
 				TargetAttributes = {
 					EEC0C3162B69E7120094E043 = {
 						CreatedOnToolsVersion = 15.2;
@@ -309,6 +315,9 @@
 				Base,
 			);
 			mainGroup = EEC0C3102B69E7120094E043;
+			packageReferences = (
+				EE0D2E112DE2755F00262554 /* XCRemoteSwiftPackageReference "CopilotForXcode" */,
+			);
 			productRefGroup = EEC0C3182B69E7120094E043 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -344,6 +353,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EEEC96002DE277CE002A180C /* GamePickerView.swift in Sources */,
 				EE6E721D2B6F5CC00012BF9E /* Conversation.swift in Sources */,
 				EEE46E322B8FDAD600CB7768 /* CookPancakesView.swift in Sources */,
 				EEC0C3402B69E8850094E043 /* ToolbarView.swift in Sources */,
@@ -364,6 +374,7 @@
 				EEE46E092B7874B400CB7768 /* SettingsView.swift in Sources */,
 				EEE46E2B2B86D64700CB7768 /* CrackEggsView.swift in Sources */,
 				EEE46E142B7C30B900CB7768 /* SteakCookingView.swift in Sources */,
+				EEEC96022DE29558002A180C /* SteakGameFlowView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -413,6 +424,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = KP5XB6RW79;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -476,6 +488,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = KP5XB6RW79;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -503,7 +516,6 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = KP5XB6RW79;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ChefyBeta MessagesExtension/Info.plist";
@@ -530,7 +542,6 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = KP5XB6RW79;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ChefyBeta MessagesExtension/Info.plist";
@@ -554,11 +565,9 @@
 		EEC0C3372B69E71E0094E043 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = KP5XB6RW79;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -575,11 +584,9 @@
 		EEC0C3382B69E71E0094E043 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = KP5XB6RW79;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -624,6 +631,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		EE0D2E112DE2755F00262554 /* XCRemoteSwiftPackageReference "CopilotForXcode" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/github/CopilotForXcode";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.35.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = EEC0C3112B69E7120094E043 /* Project object */;
 }

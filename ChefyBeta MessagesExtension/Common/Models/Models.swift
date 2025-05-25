@@ -8,6 +8,7 @@ struct GameState {
     var player1Played: Bool = false
     var player2Played: Bool = false
     var currentPlayer: String = "player1"
+    var player1Id: String?
 
     var gameHasStarted: Bool {
         return player1Played
@@ -21,7 +22,7 @@ struct ImageItem: Identifiable {
 }
 
 var imageItems: [ImageItem] = [
-    ImageItem(id: 1, imageName: "beef_wellington", label: "Welly"),
+    ImageItem(id: 1, imageName: "beef_wellington", label: "Beef Welly"),
     ImageItem(id: 2, imageName: "pancakes", label: "Pancakes"),
     ImageItem(id: 3, imageName: "carbonara", label: "Carbonara"),
     ImageItem(id: 4, imageName: "california_roll", label: "Sushi"),
@@ -109,10 +110,22 @@ enum PancakeType {
     case plain, blueberry, chocolateChip
 }
 
-enum GameStage: String, CaseIterable, Identifiable {
+enum PancakeGameStage: String, CaseIterable, Identifiable {
     case crackEggs
     case measureIngredients
     case cookPancakes
+    case outcome
+
+    var id: String { self.rawValue }
+}
+
+enum GameStage: String, CaseIterable, Identifiable {
+    case seasonSteak
+    case cookSteak
+    case sauteMushrooms
+    case rollPastry
+    case prepPastry
+    case cookWelly
     case outcome
 
     var id: String { self.rawValue }

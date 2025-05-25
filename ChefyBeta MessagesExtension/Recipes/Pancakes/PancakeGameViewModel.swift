@@ -19,7 +19,7 @@ class PancakeGameViewModel: ObservableObject {
     @Published var pancakes: [Pancake] = []
     @Published var currentOrder = PancakeOrder.generateRandomOrder()
     @Published var score: Int = 0
-    @Published var currentStage: GameStage? = nil
+    @Published var currentStage: PancakeGameStage? = nil
 
     init(gameState: GameState, messagesViewController: MessagesViewController, timeLimit: Int = 300) {
         self.gameState = gameState
@@ -29,8 +29,6 @@ class PancakeGameViewModel: ObservableObject {
         resetEggs()
 
     }
-
-    // PANCAKES
 
     func pourBatter() {
         guard pancakes.count < 6 else { return }
@@ -48,7 +46,6 @@ class PancakeGameViewModel: ObservableObject {
         }
     }
 
-    // In PancakeGameViewModel.swift
     func endGame() {
         self.gameOver = true
         messagesViewController.updateAndSendGameState {
@@ -105,7 +102,6 @@ class PancakeGameViewModel: ObservableObject {
             gameState.currentPlayer = "player1"
         }
 
-        // Update the gameState property
         self.gameState = gameState
         print("testgame", gameState)
 

@@ -69,20 +69,46 @@ struct PrepPastryView: View {
                                 updatePathsWith(value: value)
                             })
                         )}
+                Spacer()
                 VStack {
-                    Spacer()
                     Text(viewModel.mushroomsSpread ? "Place prosciutto and steak" : "Keep spreading the mushrooms")
                         .padding()
-                        .background(Color.black)
-                        .cornerRadius(5)
+                        .background(Color.white.opacity(0.8))
+                        .foregroundColor(Color.black)
+                        .font(.headline)
+                        .cornerRadius(10)
                         .shadow(radius: 5)
-                    PastryButtons(viewModel: viewModel)
-                        }}
+                        .padding(.horizontal, 10)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [Color.brown.opacity(0.8), Color.pink.opacity(0.8)]),
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    ),
+                                    lineWidth: 2
+                                )
+                        )
+                        .padding(.vertical, 5)
+
+                    Spacer()
+
+                    if viewModel.mushroomsSpread {
+                        Button("Start cooking beef wellington") {
+                            viewModel.startCookingWellington()
+                        }
+                        .buttonStyle(GameButtonStyle(backgroundColor: .blue))
+                    }
+
+                    ProgressView(value: viewModel.mushroomsSpread ? 1.0 : 0.0, total: 1.0)
+                        .frame(height: 20)
+                        .padding()
+                }
+                Spacer()
+                }
         .onAppear {
             viewModel.mushroomsSpread = false
-        }
-        .sheet(isPresented: $viewModel.showOvenCookingView) {
-            OvenCookingView(viewModel: viewModel, messagesViewController: messagesViewController)
         }
     }
 
@@ -119,7 +145,11 @@ struct PrepPastryView: View {
 
         var body: some View {
             VStack {
-                Button("Start cooking beef wellington", action: viewModel.startCookingWellington)
+                Button("Start cooking beef wellington") {
+                    viewModel.currentStage = .cookWelly
+                    viewModel.showOvenCookingView = true
+                    viewModel.startCookingWellington()
+                }
                     .buttonStyle(GameButtonStyle(backgroundColor: .blue))
             }
         }
