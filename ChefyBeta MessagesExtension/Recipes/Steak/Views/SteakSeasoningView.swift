@@ -73,7 +73,7 @@ struct SeasoningInstructionText: View {
         } else if !steakFlipped && (seasoning.backSalt < minSeasoningAmount || seasoning.backPepper < minSeasoningAmount) {
             return "Season the back side of the steak"
         } else {
-            return "Cook the steak!"
+            return "Next step!"
         }
     }
 }
@@ -129,7 +129,7 @@ struct ActionButtonView: View {
 
     var body: some View {
         VStack {
-            Button("Start Cooking") {
+            Button("Done Seasoning") {
                 viewModel.currentStage = .sauteMushrooms
                 viewModel.startCookingMushrooms()
                 viewModel.showMushroomView = true
@@ -137,4 +137,8 @@ struct ActionButtonView: View {
             .buttonStyle(GameButtonStyle(backgroundColor: .green))
         }
     }
+}
+
+#Preview {
+    SteakSeasoningView(viewModel: SteakGameViewModel(gameState: GameState(), messagesViewController: MessagesViewController()), messagesViewController: MessagesViewController())
 }

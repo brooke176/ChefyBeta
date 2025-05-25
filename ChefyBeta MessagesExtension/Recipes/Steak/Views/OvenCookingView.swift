@@ -62,10 +62,11 @@ struct OvenCookingView: View {
         var body: some View {
             VStack {
                 Button("Plate beef wellington") {
+                    viewModel.currentStage = .outcome
                     viewModel.endCookingWellington()
                 }
                 .buttonStyle(GameButtonStyle(backgroundColor: .blue))
-                ProgressBar(progress: viewModel.wellingtonCookingProgress).frame(height: 20).padding()
+                ProgressBar(progress: viewModel.wellingtonCookingProgress).frame(height: 10).padding()
             }
         }
     }

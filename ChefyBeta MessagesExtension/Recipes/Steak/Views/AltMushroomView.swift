@@ -70,7 +70,6 @@ struct SauteMushroomsView: View {
             VStack {
                 Button("Finish cooking shrooms") {
                     viewModel.currentStage = .rollPastry
-//                    viewModel.endCookingMushrooms()
                     viewModel.showDoughRollingView = true
                 }
                 .buttonStyle(GameButtonStyle(backgroundColor: .blue))

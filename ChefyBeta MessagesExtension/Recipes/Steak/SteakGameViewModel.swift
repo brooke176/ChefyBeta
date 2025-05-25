@@ -67,8 +67,8 @@ class SteakGameViewModel: ObservableObject {
         }
 
         for _ in 1...5 {
-            let newPosition = CGPoint(x: CGFloat.random(in: 160...280),
-                                      y: CGFloat.random(in: 245...310))
+            let newPosition = CGPoint(x: CGFloat.random(in: 180...280),
+                                      y: CGFloat.random(in: 250...300))
 
             seasoningGraphics.append(SeasoningGraphic(position: newPosition, color: seasoningColor, type: type, side: side))
         }
@@ -100,12 +100,12 @@ class SteakGameViewModel: ObservableObject {
 
     func stirMushrooms() {
         mushroomStirred.toggle()
-        rotationDegrees += 90
+        rotationDegrees += 45
     }
 
     func endCookingMushrooms() {
         isMushroomsCooking = false
-        burnMushrooms()
+//        burnMushrooms()
         timer?.invalidate()
         resetMushroomCookingVariables()
     }
@@ -175,11 +175,16 @@ class SteakGameViewModel: ObservableObject {
     private func calculateScore() -> Int {
         let isFrontSeasoned = seasoning.frontSalt >= minSeasoningAmount && seasoning.frontPepper >= minSeasoningAmount
         let isBackSeasoned = seasoning.backSalt >= minSeasoningAmount && seasoning.backPepper >= minSeasoningAmount
-        let cookingCorrectlyDone = cookingProgress >= 0.6 && cookingProgress <= 0.8
-        let perfectScore = isFrontSeasoned && isBackSeasoned && cookingCorrectlyDone
-        let okScore = steakFlipped && (isFrontSeasoned || isBackSeasoned) && cookingCorrectlyDone
+        // TODO: fix progress bar
+        let cookingCorrectlyDone = wellingtonCookingProgress >= 0.6 && wellingtonCookingProgress <= 1
+        NSLog("cookingProgress: \(wellingtonCookingProgress)")
 
-        return perfectScore ? 3 : okScore ? 2 : 1
+        let perfectScore = isFrontSeasoned && isBackSeasoned && cookingCorrectlyDone
+        let okScore = isFrontSeasoned && isBackSeasoned
+        let score = perfectScore ? 3 : okScore ? 2 : 1
+        NSLog("score: \(score)")
+
+        return score
     }
 
      func resetGame() {

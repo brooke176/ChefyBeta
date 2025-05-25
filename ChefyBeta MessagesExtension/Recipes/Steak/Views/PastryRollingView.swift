@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 struct PastryRollingView: View {
     @ObservedObject var viewModel: SteakGameViewModel
@@ -6,43 +7,107 @@ struct PastryRollingView: View {
 
     @State private var rollCount = 0
     @State private var dragOffset = CGSize.zero
-    let requiredRolls = 5
+    let requiredRolls = 15
     let rollThresholdUpper = UIScreen.main.bounds.height / 3
     let rollThresholdLower = UIScreen.main.bounds.height * 1.75 / 3
     @State private var lastDirectionUp = false
     @State private var crossedThreshold = false
+    @State private var countdown = 10
+    @State private var timerRunning = false
+    @State private var timerCancellable: AnyCancellable? = nil
 
+    @State private var showFailMessage = false
+    
     var body: some View {
         ZStack {
-            Image("dough")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .edgesIgnoringSafeArea(.all)
+            // Main content
+            ZStack {
+                Image("dough")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .edgesIgnoringSafeArea(.all)
+                    .offset(x: -10)
+                thresholdIndicators
 
-            thresholdIndicators
-
-            Image("rollingpin")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 300, height: 250)
-                .offset(dragOffset)
-                .gesture(
-                    DragGesture()
-                        .onChanged { gesture in
-                            withAnimation {
-                                self.dragOffset = gesture.translation
+                Image("rollingpin")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 300, height: 250)
+                    .offset(x: 10 + dragOffset.width, y: dragOffset.height)
+                    .gesture(
+                        DragGesture()
+                            .onChanged { gesture in
+                                withAnimation {
+                                    self.dragOffset = gesture.translation
+                                }
+                                self.updateRollingCount(gesture: gesture)
                             }
-                            self.updateRollingCount(gesture: gesture)
-                        }
-                        .onEnded { _ in
-                            self.resetAfterDrag()
-                        }
-                )
+                            .onEnded { _ in
+                                self.resetAfterDrag()
+                            }
+                    )
 
-            VStack {
-                rollingInstructions
+                VStack {
+                    rollingInstructions
+                }
+                .onAppear {
+                    startTimer()
+                }
+                .padding()
             }
-            .padding()
+            
+            // Fail overlay
+            if showFailMessage {
+                Color.black.opacity(0.7)
+                    .edgesIgnoringSafeArea(.all)
+                    .zIndex(1)
+                Text("FAIL")
+                    .font(.largeTitle)
+                    .fontWeight(.black)
+                    .foregroundColor(.red)
+                    .transition(.opacity)
+                    .zIndex(2)
+            }
+        }
+    }
+
+    func startTimer() {
+        countdown = 10
+        timerRunning = true
+        timerCancellable = Timer.publish(every: 1, on: .main, in: .common)
+            .autoconnect()
+            .sink { _ in
+                if countdown > 0 {
+                    countdown -= 1
+                } else {
+                    timerExpired()
+                }
+            }
+    }
+
+    func stopTimer() {
+        timerRunning = false
+        timerCancellable?.cancel()
+        timerCancellable = nil
+    }
+
+    func timerExpired() {
+        stopTimer()
+        if rollCount < requiredRolls {
+            withAnimation {
+                showFailMessage = true
+            }
+            // Hide fail message after 1.5 seconds and proceed
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                withAnimation {
+                    showFailMessage = false
+                }
+                viewModel.currentStage = .prepPastry
+                viewModel.showDoughPrepView = true
+            }
+        } else {
+            viewModel.currentStage = .prepPastry
+            viewModel.showDoughPrepView = true
         }
     }
 
@@ -62,7 +127,7 @@ struct PastryRollingView: View {
 
     private var rollingInstructions: some View {
         VStack {
-            PastryInstructionText(rollCount: rollCount, requiredRolls: requiredRolls)
+            PastryInstructionText(rollCount: rollCount, requiredRolls: requiredRolls, countdown: countdown)
                 .padding()
                 .background(Color.white.opacity(0.8))
                 .foregroundColor(Color.black)
@@ -85,10 +150,11 @@ struct PastryRollingView: View {
             Spacer()
             if rollCount >= requiredRolls {
                 Button("Finish rolling dough") {
+                    stopTimer()
                     viewModel.currentStage = .prepPastry
                     viewModel.showDoughPrepView = true
                 }
-                    .buttonStyle(GameButtonStyle(backgroundColor: .blue))
+                .buttonStyle(GameButtonStyle(backgroundColor: .blue))
             }
             ProgressView(value: Double(rollCount), total: Double(requiredRolls))
                 .frame(height: 20)
@@ -107,6 +173,10 @@ struct PastryRollingView: View {
             crossedThreshold = true
         }
         lastDirectionUp = movingUp
+
+        if rollCount >= requiredRolls {
+            stopTimer()
+        }
     }
 
     private func resetAfterDrag() {
@@ -119,22 +189,14 @@ struct PastryRollingView: View {
 struct PastryInstructionText: View {
     let rollCount: Int
     let requiredRolls: Int
+    let countdown: Int
 
     var body: some View {
-        Text(rollCount < requiredRolls ? "Roll out the pastry dough. Rolls: \(rollCount)/\(requiredRolls)" : "Ready to bake!")
+        VStack {
+            Text(rollCount < requiredRolls ? "Roll out the pastry dough. Rolls: \(rollCount)/\(requiredRolls)" : "Ready to bake!")
+            Text("Time left: \(countdown)s")
+                .font(.caption)
+                .foregroundColor(.red)
+        }
     }
 }
-
-
-
-//    struct PastryButtons: View {
-//        @ObservedObject var viewModel: SteakGameViewModel
-//
-//        var body: some View {
-//            VStack {
-//                Button("Finish rolling dough", action: viewModel.serveMushrooms)
-//                    .buttonStyle(GameButtonStyle(backgroundColor: .blue))
-//                ProgressBar(progress: viewModel.mushroomCookingProgress).frame(height: 20).padding()
-//            }
-//        }
-//    }

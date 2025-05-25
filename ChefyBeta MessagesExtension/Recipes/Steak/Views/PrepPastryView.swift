@@ -9,17 +9,15 @@ struct PrepPastryView: View {
     @State private var showSteak = false
     var messagesViewController: MessagesViewController
 
-    let doughWidth: CGFloat = 300 // Width of the dough area, adjust as needed
-    let doughHeight: CGFloat = 200 // Height of the dough area, adjust as needed
-    let brushWidth: CGFloat = 10 // Width of the "brush" used for spreading
+    let brushWidth: CGFloat = 15
     let interactiveAreaRect: CGRect
 
     init(viewModel: SteakGameViewModel, messagesViewController: MessagesViewController) {
         self.viewModel = viewModel
         self.messagesViewController = messagesViewController
         self.interactiveAreaRect = CGRect(
-            x: UIScreen.main.bounds.width / 1.6,
-            y: UIScreen.main.bounds.height / 2.5,
+            x: UIScreen.main.bounds.width / 2.6,
+            y: UIScreen.main.bounds.height / 3,
             width: 300,
             height: 200
         )

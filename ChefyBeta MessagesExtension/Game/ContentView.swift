@@ -169,4 +169,12 @@ struct ContentView: View {
             .frame(width: 80, height: 120)
         }
     }
-    
+
+//class MockGameLaunchDelegate: GameLaunchDelegate {
+//    func launchGame(for item: ImageItem) { }
+//}
+//    
+//
+//#Preview {
+//    ContentView(conversation: MSConversation(), delegate: MockGameLaunchDelegate())
+//}
