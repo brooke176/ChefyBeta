@@ -59,13 +59,13 @@ struct SteakCookingView: View {
                 } else {
                     return "Waiting for opponent..."
                 }
-            } else if viewModel.flipNeeded {
+            } else if viewModel.flipNeeded { // Corrected: No $
                 return "Flip the steak now!"
-            } else if viewModel.cookingProgress < viewModel.PERFECT_SEAR_WINDOW_START {
+            } else if viewModel.cookingProgress < viewModel.PERFECT_SEAR_WINDOW_START { // Corrected: No $
                 return "Searing steak..."
-            } else if viewModel.cookingProgress <= viewModel.PERFECT_SEAR_WINDOW_END {
+            } else if viewModel.cookingProgress <= viewModel.PERFECT_SEAR_WINDOW_END { // Corrected: No $
                 return "Perfect sear! Serve it now!"
-            } else if viewModel.cookingProgress > viewModel.PERFECT_SEAR_WINDOW_END {
+            } else if viewModel.cookingProgress > viewModel.PERFECT_SEAR_WINDOW_END { // Corrected: No $
                 return "A bit too long, serve it!"
             } else {
                 return "Keep cooking..." // Default fallback
@@ -90,9 +90,9 @@ struct SteakCookingView: View {
                     .animation(.easeInOut(duration: 0.5), value: viewModel.steakFlipped)
                     .scaleEffect(isPulsing ? 1.05 : 1.0) // Pulsing effect
                     .onTapGesture {
-                        viewModel.flipSteak() // ViewModel handles flipNeeded logic
+                        viewModel.flipSteak() // Correct: function call
                     }
-                    .onChange(of: viewModel.flipNeeded) { newValue in
+                    .onChange(of: viewModel.flipNeeded) { newValue in // Corrected: No $
                         if newValue {
                             withAnimation(.easeInOut(duration: 0.5).repeatForever(autoreverses: true)) {
                                 isPulsing = true
@@ -104,13 +104,13 @@ struct SteakCookingView: View {
                         }
                     }
 
-                if viewModel.flipNeeded {
+                if viewModel.flipNeeded { // Corrected: No $
                      Image(systemName: "arrow.triangle.2.circlepath.circle.fill") // Example flip icon
                         .font(.largeTitle)
                         .foregroundColor(.yellow)
                         .offset(y: -100) // Position above the steak
                         .transition(.scale.combined(with: .opacity))
-                         .animation(.easeInOut, value: viewModel.flipNeeded)
+                         .animation(.easeInOut, value: viewModel.flipNeeded) // Corrected: No $
                 }
                 
                 // Seasoning graphics (if any should be visible on the pan, less likely here)
@@ -138,7 +138,7 @@ struct SteakCookingView: View {
                 .disabled(viewModel.gameEnded) // Disable if game ended
 
                 // Pass window parameters to ProgressBar
-                ProgressBar(
+                ProgressBar( // Corrected: All arguments present and direct value access
                     progress: viewModel.cookingProgress,
                     perfectWindowStart: viewModel.PERFECT_SEAR_WINDOW_START,
                     perfectWindowEnd: viewModel.PERFECT_SEAR_WINDOW_END

@@ -143,7 +143,7 @@ struct PrepPastryView: View {
             // Calculate coverage and update ViewModel
             let doughArea = interactiveAreaRect.width * interactiveAreaRect.height
             let currentCoverage = totalDrawnArea / doughArea
-            viewModel.mushroomSpreadCoveragePercent = min(currentCoverage, 1.0) // Cap at 100%
+            viewModel.mushroomSpreadCoveragePercent = min(Double(currentCoverage), 1.0) // Ensure Double conversion, cap at 100%
 
             // Update the boolean flag if a certain threshold is met (e.g., 50% coverage)
             // This controls when the UI switches to "Place prosciutto and steak"
@@ -173,17 +173,17 @@ struct PrepPastryView: View {
 // as the "Start cooking beef wellington" button is defined directly within PrepPastryView's body.
 // If PastryButtons was intended to be used, its content should be reviewed and integrated.
 // For this task, I've focused on modifying the existing button and ProgressView logic.
-        @ObservedObject var viewModel: SteakGameViewModel
+        // @ObservedObject var viewModel: SteakGameViewModel // Removed this line and the struct below
 
-        var body: some View {
-            VStack {
-                Button("Start cooking beef wellington") {
-                    viewModel.currentStage = .cookWelly
-                    viewModel.showOvenCookingView = true
-                    viewModel.startCookingWellington()
-                }
-                    .buttonStyle(GameButtonStyle(backgroundColor: .blue))
-            }
-        }
-    }
-}
+        // var body: some View { // Removed this line and the struct below
+        //     VStack { // Removed this line and the struct below
+        //         Button("Start cooking beef wellington") { // Removed this line and the struct below
+        //             viewModel.currentStage = .cookWelly // Removed this line and the struct below
+        //             viewModel.showOvenCookingView = true // Removed this line and the struct below
+        //             viewModel.startCookingWellington() // Removed this line and the struct below
+        //         } // Removed this line and the struct below
+        //             .buttonStyle(GameButtonStyle(backgroundColor: .blue)) // Removed this line and the struct below
+        //     } // Removed this line and the struct below
+        // } // Removed this line and the struct below
+    // } // Removed this extra closing brace that defined PastryButtons as a nested struct incorrectly.
+} // This is the correct closing brace for PrepPastryView
