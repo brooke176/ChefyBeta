@@ -37,22 +37,30 @@ struct SteakSeasoning {
     var backSalt: Double = 0
     var frontPepper: Double = 0
     var backPepper: Double = 0
+    // seasoningCorrectness is in the ViewModel, not here.
 }
 
-enum SeasoningType {
-    case salt, pepper
-}
+// SteakSide enum is defined below - ensure it's the single source of truth.
+// SeasoningType enum is defined below.
 
 struct SeasoningGraphic: Identifiable {
     var id = UUID()
     var position: CGPoint
     var color: Color
     var type: SeasoningType
-    var side: SteakSide
+    var side: SteakSide // Uses SteakSide enum defined in this file
 }
 
-enum SteakSide {
+enum SeasoningType { // Ensure this is used or remove if only ViewModel used it
+    case salt, pepper
+}
+
+enum SteakSide { // Single source of truth for SteakSide
     case front, back
+}
+
+enum GameScoreMetric { // Moved from ViewModel
+    case poor, okay, good, perfect
 }
 
 enum GameType: String {
@@ -119,14 +127,14 @@ enum PancakeGameStage: String, CaseIterable, Identifiable {
     var id: String { self.rawValue }
 }
 
-enum GameStage: String, CaseIterable, Identifiable {
-    case seasonSteak
-    case cookSteak
-    case sauteMushrooms
-    case rollPastry
-    case prepPastry
-    case cookWelly
-    case outcome
+enum GameStage: String, CaseIterable, Identifiable { // Updated cases
+    case seasonSteak // Initial stage
+    case searSteak // Player sears steak (was cookSteak)
+    case sauteMushrooms // Player sautés mushrooms
+    case rollDough // Player rolls dough (was rollPastry)
+    case prepPastry // Player preps pastry (e.g., spread mushrooms)
+    case cookWelly // Player cooks the wellington
+    case outcome // Game outcome/score shown
 
     var id: String { self.rawValue }
 }

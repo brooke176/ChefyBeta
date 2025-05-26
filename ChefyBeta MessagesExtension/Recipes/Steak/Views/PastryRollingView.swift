@@ -92,8 +92,9 @@ struct PastryRollingView: View {
     }
 
     func timerExpired() {
-        stopTimer()
+        stopTimer() // Stop the timer first
         if rollCount < requiredRolls {
+            viewModel.pastryRollingFailedTimer = true // Set failure flag
             withAnimation {
                 showFailMessage = true
             }
@@ -102,10 +103,17 @@ struct PastryRollingView: View {
                 withAnimation {
                     showFailMessage = false
                 }
-                viewModel.currentStage = .prepPastry
+                // Use ViewModel's method if available, otherwise set directly
+                // viewModel.finishRollingDough() // This method exists and sets stage and view var
+                // For clarity with the task, setting directly:
+                viewModel.currentStage = .prepPastry 
                 viewModel.showDoughPrepView = true
             }
         } else {
+            // Rolls completed by the time timer expired or before
+            viewModel.pastryRollingFailedTimer = false // Ensure success flag state
+            // Use ViewModel's method if available, otherwise set directly
+            // viewModel.finishRollingDough()
             viewModel.currentStage = .prepPastry
             viewModel.showDoughPrepView = true
         }
@@ -151,6 +159,9 @@ struct PastryRollingView: View {
             if rollCount >= requiredRolls {
                 Button("Finish rolling dough") {
                     stopTimer()
+                    viewModel.pastryRollingFailedTimer = false // Explicitly set to false on success via button
+                    // Use ViewModel's method if available, otherwise set directly
+                    // viewModel.finishRollingDough()
                     viewModel.currentStage = .prepPastry
                     viewModel.showDoughPrepView = true
                 }

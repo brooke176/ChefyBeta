@@ -14,7 +14,8 @@ struct SteakCookingView: View {
             
             VStack {
                 Spacer()
-                InstructionText(gameEnded: viewModel.gameEnded, isCooking: viewModel.isCooking, steakFlipped: viewModel.steakFlipped, cookingProgress: viewModel.cookingProgress, seasoning: viewModel.seasoning, gameState: viewModel.gameState)
+                // Pass the whole viewModel to InstructionText
+                InstructionText(viewModel: viewModel)
                     .padding()
                     .background(Color.white.opacity(0.8))
                     .foregroundColor(Color.black)
@@ -28,8 +29,9 @@ struct SteakCookingView: View {
                     )
                     .padding(.vertical, 5)
                 Spacer()
-                SteakCookView(steakFlipped: viewModel.steakFlipped, isCooking: viewModel.isCooking, seasoningGraphics: viewModel.seasoningGraphics, viewModel: viewModel)
-                    .padding(.bottom, 200)
+                // Pass the whole viewModel to SteakCookView
+                SteakCookView(viewModel: viewModel)
+                    .padding(.bottom, 50) // Adjusted padding
                 ActionButtonsView(viewModel: viewModel)
                 Spacer()
             }
@@ -37,71 +39,89 @@ struct SteakCookingView: View {
     }
     
     struct InstructionText: View {
-        var gameEnded: Bool
-        var isCooking: Bool
-        var steakFlipped: Bool
-        var cookingProgress: Double
-        var seasoning: SteakSeasoning
-        var gameState: GameState
-        
-        private let minSeasoningAmount: Double = 0.6
-        private let maxSeasoningAmount = 3.0
-        private let perfectSeasoningRange = 0.6...1.5
-        private let maxCookingProgress = 1.0
+        @ObservedObject var viewModel: SteakGameViewModel
         
         var body: some View {
             Text(instructionText)
         }
         
         private var instructionText: String {
-            if gameEnded {
-                if gameState.player2Score != 0 {
-                    if gameState.player1Score > gameState.player2Score {
+            if viewModel.gameEnded {
+                // Existing game end logic - seems fine
+                if viewModel.gameState.player2Score != 0 {
+                    if viewModel.gameState.player1Score > viewModel.gameState.player2Score {
                         return "You won! 🎉"
-                    } else if gameState.player1Score < gameState.player2Score {
+                    } else if viewModel.gameState.player1Score < viewModel.gameState.player2Score {
                         return "You lost. Try again!"
                     } else {
                         return "It's a tie!"
                     }
                 } else {
                     return "Waiting for opponent..."
-                }}
-            else if cookingProgress < 0.6 {
-                return "Keep cooking..."
+                }
+            } else if viewModel.flipNeeded {
+                return "Flip the steak now!"
+            } else if viewModel.cookingProgress < viewModel.PERFECT_SEAR_WINDOW_START {
+                return "Searing steak..."
+            } else if viewModel.cookingProgress <= viewModel.PERFECT_SEAR_WINDOW_END {
+                return "Perfect sear! Serve it now!"
+            } else if viewModel.cookingProgress > viewModel.PERFECT_SEAR_WINDOW_END {
+                return "A bit too long, serve it!"
             } else {
-                return "Serve the steak"
+                return "Keep cooking..." // Default fallback
             }
         }
     }
     
     
     struct SteakCookView: View {
-        var steakFlipped: Bool
-        var isCooking: Bool
-        var seasoningGraphics: [SeasoningGraphic]
         @ObservedObject var viewModel: SteakGameViewModel
+        @State private var isPulsing: Bool = false // For flip cue
         
         var body: some View {
             ZStack(alignment: .center) {
                 Image("steakie")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 155, height: 155)
-                    .offset(x: 70, y: -135)
-                    .position(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
-                    .rotation3DEffect(.degrees(steakFlipped ? 180 : 0), axis: (x: 0, y: 1, z: 0))
-                    .animation(.easeInOut(duration: 0.5), value: steakFlipped)
+                    .frame(width: 180, height: 180) // Slightly larger for better visual
+                    // Apply browning effect based on cookingProgress
+                    .colorMultiply(Color(red: 1.0, green: 1.0 - (viewModel.cookingProgress * 0.6), blue: 1.0 - (viewModel.cookingProgress * 0.8))) // Darkens by reducing green/blue
+                    .rotation3DEffect(.degrees(viewModel.steakFlipped ? 180 : 0), axis: (x: 0, y: 1, z: 0))
+                    .animation(.easeInOut(duration: 0.5), value: viewModel.steakFlipped)
+                    .scaleEffect(isPulsing ? 1.05 : 1.0) // Pulsing effect
                     .onTapGesture {
-                        viewModel.steakFlipped.toggle()
+                        viewModel.flipSteak() // ViewModel handles flipNeeded logic
                     }
-                
-                ForEach(seasoningGraphics.filter { $0.side == (steakFlipped ? .back : .front) }) { graphic in
-                    Circle()
-                        .fill(graphic.color)
-                        .frame(width: 4, height: 4)
-                        .position(graphic.position)
+                    .onChange(of: viewModel.flipNeeded) { newValue in
+                        if newValue {
+                            withAnimation(.easeInOut(duration: 0.5).repeatForever(autoreverses: true)) {
+                                isPulsing = true
+                            }
+                        } else {
+                            withAnimation(.easeInOut(duration: 0.1)) { // Stop pulsing quickly
+                                isPulsing = false
+                            }
+                        }
+                    }
+
+                if viewModel.flipNeeded {
+                     Image(systemName: "arrow.triangle.2.circlepath.circle.fill") // Example flip icon
+                        .font(.largeTitle)
+                        .foregroundColor(.yellow)
+                        .offset(y: -100) // Position above the steak
+                        .transition(.scale.combined(with: .opacity))
+                         .animation(.easeInOut, value: viewModel.flipNeeded)
                 }
+                
+                // Seasoning graphics (if any should be visible on the pan, less likely here)
+                // ForEach(viewModel.seasoningGraphics.filter { $0.side == (viewModel.steakFlipped ? .back : .front) }) { graphic in
+                //     Circle()
+                //         .fill(graphic.color)
+                //         .frame(width: 4, height: 4)
+                //         .position(graphic.position) // Ensure positioning is correct for this view
+                // }
             }
+            .frame(height: 200) // Give ZStack a defined height for positioning flip icon
         }
     }
     
@@ -111,11 +131,20 @@ struct SteakCookingView: View {
         var body: some View {
             VStack {
                 Button("Serve Steak") {
-                    viewModel.currentStage = .sauteMushrooms
+                    // viewModel.currentStage = .sauteMushrooms // This is handled by serveSteak() in ViewModel
                     viewModel.serveSteak()
                 }
                 .buttonStyle(GameButtonStyle(backgroundColor: .blue))
-                ProgressBar(progress: viewModel.cookingProgress).frame(height: 20).padding()
+                .disabled(viewModel.gameEnded) // Disable if game ended
+
+                // Pass window parameters to ProgressBar
+                ProgressBar(
+                    progress: viewModel.cookingProgress,
+                    perfectWindowStart: viewModel.PERFECT_SEAR_WINDOW_START,
+                    perfectWindowEnd: viewModel.PERFECT_SEAR_WINDOW_END
+                )
+                .frame(height: 20)
+                .padding()
             }
         }
     }
